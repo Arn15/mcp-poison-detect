@@ -1,0 +1,32 @@
+# Secrets
+.env
+*.key
+secrets*.json
+kaggle.json
+
+# Data and model artifacts (kept out of git; live on Kaggle Datasets / Drive)
+data/raw/*
+data/processed/*
+!data/**/.gitkeep
+outputs/
+checkpoints/
+*.pt
+*.bin
+*.safetensors
+*.ckpt
+*.onnx
+wandb/
+mlruns/
+hf_cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store

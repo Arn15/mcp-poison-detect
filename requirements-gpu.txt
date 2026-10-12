@@ -1,0 +1,3 @@
+# Only on GPU runtimes (Kaggle T4 / Colab A100) for the attacker loop and agent eval
+vllm>=0.6
+bitsandbytes>=0.43

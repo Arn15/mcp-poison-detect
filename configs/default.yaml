@@ -1,0 +1,79 @@
+# Single source of truth for every experiment setting.
+# Override per run:  python scripts/xxx.py --config configs/default.yaml --set detector.lr=3e-5
+project:
+  name: mcp-poison-detect
+  seed: 42
+
+paths:
+  # Resolved relative to the detected runtime root (local / kaggle / colab), see mcptp/utils/env.py
+  data_raw: data/raw
+  data_processed: data/processed
+  splits: data/splits
+  outputs: outputs
+  hf_cache: hf_cache
+
+data:
+  mcptox_repo: https://github.com/zhiqiangwang4/MCPTox-Benchmark   # files: pure_tool.json, response_all.json, def_tool/
+  split_strategy: server_disjoint
+  test_frac: 0.2
+  val_frac: 0.1
+  heldout_attack_families: []        # filled in Step 2, then frozen
+  hard_negative_templates: true
+  max_cases: 300                     # compute-scaled subset (~200-300)
+
+context:
+  name_match: true
+  semantic_match: true
+  embedder: intfloat/e5-base-v2
+  top_k: 3
+  sim_threshold: 0.80
+  max_context_tokens: 256
+
+detector:
+  backbone: microsoft/deberta-v3-base
+  use_context: true                  # false = baseline B3
+  max_len: 512
+  lr: 2.0e-5
+  batch_size: 16
+  epochs: 4
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  fp16: true
+
+attacker:
+  attacker_model: Qwen/Qwen3-4B
+  evaluator_model: Qwen/Qwen3-4B
+  target_models: [Qwen/Qwen3-8B, meta-llama/Llama-3.1-8B-Instruct]
+  n_candidates: 5                    # N
+  iterations: 2                      # T
+  shadow_queries: 5
+  temperature: 0.9
+  max_new_tokens: 384
+  asr_weight: 1.0
+  evasion_weight: 1.0
+  vllm:
+    enable_prefix_caching: true
+    gpu_memory_utilization: 0.85
+    max_model_len: 8192
+    quantization: null               # e.g. awq / bitsandbytes for 8B on T4
+
+adversarial:
+  rounds: 2
+
+baselines:
+  b1_e5:
+    backbone: intfloat/multilingual-e5-base
+    lr: 2.0e-5
+    epochs: 4
+  b2_llm_judge:
+    model: Qwen/Qwen3-8B
+  b3_plain_deberta:
+    use_context: false
+
+eval:
+  target_fpr: 0.01
+  bootstrap_iters: 1000
+  ci: 0.95
+
+checkpoint:
+  every_n_items: 20
