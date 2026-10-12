@@ -1,0 +1,24 @@
+{
+ "version": "v1",
+ "inputs": [
+  "outputs/kaggle/para_test_download/outputs/paraphrase/20261012-195459_para_test/generations.jsonl"
+ ],
+ "per_split": {
+  "test": {
+   "n": 625,
+   "pos": 376,
+   "sha256": "024556513f27602cb9b8712a5064791a44e59f5dae4b5b20aad97187738adbbf"
+  }
+ },
+ "validity": {
+  "0": {
+   "total": 286,
+   "invalid": 37
+  },
+  "1": {
+   "total": 390,
+   "invalid": 14
+  }
+ },
+ "fail_reasons": {}
+}
