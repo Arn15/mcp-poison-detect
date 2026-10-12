@@ -46,8 +46,9 @@ def main():
     version = cfg["para"]["version"]
     out_path = REPO_ROOT / "data" / "para" / f"para_{version}.jsonl"
     man_path = paths["splits"] / f"para_{version}.json"
-    if man_path.exists() and not refreeze:
-        raise SystemExit(f"{man_path} exists (frozen). Use --refreeze to replace it deliberately.")
+    old_manifest = json.loads(man_path.read_text()) if man_path.exists() else None
+    if old_manifest and not refreeze:
+        raise SystemExit(f"{man_path} exists (frozen). Use --refreeze to add splits; frozen splits must not change.")
 
     examples = {e["id"]: e for e in ensure_examples(cfg, paths)}
     registries = defaultdict(dict)
@@ -85,6 +86,13 @@ def main():
                   "context": [{"tool_name": t, "description": reg[t]} for t in refs]})
         recs.append(r)
 
+    # Already-frozen splits (e.g. test) must reproduce exactly; only new splits may be added.
+    if old_manifest:
+        for s, info in old_manifest["per_split"].items():
+            new = split_hash([r for r in recs if r["split"] == s])
+            if new != info["sha256"]:
+                raise SystemExit(f"refusing: frozen para split '{s}' would change ({info['sha256'][:12]} -> {new[:12]}). "
+                                 "Pass the original generations for that split too.")
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w") as f:
         for r in recs:

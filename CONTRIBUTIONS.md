@@ -29,6 +29,10 @@ design · **Library** = called via a third-party package, not reimplemented.
 | `scripts/paraphrase.py` | Own | Resumable batched paraphrase generation (GPU) | — |
 | `scripts/freeze_para.py` | Own | Validate generations, rebuild context, freeze MCPTox-Para with per-split hashes | — |
 | `tests/test_data.py` | Own | Unit tests for data, splits, metrics | — |
+| `mcptp/detector/model.py` | Own | Plain / context-aware cross-encoder inputs, shuffled-context control | — |
+| `mcptp/detector/train.py` | Own | AMP fine-tuning loop, context dropout + context swap augmentation, val selection with loss tie-break | — |
+| `mcptp/eval/report.py` | Own | Subset evaluation (implicit, held-out family/server), val-fixed thresholds, hard-negative FPR | — |
+| `scripts/train_detector.py` | Own | Variant sweep (B0, B3, context, +para), seeds, paired bootstrap, summary table | — |
 | *(Step 4)* `mcptp/attacker/…` | Adapted | MCP-ITP-style optimizer | Li et al., arXiv 2601.07395 |
 | *(Step 5)* `mcptp/baselines/e5.py` | Adapted | MCP-Guard Stage II classifier | Xing et al., arXiv 2508.10991 |
 | — | Library | DeBERTa-v3 / E5 weights, HF Transformers, vLLM, scikit-learn | — |

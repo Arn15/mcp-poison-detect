@@ -60,6 +60,21 @@ detector:
   weight_decay: 0.01
   fp16: true
   max_steps: null                    # smoke tests only
+  context_dropout: 0.3               # context model: drop the referenced-tool context with this prob
+  context_swap: 0.5                  # context model: give context-free benign tools random registry tools as context
+  variants:                          # trained by scripts/train_detector.py
+    B3_plain:           {use_context: false, train_para: false}
+    B3_plain+para:      {use_context: false, train_para: true}
+    ours_context:       {use_context: true,  train_para: false}
+    ours_context+para:  {use_context: true,  train_para: true}
+  compare:                           # paired bootstrap (a - b)
+    - [ours_context, B3_plain]
+    - [ours_context+para, B3_plain+para]
+    - [B3_plain+para, B3_plain]
+    - [ours_context+para, ours_context]
+    - [ours_context, ours_context/SHUFFLED]
+    - [ours_context+para, ours_context+para/SHUFFLED]
+    - [ours_context, B0_tfidf_lr]
 
 attacker:
   attacker_model: Qwen/Qwen3-4B
