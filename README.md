@@ -7,7 +7,24 @@ co-registered tools it references**, hardened by adversarial training against ou
 implicit-poisoning optimizer. Evaluated on MCPTox with server-disjoint splits, TPR@1%FPR, hard-negative FPR,
 held-out attack families, and a final adaptive attack.
 
-> Status: **Step 1 (infrastructure) complete.** Data pipeline, detector, attacker, baselines and eval land in later steps.
+> Status: **Steps 1-2 complete** (infrastructure; data pipeline + frozen split v1). Detector, attacker, baselines next.
+
+## Data (split v1, frozen)
+
+```bash
+python scripts/prepare_data.py     # downloads MCPTox @ f85189f if missing, builds examples, verifies split_v1
+python scripts/leakage_check.py    # shortcut baselines -> results/leakage_v1.json
+```
+
+| | train | val | test |
+|---|---|---|---|
+| servers | 31 | 4 | 10 |
+| poisoned tools | 434 | 73 | 195 (57 from held-out risk families) |
+| benign real tools | 257 | 42 | 63 |
+| templated hard negatives | 248 | 32 | 80 |
+
+Server-disjoint; risk families *Financial Loss* and *Message Hijacking* never appear in train/val.
+The test set is pinned by a SHA-256 hash in `data/splits/split_v1.json`; loaders refuse drifted data.
 
 ## Repository layout
 
@@ -15,7 +32,7 @@ held-out attack families, and a final adaptive attack.
 |---|---|
 | `configs/default.yaml` | Single source of truth for every experiment setting |
 | `mcptp/utils/` | Config loading + CLI overrides, runtime/path detection, seeding, resumable checkpoints, run dirs |
-| `mcptp/data/` | MCPTox loading, hard negatives, registry context, server-disjoint splits *(Step 2)* |
+| `mcptp/data/` | MCPTox loading, hard negatives, registry context, server-disjoint frozen splits |
 | `mcptp/detector/` | Context-aware DeBERTa-v3 detector *(Steps 3, 7)* |
 | `mcptp/attacker/` | MCP-ITP-style attacker / evaluator loop *(Step 4)* |
 | `mcptp/baselines/` | B1 E5 classifier, B2 LLM judge, B4 MindGuard (optional) *(Step 5)* |

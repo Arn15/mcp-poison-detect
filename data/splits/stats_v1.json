@@ -1,0 +1,78 @@
+{
+ "version": "v1",
+ "n_examples": 1424,
+ "per_split": {
+  "train": {
+   "servers": 31,
+   "kind": {
+    "poison": 434,
+    "benign": 257,
+    "hard_negative": 248
+   },
+   "paradigm": {
+    "Template-3": 216,
+    "Template-2": 164,
+    "Template-1": 54
+   },
+   "hard_negatives": 268,
+   "pos_with_marker": 343,
+   "ref_method_pos": {
+    "name": 431,
+    "none": 3
+   },
+   "ref_method_neg": {
+    "none": 237,
+    "name": 268
+   }
+  },
+  "val": {
+   "servers": 4,
+   "kind": {
+    "poison": 73,
+    "benign": 42,
+    "hard_negative": 32
+   },
+   "paradigm": {
+    "Template-2": 36,
+    "Template-3": 22,
+    "Template-1": 15
+   },
+   "hard_negatives": 35,
+   "pos_with_marker": 61,
+   "ref_method_pos": {
+    "name": 73
+   },
+   "ref_method_neg": {
+    "none": 39,
+    "name": 35
+   }
+  },
+  "test": {
+   "servers": 10,
+   "kind": {
+    "poison": 195,
+    "benign": 63,
+    "hard_negative": 80
+   },
+   "paradigm": {
+    "Template-2": 103,
+    "Template-3": 65,
+    "Template-1": 27
+   },
+   "hard_negatives": 89,
+   "pos_with_marker": 150,
+   "ref_method_pos": {
+    "name": 195
+   },
+   "ref_method_neg": {
+    "none": 54,
+    "name": 89
+   }
+  }
+ },
+ "test_subsets": {
+  "heldout_server_pos": 138,
+  "heldout_family_pos": 57,
+  "neg": 143
+ }
+}

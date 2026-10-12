@@ -14,11 +14,14 @@ paths:
 
 data:
   mcptox_repo: https://github.com/zhiqiangwang4/MCPTox-Benchmark   # files: pure_tool.json, response_all.json, def_tool/
+  mcptox_commit: f85189f9ad12504c197c7f920ab818a40657b1fa
+  split_version: v1
   split_strategy: server_disjoint
   test_frac: 0.2
   val_frac: 0.1
-  heldout_attack_families: []        # filled in Step 2, then frozen
-  hard_negative_templates: true
+  heldout_risk_families: [Financial Loss, Message Hijacking]   # never trained on; frozen in split_v1
+  include_explicit: true             # keep Template-1 (explicit) as positives; primary metric is implicit-only
+  hard_negatives_per_server: 8
   max_cases: 300                     # compute-scaled subset (~200-300)
 
 context:
@@ -72,6 +75,7 @@ baselines:
 
 eval:
   target_fpr: 0.01
+  extra_fprs: [0.05]                 # test has ~150 negatives, so 1% FPR is coarse; also report 5%
   bootstrap_iters: 1000
   ci: 0.95
 
