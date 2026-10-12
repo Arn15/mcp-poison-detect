@@ -51,13 +51,15 @@ context:
 detector:
   backbone: microsoft/deberta-v3-base
   use_context: true                  # false = baseline B3
-  max_len: 512
+  max_len: 384
+  seeds: [42, 43, 44]
   lr: 2.0e-5
   batch_size: 16
   epochs: 4
   warmup_ratio: 0.1
   weight_decay: 0.01
   fp16: true
+  max_steps: null                    # smoke tests only
 
 attacker:
   attacker_model: Qwen/Qwen3-4B

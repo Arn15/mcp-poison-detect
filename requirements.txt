@@ -9,6 +9,7 @@ pytest>=7.4
 torch>=2.2
 transformers>=4.44
 sentencepiece
+protobuf
 accelerate>=0.33
 datasets>=2.20
 sentence-transformers>=3.0

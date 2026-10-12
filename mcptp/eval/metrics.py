@@ -60,3 +60,18 @@ def summarize(y, s, fprs=(0.01, 0.05), n_boot: int = 1000, seed: int = 0) -> dic
     for f in fprs:
         out[f"tpr@{f:g}fpr"] = bootstrap_ci(lambda a, b, f=f: tpr_at_fpr(a, b, f), y, s, n_boot, seed=seed)
     return out
+
+
+def paired_bootstrap_diff(metric, y, s_a, s_b, n: int = 1000, ci: float = 0.95, seed: int = 0) -> dict:
+    """metric(a) - metric(b) on the same stratified resamples. p = share of resamples with diff <= 0."""
+    y, s_a, s_b = np.asarray(y), np.asarray(s_a, float), np.asarray(s_b, float)
+    rng = np.random.default_rng(seed)
+    pi, ni = np.where(y == 1)[0], np.where(y == 0)[0]
+    d = []
+    for _ in range(n):
+        idx = np.concatenate([rng.choice(pi, len(pi)), rng.choice(ni, len(ni))])
+        d.append(metric(y[idx], s_a[idx]) - metric(y[idx], s_b[idx]))
+    d = np.asarray(d)
+    a = (1 - ci) / 2
+    return {"diff": float(metric(y, s_a) - metric(y, s_b)), "lo": float(np.nanquantile(d, a)),
+            "hi": float(np.nanquantile(d, 1 - a)), "p_le_0": float(np.mean(d <= 0))}
