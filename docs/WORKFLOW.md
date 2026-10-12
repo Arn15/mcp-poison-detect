@@ -21,7 +21,7 @@ previous output dir back in and re-run with `--resume <run_dir_name>`; finished 
 
 ## One-time setup
 - **GitHub**: create an empty repo `mcp-poison-detect` (private until the deadline is fine), then
-  `git remote add origin https://github.com/<you>/mcp-poison-detect.git && git push -u origin main`.
+  `git remote add origin https://github.com/Arn15/mcp-poison-detect.git && git push -u origin main`.
 - **Kaggle**: phone-verify the account (needed for GPU + Internet). Add-ons → Secrets: `HF_TOKEN`, `GH_TOKEN`
   (fine-grained PAT, read-only contents on this repo) if private.
 - **Hugging Face**: accept the Llama-3.1 license on its model page; create a read token.
