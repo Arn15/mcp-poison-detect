@@ -5,6 +5,7 @@ Kaggle : repo in /kaggle/working/<repo>; outputs -> /kaggle/working/outputs (sav
 Colab  : outputs -> /content/drive/MyDrive/mcp-poison-detect/outputs so they survive disconnects.
 Local  : everything relative to the repo root.
 Override any of these with the env var MCPTP_ROOT.
+On Kaggle the HF model cache goes to /kaggle/tmp (scratch, not saved with outputs).
 """
 from __future__ import annotations
 
@@ -40,9 +41,13 @@ def resolve_paths(cfg: dict) -> dict:
     manifest is versioned; everything else resolves under the runtime storage root.
     """
     root = storage_root()
+    runtime = detect_runtime()
     out = {}
     for name, rel in cfg.get("paths", {}).items():
         base = REPO_ROOT if name == "splits" else root
+        if name == "hf_cache" and runtime == "kaggle" and not os.environ.get("MCPTP_ROOT"):
+            # /kaggle/working is saved as notebook output (~20 GB cap); model weights must not go there.
+            base = Path("/kaggle/tmp")
         p = Path(rel) if Path(rel).is_absolute() else base / rel
         p.mkdir(parents=True, exist_ok=True)
         out[name] = p
