@@ -24,6 +24,22 @@ data:
   hard_negatives_per_server: 8
   max_cases: 300                     # compute-scaled subset (~200-300)
 
+para:                                # MCPTox-Para: meaning-preserving LLM paraphrases (Step 2b)
+  version: v1
+  model: Qwen/Qwen3-4B
+  backend: transformers              # transformers | echo (CPU smoke test)
+  splits: [test]                     # add train for the augmentation ablation
+  n_per_example: {train: 1, val: 1, test: 2}
+  styles: [formal API reference, concise developer note, plain friendly English, verbose explanatory documentation,
+           terse changelog-like, technical specification]
+  temperature: 0.8
+  top_p: 0.95
+  max_new_tokens: 384
+  batch_size: 16
+  max_retries: 2
+  min_value_recall: 0.8              # share of quoted values / paths / numbers that must survive
+  length_ratio: [0.5, 2.2]
+
 context:
   name_match: true
   semantic_match: true

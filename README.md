@@ -23,6 +23,14 @@ python scripts/leakage_check.py    # shortcut baselines -> results/leakage_v1.js
 | benign real tools | 257 | 42 | 63 |
 | templated hard negatives | 248 | 32 | 80 |
 
+**MCPTox-Para** (meaning-preserving paraphrases, because TF-IDF + LR already reaches TPR@1%FPR = 1.0 on the
+original attacks; see `results/leakage_v1.json`):
+
+```bash
+python scripts/paraphrase.py --tag para_test                         # GPU (Kaggle T4), ~30-40 min for the test split
+python scripts/freeze_para.py --inputs <run_dir>/generations.jsonl   # -> data/para/para_v1.jsonl (frozen)
+```
+
 Server-disjoint; risk families *Financial Loss* and *Message Hijacking* never appear in train/val.
 The test set is pinned by a SHA-256 hash in `data/splits/split_v1.json`; loaders refuse drifted data.
 

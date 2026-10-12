@@ -19,8 +19,9 @@ sys.argv = [a for a in sys.argv if a not in flags]
 from common import setup_run  # noqa: E402
 
 from mcptp.data.build import build_examples  # noqa: E402
+from mcptp.data.io import annotate_splits  # noqa: E402
 from mcptp.data.splits import (assign_splits, build_manifest, choose_server_split, load_manifest,  # noqa: E402
-                               save_manifest, split_of, verify_manifest)
+                               save_manifest, verify_manifest)
 
 
 def main():
@@ -54,13 +55,7 @@ def main():
         log.warning("FROZE new split %s (test sha256 %s...). Commit data/splits/ now.", mpath.name,
                     manifest["test_sha256"][:12])
 
-    where = split_of(manifest)
-    test_servers = set(manifest["servers"]["test"])
-    held = set(manifest["heldout_families"])
-    for e in examples:
-        e["split"] = where[e["id"]]
-        e["heldout_server"] = e["server"] in test_servers
-        e["heldout_family"] = e["label"] == 1 and e.get("risk") in held
+    annotate_splits(examples, manifest)
 
     out = paths["data_processed"] / "examples.jsonl"
     with open(out, "w") as f:

@@ -37,14 +37,14 @@
     "Template-3": 22,
     "Template-1": 15
    },
-   "hard_negatives": 35,
+   "hard_negatives": 32,
    "pos_with_marker": 61,
    "ref_method_pos": {
     "name": 73
    },
    "ref_method_neg": {
-    "none": 39,
-    "name": 35
+    "none": 42,
+    "name": 32
    }
   },
   "test": {

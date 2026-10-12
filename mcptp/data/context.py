@@ -12,10 +12,15 @@ from typing import Callable, Sequence
 
 
 def name_variants(name: str) -> set[str]:
-    """'getEmailDetail' -> {'getemaildetail', 'get_email_detail', 'get email detail', 'get-email-detail'}."""
+    """'getEmailDetail' -> {'getemaildetail', 'get_email_detail', 'get-email-detail'}.
+
+    The space-separated form ('get email detail') is deliberately excluded: it matches ordinary prose
+    ("Search emails within ...") and creates false references."""
     snake = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", "_", name).replace("-", "_").lower()
     words = [w for w in re.split(r"[_\s]+", snake) if w]
-    out = {name.lower(), snake, " ".join(words), "-".join(words), "".join(words)}
+    out = {name.lower(), snake, "-".join(words)}
+    if len(words) > 1:
+        out.add("".join(words))
     return {v for v in out if len(v) >= 3}
 
 

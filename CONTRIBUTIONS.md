@@ -25,6 +25,9 @@ design · **Library** = called via a third-party package, not reimplemented.
 | `mcptp/eval/metrics.py` | Own | TPR@FPR, val-fixed thresholds, AUROC, stratified bootstrap CIs | — |
 | `scripts/prepare_data.py` | Own | Step 2 pipeline: build, freeze/verify split, stats | — |
 | `scripts/leakage_check.py` | Own | TF-IDF/LR and rule baselines for shortcut detection | MCP-Poison-Bench concern |
+| `mcptp/data/paraphrase.py` | Own | MCPTox-Para prompts, faithfulness checks (names, values, length, refusal), HF / echo backends | — |
+| `scripts/paraphrase.py` | Own | Resumable batched paraphrase generation (GPU) | — |
+| `scripts/freeze_para.py` | Own | Validate generations, rebuild context, freeze MCPTox-Para with per-split hashes | — |
 | `tests/test_data.py` | Own | Unit tests for data, splits, metrics | — |
 | *(Step 4)* `mcptp/attacker/…` | Adapted | MCP-ITP-style optimizer | Li et al., arXiv 2601.07395 |
 | *(Step 5)* `mcptp/baselines/e5.py` | Adapted | MCP-Guard Stage II classifier | Xing et al., arXiv 2508.10991 |

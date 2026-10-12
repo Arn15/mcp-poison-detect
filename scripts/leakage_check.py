@@ -82,6 +82,19 @@ def main():
                  name, a["auroc"][0], a["tpr@0.01fpr"][0], a["tpr@0.05fpr"][0],
                  r["implicit"]["tpr@0.05fpr"][0], r["heldout_family"]["tpr@0.05fpr"][0], r["val_thr@5%fpr"]["hard_neg_fpr"])
 
+    # MCPTox-Para test (if frozen): train on original train, test on paraphrases
+    para_path = paths["splits"] / f"para_{cfg['para']['version']}.json"
+    if para_path.exists():
+        from mcptp.data.io import load_para
+        pte = load_para(paths["splits"], cfg["para"]["version"], "test")
+        for name, (fn, _) in scorers.items():
+            r = {sub: summarize([e["label"] for e in es], fn(es), fprs, nb, seed=cfg["project"]["seed"])
+                 for sub, es in subsets(pte).items()}
+            results[name]["para_test"] = r
+            log.info("PARA %-43s AUROC %.3f  TPR@1%% %.3f  TPR@5%% %.3f | implicit TPR@5%% %.3f",
+                     name, r["all"]["auroc"][0], r["all"]["tpr@0.01fpr"][0], r["all"]["tpr@0.05fpr"][0],
+                     r["implicit"]["tpr@0.05fpr"][0])
+
     # most predictive n-grams of the raw TF-IDF model
     m = scorers["tfidf_lr[description]"][1]
     names = np.concatenate([t.get_feature_names_out() for _, t in m[0].transformer_list])
