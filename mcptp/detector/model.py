@@ -31,8 +31,11 @@ def shuffled_contexts(examples: list[dict], seed: int = 0) -> list[list[dict]]:
 
 
 def build_model(backbone: str):
+    import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
     tok = AutoTokenizer.from_pretrained(backbone)
-    model = AutoModelForSequenceClassification.from_pretrained(backbone, num_labels=2)
-    return tok, model
+    # transformers 5 keeps the checkpoint dtype by default (deberta-v3 ships fp16). Master weights must be fp32
+    # for AMP: fp16 is applied only inside autocast, and GradScaler refuses fp16 gradients.
+    model = AutoModelForSequenceClassification.from_pretrained(backbone, num_labels=2, dtype=torch.float32)
+    return tok, model.float()
