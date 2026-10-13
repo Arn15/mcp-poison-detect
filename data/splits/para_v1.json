@@ -1,9 +1,20 @@
 {
  "version": "v1",
  "inputs": [
-  "outputs/kaggle/para_test_download/outputs/paraphrase/20261012-195459_para_test/generations.jsonl"
+  "outputs/kaggle/para_test_download/outputs/paraphrase/20261012-195459_para_test/generations.jsonl",
+  "outputs/kaggle/para_trainval_download/outputs/paraphrase/20261012-222116_para_trainval/generations.jsonl"
  ],
  "per_split": {
+  "train": {
+   "n": 862,
+   "pos": 425,
+   "sha256": "fe9eb17e69448545920c055fbe382c963e1dd842d0f9a75575d2e8045db57419"
+  },
+  "val": {
+   "n": 134,
+   "pos": 70,
+   "sha256": "d2327f8c1fc2974161f14bc5ba93035a8da2646362aecb876a5f73a323cba6d9"
+  },
   "test": {
    "n": 625,
    "pos": 376,
@@ -12,13 +23,16 @@
  },
  "validity": {
   "0": {
-   "total": 286,
-   "invalid": 37
+   "total": 865,
+   "invalid": 115
   },
   "1": {
-   "total": 390,
-   "invalid": 14
+   "total": 897,
+   "invalid": 26
   }
  },
- "fail_reasons": {}
+ "fail_reasons": {
+  "fail_copy": 19,
+  "fail_names_ok": 2
+ }
 }
