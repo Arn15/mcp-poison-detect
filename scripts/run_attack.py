@@ -13,6 +13,9 @@ from __future__ import annotations
 
 import json
 import sys
+import warnings
+
+warnings.filterwarnings("ignore", category=SyntaxWarning)  # ast.literal_eval on agent output
 
 sys.argv = sys.argv  # keep common's parser
 from common import setup_run
@@ -84,9 +87,7 @@ def main():
         return float(detector.score([{"tool_name": name, "description": desc, "context": ctx,
                                        "label": 1, "server": ""}])[0])
 
-    for e, spec in seeds:
-        if e["id"] in done:
-            continue
+    def process_seed(e, spec):
         reg_block = registries[e["server"]]["clean_system_promot"]
         # seed's own recorded queries first, then other recorded queries that use the same target tool
         qs = list(dict.fromkeys(list(e.get("queries") or []) + tool_queries.get((e["server"], spec["legit_tool"]), [])))
@@ -123,9 +124,22 @@ def main():
         atomic_write_json({"done": len(ckpt), "total": len(seeds)}, run_dir / "state.json")
         if len(ckpt) % 10 == 0:
             log.info("%d/%d seeds done", len(ckpt), len(seeds))
+
+    n_err = 0
+    for e, spec in seeds:
+        if e["id"] in done:
+            continue
+        try:
+            process_seed(e, spec)
+        except Exception as ex:  # noqa: BLE001 - keep a multi-hour run alive
+            n_err += 1
+            log.exception("seed %s failed (%s); skipping", e["id"], type(ex).__name__)
+            if n_err > max(5, len(seeds) // 10):
+                raise RuntimeError("too many failing seeds; stopping") from ex
     traj.close()
-    atomic_write_json({"done": len(ckpt), "total": len(seeds), "complete": True}, run_dir / "state.json")
-    log.info("done: %s", run_dir / "attacks.jsonl")
+    atomic_write_json({"done": len(ckpt), "total": len(seeds), "errors": n_err, "complete": True},
+                      run_dir / "state.json")
+    log.info("done: %s (%d seeds failed)", run_dir / "attacks.jsonl", n_err)
 
 
 if __name__ == "__main__":
