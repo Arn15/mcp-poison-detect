@@ -112,7 +112,11 @@ class EchoBackend:
 class HFBackend:
     """Batched generation with transformers (fp16 on a single T4; Qwen3 non-thinking mode)."""
 
-    def __init__(self, model_name: str, temperature: float, top_p: float, max_new_tokens: int, device: str = "cuda:0"):
+    def __init__(self, model_name: str, temperature: float, top_p: float, max_new_tokens: int,
+                 device: str = "cuda:0", quant: str | None = None):
+        """device: 'cuda:0' / 'cuda:1' / 'auto' (split across GPUs). quant: None (fp16) or '4bit' (bitsandbytes NF4).
+        Qwen3-8B fp16 (~16.4 GB) does not fit one 15 GB T4: use quant='4bit' (~6 GB) or device='auto'.
+        temperature <= 0 -> greedy decoding (used for the target agent so ASR is deterministic)."""
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
@@ -121,11 +125,24 @@ class HFBackend:
         self.tok = AutoTokenizer.from_pretrained(model_name, padding_side="left")
         if self.tok.pad_token is None:
             self.tok.pad_token = self.tok.eos_token
-        dtype = torch.float16 if torch.cuda.is_available() else torch.float32
-        self.model = AutoModelForCausalLM.from_pretrained(model_name, dtype=dtype).to(
-            device if torch.cuda.is_available() else "cpu").eval()
-        self.gen_kwargs = dict(do_sample=True, temperature=temperature, top_p=top_p, max_new_tokens=max_new_tokens,
-                               pad_token_id=self.tok.pad_token_id)
+        cuda = torch.cuda.is_available()
+        kw = {"dtype": torch.float16 if cuda else torch.float32}
+        if cuda and quant == "4bit":
+            from transformers import BitsAndBytesConfig
+            kw["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
+                                                           bnb_4bit_compute_dtype=torch.float16)
+            kw["device_map"] = {"": device if device != "auto" else "cuda:0"}
+        elif cuda and device == "auto":
+            kw["device_map"] = "auto"
+        self.model = AutoModelForCausalLM.from_pretrained(model_name, **kw)
+        if "device_map" not in kw:
+            self.model = self.model.to(device if cuda else "cpu")
+        self.model.eval()
+        if temperature and temperature > 0:
+            self.gen_kwargs = dict(do_sample=True, temperature=temperature, top_p=top_p)
+        else:
+            self.gen_kwargs = dict(do_sample=False)
+        self.gen_kwargs.update(max_new_tokens=max_new_tokens, pad_token_id=self.tok.pad_token_id)
 
     def _chat(self, user: str, system: str = SYSTEM) -> str:
         msgs = [{"role": "system", "content": system}, {"role": "user", "content": user}]
@@ -149,4 +166,6 @@ class HFBackend:
 def make_backend(pcfg: dict):
     if pcfg["backend"] == "echo":
         return EchoBackend()
-    return HFBackend(pcfg["model"], pcfg["temperature"], pcfg["top_p"], pcfg["max_new_tokens"])
+    return HFBackend(pcfg["model"], pcfg.get("temperature", 0.8), pcfg.get("top_p", 0.95),
+                     pcfg.get("max_new_tokens", 256), device=pcfg.get("device", "cuda:0"),
+                     quant=pcfg.get("quant"))

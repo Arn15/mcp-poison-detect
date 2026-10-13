@@ -78,7 +78,10 @@ detector:
 
 attacker:
   attacker_model: Qwen/Qwen3-4B
-  evaluator_model: Qwen/Qwen3-4B
+  evaluator_model: Qwen/Qwen3-8B      # target agent; MCPTox has recorded labels for Qwen3-8B
+  agent_device: cuda:1
+  agent_quant: 4bit                  # Qwen3-8B fp16 (~16.4GB) > one T4 (15GB); 4-bit NF4 ~6GB
+  attacker_device: cuda:0            # Qwen3-4B fp16 (~8GB)
   target_models: [Qwen/Qwen3-8B, meta-llama/Llama-3.1-8B-Instruct]
   n_candidates: 5                    # N
   iterations: 2                      # T

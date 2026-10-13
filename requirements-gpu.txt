@@ -1,3 +1,3 @@
-# Only on GPU runtimes (Kaggle T4 / Colab A100) for the attacker loop and agent eval
-vllm>=0.6
-bitsandbytes>=0.43
+# GPU-only extras (Kaggle/Colab). bitsandbytes = 4-bit Qwen3-8B agent.
+bitsandbytes>=0.45
+# vllm is optional (faster); not installed by default because it may not support Python 3.13 on Kaggle.

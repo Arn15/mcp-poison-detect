@@ -31,8 +31,8 @@ def main():
     cfg, paths, run_dir, log = setup_run("run_attack", __doc__)
     a = cfg["attacker"]
     ex = ensure_examples(cfg, paths)
-    raw = _json.load(open(paths["data_raw"] + "/mcptox/response_all.json")) if isinstance(paths["data_raw"], str) \
-        else _json.load(open(paths["data_raw"] / "mcptox" / "response_all.json"))
+    from mcptp.data.mcptox import ensure_mcptox
+    raw = _json.load(open(ensure_mcptox(paths["data_raw"]) / "response_all.json"))
     specs = derive_specs_from_mcptox(raw)
     registries = {s: raw["servers"][s] for s in raw["servers"]}
 
@@ -49,8 +49,10 @@ def main():
         seeds = seeds[: int(a["max_seeds"])]
     log.info("usable seeds: %d", len(seeds))
 
-    agent = make_backend({**a, "model": a["evaluator_model"]})
-    attacker = agent if a["attacker_model"] == a["evaluator_model"] else make_backend({**a, "model": a["attacker_model"]})
+    agent = make_backend({**a, "model": a["evaluator_model"], "device": a.get("agent_device", "cuda:1"),
+                          "quant": a.get("agent_quant"), "temperature": 0.0, "max_new_tokens": 128})
+    attacker = make_backend({**a, "model": a["attacker_model"],
+                                                                                         "device": a.get("attacker_device", "cuda:0")})
     detector = None
     if a.get("detector_ckpt"):
         from mcptp.detector.train import LoadedDetector

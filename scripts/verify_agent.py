@@ -30,10 +30,12 @@ def main():
 
     cfg, paths, run_dir, log = setup_run("verify_agent", __doc__)
     a = cfg["attacker"]
-    raw = json.load(open(paths["data_raw"] / "mcptox" / "response_all.json"))
+    from mcptp.data.mcptox import ensure_mcptox
+    raw = json.load(open(ensure_mcptox(paths["data_raw"]) / "response_all.json"))
     specs = derive_specs_from_mcptox(raw)
     model_key = a.get("verify_model", "Qwen3-8b-No-Think")
-    agent = make_backend({**a, "model": a["evaluator_model"]})
+    agent = make_backend({**a, "model": a["evaluator_model"], "device": a.get("agent_device", "cuda:1"),
+                          "quant": a.get("agent_quant"), "temperature": 0.0, "max_new_tokens": 128})
 
     rows = []
     insts = []
