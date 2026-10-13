@@ -21,7 +21,7 @@ from common import setup_run
 
 from mcptp.data.io import ensure_examples, load_para
 from mcptp.detector.model import shuffled_contexts
-from mcptp.detector.train import score, train_detector
+from mcptp.detector.train import save_detector, score, train_detector
 from mcptp.eval.metrics import paired_bootstrap_diff, tpr_at_fpr
 from mcptp.eval.report import evaluate
 
@@ -94,6 +94,8 @@ def main():
             log.info("== %s seed %d (n_train=%d)", vname, sd, len(tr))
             model, tok, hist, device = train_detector(tr, val, dcfg, use_ctx, sd, log, registries=registries)
             history[f"{vname}/{sd}"] = hist
+            if dcfg.get("save_ckpt") and sd == dcfg.get("seeds", [seed0])[0]:
+                save_detector(model, tok, dcfg, use_ctx, run_dir / f"ckpt_{vname}")
             sv = score(model, tok, val, dcfg, use_ctx, device)
             val_scores.setdefault(vname, []).append(sv)
             for name, es in sets.items():

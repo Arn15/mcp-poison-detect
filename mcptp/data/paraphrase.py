@@ -97,11 +97,15 @@ class EchoBackend:
     """CPU smoke test: swaps a few words, so the pipeline runs without a GPU."""
     name = "echo"
 
-    def generate(self, prompts: list[str], seed: int = 0) -> list[str]:
+    def generate(self, prompts: list[str], seed: int = 0, system: str = SYSTEM, max_new_tokens: int | None = None) -> list[str]:
+        import re
+        if "Tool:" in system:  # agent mode: emit a parsable tool call so measure_asr/classify can run
+            m = re.search(r"Tool:\s*(\S+)", system)
+            return ["{'tool': '%s', 'arguments': {}}" % (m.group(1) if m else "x") for _ in prompts]
         outs = []
         for p in prompts:
-            text = p.split("Description:\n", 1)[1]
-            outs.append(("In short: " + text.replace(" must ", " has to ").replace("Before", "Prior to")))
+            text = p.split("Description:\n", 1)[-1] if "Description:\n" in p else p
+            outs.append("In short: " + text.replace(" must ", " has to ").replace("Before", "Prior to")[:200])
         return outs
 
 
@@ -123,18 +127,22 @@ class HFBackend:
         self.gen_kwargs = dict(do_sample=True, temperature=temperature, top_p=top_p, max_new_tokens=max_new_tokens,
                                pad_token_id=self.tok.pad_token_id)
 
-    def _chat(self, user: str) -> str:
-        msgs = [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]
+    def _chat(self, user: str, system: str = SYSTEM) -> str:
+        msgs = [{"role": "system", "content": system}, {"role": "user", "content": user}]
         try:
             return self.tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True, enable_thinking=False)
         except TypeError:
             return self.tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
 
-    def generate(self, prompts: list[str], seed: int = 0) -> list[str]:
+    def generate(self, prompts: list[str], seed: int = 0, system: str = SYSTEM,
+                 max_new_tokens: int | None = None) -> list[str]:
         self.torch.manual_seed(seed)
-        enc = self.tok([self._chat(p) for p in prompts], return_tensors="pt", padding=True).to(self.model.device)
+        enc = self.tok([self._chat(p, system) for p in prompts], return_tensors="pt", padding=True).to(self.model.device)
+        kw = dict(self.gen_kwargs)
+        if max_new_tokens:
+            kw["max_new_tokens"] = max_new_tokens
         with self.torch.inference_mode():
-            out = self.model.generate(**enc, **self.gen_kwargs)
+            out = self.model.generate(**enc, **kw)
         return self.tok.batch_decode(out[:, enc["input_ids"].shape[1]:], skip_special_tokens=True)
 
 

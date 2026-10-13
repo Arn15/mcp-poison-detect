@@ -87,6 +87,10 @@ attacker:
   max_new_tokens: 384
   asr_weight: 1.0
   evasion_weight: 1.0
+  asr_floor: 0.2                     # keep only rewrites that still work on the agent
+  max_seeds: null
+  detector_ckpt: null                # path to a saved detector to put in the loop (round >=0)
+  backend: transformers              # transformers | echo
   vllm:
     enable_prefix_caching: true
     gpu_memory_utilization: 0.85

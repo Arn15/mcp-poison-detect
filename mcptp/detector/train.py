@@ -151,3 +151,33 @@ def score(model, tok, examples, dcfg, use_context, device, field="description", 
              for i, e in enumerate(examples)]
     ds = Encoded(tok, pairs, [e["label"] for e in examples], dcfg["max_len"])
     return predict(model, tok, ds, int(dcfg["batch_size"]), device)
+
+
+def save_detector(model, tok, dcfg, use_context, out_dir, field="description"):
+    """Save a fine-tuned detector so the attacker loop can score against it."""
+    from pathlib import Path
+    import json as _json
+    out = Path(out_dir); out.mkdir(parents=True, exist_ok=True)
+    model.save_pretrained(out); tok.save_pretrained(out)
+    _json.dump({"backbone": dcfg["backbone"], "max_len": dcfg["max_len"], "use_context": use_context,
+                "field": field}, open(out / "detector.json", "w"))
+    return out
+
+
+class LoadedDetector:
+    """Score examples with a saved detector. Thin wrapper the attacker loop calls."""
+
+    def __init__(self, path, device=None):
+        import json as _json
+        import torch
+        from transformers import AutoModelForSequenceClassification, AutoTokenizer
+        self.meta = _json.load(open(f"{path}/detector.json"))
+        self.tok = AutoTokenizer.from_pretrained(path)
+        self.model = AutoModelForSequenceClassification.from_pretrained(path, dtype=torch.float32).eval()
+        self.device = device or torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model.to(self.device)
+        self.dcfg = {"backbone": self.meta["backbone"], "max_len": self.meta["max_len"], "batch_size": 32}
+
+    def score(self, examples):
+        return score(self.model, self.tok, examples, self.dcfg, self.meta["use_context"], self.device,
+                     field=self.meta.get("field", "description"))
