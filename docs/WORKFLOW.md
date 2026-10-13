@@ -32,3 +32,15 @@ previous output dir back in and re-run with `--resume <run_dir_name>`; finished 
 - Never commit API keys, model weights or raw data (`.gitignore` enforces it).
 - Never tune on `data/splits/test*`. The test manifest is frozen in Step 2 with a SHA-256 hash.
 - Every reported number must come from a run dir with a saved `config.yaml` + git commit.
+
+## Step 4 runs (attacker)
+All use the Kaggle runner, GPU_DEPS=False (transformers backend; vLLM optional later).
+1. Checkpoints + verify (one run, ~20 min):
+   - `train_detector` with `--set detector.save_ckpt=true 'detector.only=[B3_plain+para,ours_context+para]' --tag ckpt`
+     -> saves ckpt_* under the run dir. Save Version so the output is reusable as an input Dataset.
+2. Agent-harness check (~5 min): `verify_agent --tag verify --set attacker.max_seeds=60`
+   -> want low MAE and positive correlation vs MCPTox ASR before trusting the loop.
+3. Attack round 0 (~2-3 h, resumable): `run_attack --tag r0 --set attacker.max_seeds=220`
+   (detector_ckpt left null: round 0 optimizes ASR + naturalness only; detector-in-loop is Step 5).
+4. Score (~5 min): `score_attacks --tag r0 --set score.attacks=/kaggle/input/<atk>/.../attacks.jsonl
+   'score.ckpts=[/kaggle/input/<ck>/.../ckpt_B3_plain+para,/kaggle/input/<ck>/.../ckpt_ours_context+para]'`
