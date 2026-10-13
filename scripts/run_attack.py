@@ -35,6 +35,17 @@ def main():
     raw = _json.load(open(ensure_mcptox(paths["data_raw"]) / "response_all.json"))
     specs = derive_specs_from_mcptox(raw)
     registries = {s: raw["servers"][s] for s in raw["servers"]}
+    # queries that exercise each target tool: an attack only fires when the user's request uses legit_tool
+    from mcptp.data.mcptox import parse_tool_block
+    tool_queries = {}
+    for sname, sv in raw["servers"].items():
+        for mi in sv["malicious_instance"]:
+            pb = parse_tool_block(mi["poisoned_tool"] + "\n")
+            sp = specs.get(f"{sname}\x1f{pb[0]['tool_name']}\x1f{pb[0]['description'][:60]}") if pb else None
+            if sp and sp.get("legit_tool"):
+                for d in mi["datas"]:
+                    if d.get("query"):
+                        tool_queries.setdefault((sname, sp["legit_tool"]), []).append(d["query"])
 
     # seeds: training-split poisoned tools with a usable attack spec
     seeds = []
@@ -77,7 +88,9 @@ def main():
         if e["id"] in done:
             continue
         reg_block = registries[e["server"]]["clean_system_promot"]
-        queries = (registries[e["server"]].get("clean_querys") or [])[:nq]
+        # seed's own recorded queries first, then other recorded queries that use the same target tool
+        qs = list(dict.fromkeys(list(e.get("queries") or []) + tool_queries.get((e["server"], spec["legit_tool"]), [])))
+        queries = qs[:nq]
         seed_desc = e["description_stripped"]
         prev, best = None, None
         for t in range(T):
