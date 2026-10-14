@@ -28,12 +28,33 @@ def main():
     from pathlib import Path
     roots = [Path("/kaggle/input"), Path(paths["outputs"])]
     if not sc.get("attacks"):
+        from mcptp.utils.env import REPO_ROOT
+        repo_copy = REPO_ROOT / "data" / "attacks" / "r0" / "attacks.jsonl"
         found = sorted(p for r in roots if r.exists() for p in r.rglob("attacks.jsonl") if "run_attack" in str(p))
-        if not found:
-            raise SystemExit("no attacks.jsonl found; attach the run_attack output or pass score.attacks=")
-        sc["attacks"] = str(found[-1])
+        if repo_copy.exists():
+            sc["attacks"] = str(repo_copy)
+        elif found:
+            sc["attacks"] = str(found[-1])
+        else:
+            raise SystemExit("no attacks.jsonl found (repo data/attacks/r0 or attached run_attack output)")
     if not sc.get("ckpts"):
         sc["ckpts"] = sorted({str(p.parent) for r in roots if r.exists() for p in r.rglob("detector.json")})
+    if not sc["ckpts"]:
+        # no checkpoints attached: retrain the two detectors here (seed 42, same config as the saved ones)
+        from mcptp.data.io import ensure_examples as _ens, load_para
+        from mcptp.detector.train import save_detector, train_detector
+        ex_all = _ens(cfg, paths)
+        tr = [e for e in ex_all if e["split"] == "train"] + load_para(paths["splits"], cfg["para"]["version"], "train")
+        va = [e for e in ex_all if e["split"] == "val"] + load_para(paths["splits"], cfg["para"]["version"], "val")
+        regs = {}
+        for e in ex_all:
+            if e["kind"] == "benign":
+                regs.setdefault(e["server"], []).append({"tool_name": e["tool_name"], "description": e["description"]})
+        for name, use_ctx in (("B3_plain+para", False), ("ours_context+para", True)):
+            log.info("no checkpoint attached: training %s (seed 42)", name)
+            m, tok, _, _ = train_detector(tr, va, cfg["detector"], use_ctx, 42, log, registries=regs)
+            sc["ckpts"].append(str(save_detector(m, tok, cfg["detector"], use_ctx, run_dir / f"ckpt_{name}")))
+            del m
     log.info("attacks: %s", sc["attacks"])
     log.info("detector checkpoints: %s", sc["ckpts"])
     atk = [json.loads(l) for l in open(sc["attacks"]) if l.strip()]
