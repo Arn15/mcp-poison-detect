@@ -181,3 +181,20 @@ class LoadedDetector:
     def score(self, examples):
         return score(self.model, self.tok, examples, self.dcfg, self.meta["use_context"], self.device,
                      field=self.meta.get("field", "description"))
+
+
+def train_default_detector(cfg, paths, use_context, out_dir, log, seed=42):
+    """Train the standard +para detector and save it; returns the checkpoint path."""
+    from ..data.io import ensure_examples, load_para
+    ex = ensure_examples(cfg, paths)
+    v = cfg["para"]["version"]
+    tr = [e for e in ex if e["split"] == "train"] + load_para(paths["splits"], v, "train")
+    va = [e for e in ex if e["split"] == "val"] + load_para(paths["splits"], v, "val")
+    regs = {}
+    for e in ex:
+        if e["kind"] == "benign":
+            regs.setdefault(e["server"], []).append({"tool_name": e["tool_name"], "description": e["description"]})
+    m, tok, _, _ = train_detector(tr, va, cfg["detector"], use_context, seed, log, registries=regs)
+    out = save_detector(m, tok, cfg["detector"], use_context, out_dir)
+    del m
+    return out

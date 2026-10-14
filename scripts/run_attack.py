@@ -68,10 +68,16 @@ def main():
     attacker = make_backend({**a, "model": a["attacker_model"],
                                                                                          "device": a.get("attacker_device", "cuda:0")})
     detector = None
-    if a.get("detector_ckpt"):
+    ckpt = a.get("detector_ckpt")
+    if ckpt == "train":
+        from mcptp.detector.train import train_default_detector
+        log.info("training in-loop detector (%s)...", a.get("detector_context", False))
+        ckpt = str(train_default_detector(cfg, paths, bool(a.get("detector_context", False)),
+                                          run_dir / "ckpt_inloop", log))
+    if ckpt:
         from mcptp.detector.train import LoadedDetector
-        detector = LoadedDetector(a["detector_ckpt"])
-        log.info("in-loop detector: %s", a["detector_ckpt"])
+        detector = LoadedDetector(ckpt)
+        log.info("in-loop detector: %s", ckpt)
 
     N, T = int(a["n_candidates"]), int(a["iterations"])
     lam, floor = float(a.get("evasion_weight", 1.0)), float(a.get("asr_floor", 0.2))
