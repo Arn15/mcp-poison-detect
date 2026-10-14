@@ -63,10 +63,6 @@ def main():
         seeds = seeds[: int(a["max_seeds"])]
     log.info("usable seeds: %d", len(seeds))
 
-    agent = make_backend({**a, "model": a["evaluator_model"], "device": a.get("agent_device", "cuda:1"),
-                          "quant": a.get("agent_quant"), "temperature": 0.0, "max_new_tokens": 128})
-    attacker = make_backend({**a, "model": a["attacker_model"],
-                                                                                         "device": a.get("attacker_device", "cuda:0")})
     detector = None
     ckpt = a.get("detector_ckpt")
     if ckpt == "train":
@@ -78,6 +74,16 @@ def main():
         from mcptp.detector.train import LoadedDetector
         detector = LoadedDetector(ckpt)
         log.info("in-loop detector: %s", ckpt)
+    # free the detector's training memory before the LLMs load (OOM on a 15 GB T4 otherwise)
+    try:
+        import gc, torch
+        gc.collect(); torch.cuda.empty_cache()
+    except Exception:
+        pass
+    agent = make_backend({**a, "model": a["evaluator_model"], "device": a.get("agent_device", "cuda:1"),
+                          "quant": a.get("agent_quant"), "temperature": 0.0, "max_new_tokens": 128})
+    attacker = make_backend({**a, "model": a["attacker_model"],
+                                                                                         "device": a.get("attacker_device", "cuda:0")})
 
     N, T = int(a["n_candidates"]), int(a["iterations"])
     lam, floor = float(a.get("evasion_weight", 1.0)), float(a.get("asr_floor", 0.2))
