@@ -1,0 +1,26 @@
+19:20:44 | INFO | run_attack | stage=run_attack runtime=kaggle commit=dc2d95e run_dir=/kaggle/working/outputs/run_attack/20261013-192044_r0
+19:20:48 | INFO | run_attack | usable seeds: 220
+19:24:13 | INFO | run_attack | 220 seeds, 0 already done
+19:36:10 | INFO | run_attack | 10/220 seeds done
+19:50:57 | INFO | run_attack | 20/220 seeds done
+20:03:01 | INFO | run_attack | 30/220 seeds done
+20:15:06 | INFO | run_attack | 40/220 seeds done
+20:29:40 | INFO | run_attack | 50/220 seeds done
+20:40:19 | INFO | run_attack | 60/220 seeds done
+20:53:19 | INFO | run_attack | 70/220 seeds done
+21:04:40 | INFO | run_attack | 80/220 seeds done
+21:18:21 | INFO | run_attack | 90/220 seeds done
+21:28:58 | INFO | run_attack | 100/220 seeds done
+21:34:37 | INFO | run_attack | 110/220 seeds done
+21:48:51 | INFO | run_attack | 120/220 seeds done
+22:03:16 | INFO | run_attack | 130/220 seeds done
+22:15:00 | INFO | run_attack | 140/220 seeds done
+22:23:09 | INFO | run_attack | 150/220 seeds done
+22:32:20 | INFO | run_attack | 160/220 seeds done
+22:42:37 | INFO | run_attack | 170/220 seeds done
+22:50:22 | INFO | run_attack | 180/220 seeds done
+22:56:34 | INFO | run_attack | 190/220 seeds done
+23:05:59 | INFO | run_attack | 200/220 seeds done
+23:15:25 | INFO | run_attack | 210/220 seeds done
+23:25:18 | INFO | run_attack | 220/220 seeds done
+23:25:18 | INFO | run_attack | done: /kaggle/working/outputs/run_attack/20261013-192044_r0/attacks.jsonl (0 seeds failed)
