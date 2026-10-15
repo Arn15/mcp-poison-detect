@@ -53,7 +53,7 @@ def main():
     # seeds: training-split poisoned tools with a usable attack spec
     seeds = []
     for e in ex:
-        if e["split"] != "train" or e["label"] != 1:
+        if e["split"] != a.get("seed_split", "train") or e["label"] != 1:
             continue
         key = f"{e['server']}\x1f{e['tool_name']}\x1f{e['description_stripped'][:60]}"
         spec = specs.get(key) or specs.get(f"{e['server']}\x1f{e['tool_name']}\x1f{e['description'][:60]}")

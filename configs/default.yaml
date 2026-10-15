@@ -92,6 +92,7 @@ attacker:
   evasion_weight: 1.0
   asr_floor: 0.2                     # keep only rewrites that still work on the agent
   max_seeds: null
+  seed_split: train                  # train (attack data for training) | test (held-out robustness evaluation)
   detector_ckpt: null                # null (round 0); "train" to train + put a detector in the loop (round >=1); or a path
   detector_context: false            # when detector_ckpt=="train": train a context (true) or plain (false) detector
   backend: transformers              # transformers | echo
