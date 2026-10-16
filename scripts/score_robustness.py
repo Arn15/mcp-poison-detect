@@ -1,7 +1,9 @@
 """Robustness comparison across defenders (milestone core table).
 
 Defenders: B0 TF-IDF+LR, B1 E5 classifier (+para), B3 plain DeBERTa (+para), ours context DeBERTa (+para),
-B2 LLM judge (Qwen3-8B 4-bit, P(Yes)). Trained models are trained in-run (seed 42) - no Kaggle inputs needed.
+B2 LLM judge (Qwen3-8B 4-bit, P(Yes)). Trained models are trained in-run per seed (score.seeds, default [42,43,44]) - no Kaggle inputs needed.
+Reports: val-fixed thresholds (deployable), matched TEST-FPR thresholds (oracle, equal FPR), AUROC; writes
+per-example scores to scores.jsonl.
 
 Eval sets
   val_neg   : val negatives (orig + para)            -> thresholds at 1% / 5% FPR
@@ -10,7 +12,8 @@ Eval sets
   <round>_opt / <round>_orig : working optimized rewrites from data/attacks/<round> and the same seeds' originals
                                (r0, r1 = train seeds; r1t = held-out test seeds)
 
-Kaggle: SCRIPT="scripts/score_robustness.py"  ARGS="--tag robust"  GPU_DEPS=True  (~35-45 min)
+Kaggle: SCRIPT="scripts/score_robustness.py"  ARGS="--tag robust2"  GPU_DEPS=True  (~1.5-2 h for 3 seeds)
+One seed: --set score.seeds=[42]
 Skip the judge: --set score.judge=false
 """
 from __future__ import annotations
@@ -24,7 +27,7 @@ from common import setup_run
 
 from mcptp.data.context import find_references
 from mcptp.data.io import ensure_examples, load_para
-from mcptp.eval.metrics import threshold_at_fpr
+from mcptp.eval.metrics import auroc, threshold_at_fpr
 from mcptp.utils.env import REPO_ROOT
 
 ROUNDS = ("r0", "r1", "r1t")
@@ -72,9 +75,52 @@ def rates(scores_by_set, val_neg_key="val_neg"):
     return out
 
 
+
+
+def matched_rates(scores_by_set, neg_key="test_neg"):
+    """Oracle operating point: threshold set on TEST negatives so every defender sits at the same realized FPR."""
+    out = {}
+    ns = np.asarray(scores_by_set[neg_key])
+    for fp in (0.01, 0.05):
+        thr = threshold_at_fpr(ns, fp)
+        out[f"thr@{fp:g}"] = float(thr)
+        for name, s in scores_by_set.items():
+            if name in (neg_key, "val_neg"):
+                continue
+            out[f"{name}@{fp:g}"] = float((np.asarray(s) >= thr).mean()) if len(s) else None
+    return out
+
+
+def aurocs(scores_by_set, neg_key="test_neg"):
+    """AUROC of each positive set against test negatives (threshold-free)."""
+    ns = np.asarray(scores_by_set[neg_key])
+    out = {}
+    for name, s in scores_by_set.items():
+        if name in (neg_key, "val_neg", "test_hardneg") or not len(s):
+            continue
+        y = np.r_[np.zeros(len(ns)), np.ones(len(s))]
+        out[name] = float(auroc(y, np.r_[ns, np.asarray(s)]))
+    hn = scores_by_set.get("test_hardneg")
+    if hn is not None and len(hn) and len(scores_by_set.get("test_pos", [])):
+        s = np.asarray(scores_by_set["test_pos"])
+        out["test_pos_vs_hardneg"] = float(auroc(np.r_[np.zeros(len(hn)), np.ones(len(s))], np.r_[np.asarray(hn), s]))
+    return out
+
+
+def summarize_runs(runs):
+    """runs: list of per-seed metric dicts -> {key: [mean, std, n]}."""
+    keys = sorted({k for r in runs for k in r})
+    out = {}
+    for k in keys:
+        vals = [r[k] for r in runs if r.get(k) is not None]
+        out[k] = [float(np.mean(vals)), float(np.std(vals)), len(vals)] if vals else None
+    return out
+
+
 def main():
     cfg, paths, run_dir, log = setup_run("score_robustness", __doc__)
     sc = dict(cfg.get("score") or {})
+    seeds = [int(s) for s in (sc.get("seeds") or [42, 43, 44])]
     ex = ensure_examples(cfg, paths)
     v = cfg["para"]["version"]
     para = {s: load_para(paths["splits"], v, s) for s in ("val", "test")}
@@ -92,11 +138,26 @@ def main():
         "test_pos": [e for e in ex if e["split"] == "test" and e["label"] == 1] + [e for e in para["test"] if e["label"] == 1],
     }
     sets.update(attack_sets(registries, cfg["context"]["top_k"]))
-    log.info("eval sets: %s", {k: len(v_) for k, v_ in sets.items()})
+    n_sets = {k: len(v_) for k, v_ in sets.items()}
+    log.info("eval sets: %s | seeds %s", n_sets, seeds)
 
-    results = {}
+    per_seed = defaultdict(list)   # defender -> [{"val": .., "matched": .., "auroc": ..}, ...]
+    scores_f = open(run_dir / "scores.jsonl", "w")
 
-    # B0: TF-IDF + LR on the original train split
+    def record(name, seed, scores_by_set):
+        scores_by_set = {k: np.asarray(s, dtype=float) for k, s in scores_by_set.items()}
+        for k, s in scores_by_set.items():
+            for i, (e, x) in enumerate(zip(sets[k], s)):
+                scores_f.write(json.dumps({"defender": name, "seed": seed, "set": k,
+                                           "id": e.get("id", f"{k}_{i}"), "score": float(x)}) + "\n")
+        scores_f.flush()
+        m = {"val": rates(scores_by_set), "matched": matched_rates(scores_by_set), "auroc": aurocs(scores_by_set)}
+        per_seed[name].append({"seed": seed, **m})
+        log.info("%s seed %s: matched@1%% %s | auroc %s", name, seed,
+                 {k: round(x, 3) for k, x in m["matched"].items() if k.endswith("@0.01") and x is not None},
+                 {k: round(x, 3) for k, x in m["auroc"].items()})
+
+    # B0: TF-IDF + LR on the original train split (deterministic -> one run)
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.linear_model import LogisticRegression
     from sklearn.pipeline import FeatureUnion, make_pipeline
@@ -106,52 +167,72 @@ def main():
                                                            sublinear_tf=True))]),
                        LogisticRegression(max_iter=2000, class_weight="balanced"))
     b0.fit([e["description"] for e in tr], [e["label"] for e in tr])
-    results["B0_tfidf_lr"] = rates({k: b0.predict_proba([e["description"] for e in s])[:, 1] if s else []
-                                    for k, s in sets.items()})
-    log.info("B0 done")
+    record("B0_tfidf_lr", 0, {k: b0.predict_proba([e["description"] for e in s])[:, 1] if s else []
+                              for k, s in sets.items()})
 
-    # trained classifiers (in-run, seed 42), scored one at a time to keep GPU memory low
-    from mcptp.detector.train import LoadedDetector, train_default_detector
+    # trained classifiers: one per seed, scored one at a time to keep GPU memory and disk low
     models = [("B1_e5+para", "intfloat/multilingual-e5-base", False),
               ("B3_plain_deberta+para", cfg["detector"]["backbone"], False),
               ("ours_context_deberta+para", cfg["detector"]["backbone"], True)]
-    for name, backbone, use_ctx in models:
-        if name in (sc.get("skip") or []):
-            continue
-        c = {**cfg, "detector": {**cfg["detector"], "backbone": backbone}}
-        log.info("training %s", name)
-        ck = train_default_detector(c, paths, use_ctx, run_dir / f"ckpt_{name}", log)
-        det = LoadedDetector(ck)
-        results[name] = rates({k: det.score(s) if s else [] for k, s in sets.items()})
-        log.info("%s done", name)
-        del det
-        gc.collect()
-        try:
-            import torch
-            torch.cuda.empty_cache()
-        except Exception:
-            pass
+    models = [m for m in models if m[0] not in (sc.get("skip") or [])]
+    if models:
+        import shutil
+        from mcptp.detector.train import LoadedDetector, train_default_detector
+        for seed in seeds:
+            for name, backbone, use_ctx in models:
+                c = {**cfg, "detector": {**cfg["detector"], "backbone": backbone}}
+                log.info("training %s seed %s", name, seed)
+                ck_dir = run_dir / f"ckpt_{name}_s{seed}"
+                ck = train_default_detector(c, paths, use_ctx, ck_dir, log, seed=seed)
+                det = LoadedDetector(ck)
+                record(name, seed, {k: det.score(s) if s else [] for k, s in sets.items()})
+                del det
+                gc.collect()
+                try:
+                    import torch
+                    torch.cuda.empty_cache()
+                except Exception:
+                    pass
+                if not sc.get("keep_ckpt", False):
+                    shutil.rmtree(ck_dir, ignore_errors=True)
 
-    # B2: LLM judge (needs GPU + bitsandbytes)
+    # B2: LLM judge (greedy, deterministic -> one run; needs GPU + bitsandbytes)
     if sc.get("judge", True):
         from mcptp.baselines.llm_judge import LLMJudge
         judge = LLMJudge(sc.get("judge_model", "Qwen/Qwen3-8B"), device=sc.get("judge_device", "cuda:0"),
                          quant="4bit", batch_size=int(sc.get("judge_batch", 8)))
-        results["B2_llm_judge"] = rates({k: judge.score(s) if s else [] for k, s in sets.items()})
-        log.info("B2 done")
+        record("B2_llm_judge", 0, {k: judge.score(s) if s else [] for k, s in sets.items()})
+    scores_f.close()
 
-    out = {"n": {k: len(v_) for k, v_ in sets.items()}, "results": results}
+    summary = {name: {kind: summarize_runs([r[kind] for r in runs]) for kind in ("val", "matched", "auroc")}
+               for name, runs in per_seed.items()}
+    out = {"n": n_sets, "seeds": seeds, "summary": summary, "per_seed": per_seed}
     (run_dir / "robustness.json").write_text(json.dumps(out, indent=1))
-    cols = ["test_pos", "test_neg", "test_hardneg"] + [f"{r}_{t}" for r in ROUNDS for t in ("orig", "opt") if f"{r}_{t}" in sets]
-    lines = ["Rates at thresholds fixed on validation negatives. *_neg / hardneg columns are FPR; all others are detection.", ""]
+
+    def fmt(cell):
+        if cell is None:
+            return "-"
+        m, s, n = cell
+        return f"{m:.3f}" if n == 1 else f"{m:.3f}±{s:.3f}"
+
+    atk = [f"{r}_{t}" for r in ROUNDS for t in ("orig", "opt") if f"{r}_{t}" in sets]
+    lines = [f"Trained classifiers: mean±std over seeds {seeds}; B0 and B2 are deterministic (single run).", ""]
     for fp in ("0.01", "0.05"):
-        lines += [f"### @ {float(fp):.0%} val FPR", "", "| defender | " + " | ".join(cols) + " |",
-                  "|---" * (len(cols) + 1) + "|"]
-        for name, r in results.items():
-            lines.append(f"| {name} | " + " | ".join(
-                "-" if r.get(f"{c}@{float(fp):g}") is None else f"{r[f'{c}@{float(fp):g}']:.3f}" for c in cols) + " |")
+        f = f"{float(fp):g}"
+        cols = ["test_pos", "test_neg", "test_hardneg"] + atk
+        lines += [f"### Val-fixed threshold @ {float(fp):.0%} val FPR (deployable; realized FPR in *_neg columns)", "",
+                  "| defender | " + " | ".join(cols) + " |", "|---" * (len(cols) + 1) + "|"]
+        lines += [f"| {n} | " + " | ".join(fmt(s['val'].get(f"{c}@{f}")) for c in cols) + " |" for n, s in summary.items()]
+        cols = ["test_pos", "test_hardneg"] + atk
+        lines += ["", f"### Matched threshold @ {float(fp):.0%} TEST FPR (oracle; equal FPR for every defender)", "",
+                  "| defender | " + " | ".join(cols) + " |", "|---" * (len(cols) + 1) + "|"]
+        lines += [f"| {n} | " + " | ".join(fmt(s['matched'].get(f"{c}@{f}")) for c in cols) + " |" for n, s in summary.items()]
         lines.append("")
-    lines.append("n per set: " + json.dumps(out["n"]))
+    cols = ["test_pos", "test_pos_vs_hardneg"] + atk
+    lines += ["### AUROC vs test negatives (threshold-free)", "",
+              "| defender | " + " | ".join(cols) + " |", "|---" * (len(cols) + 1) + "|"]
+    lines += [f"| {n} | " + " | ".join(fmt(s['auroc'].get(c)) for c in cols) + " |" for n, s in summary.items()]
+    lines += ["", "n per set: " + json.dumps(n_sets)]
     (run_dir / "robustness.md").write_text("\n".join(lines) + "\n")
     log.info("\n" + "\n".join(lines))
 
