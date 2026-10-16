@@ -1,0 +1,1 @@
+Kaggle run tagged r2 on 2026-10-16 actually ran commit e9ea7c9 (round-2 code not yet pushed): preset ignored, so this is an r1 replicate (Qwen3-4B attacker, T=2, plain DeBERTa+para in loop, 220 non-deduped train seeds). 252 working candidates (140 unique), 2 score < 0.5.
