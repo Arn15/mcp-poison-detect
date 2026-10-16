@@ -36,7 +36,8 @@ def _batches(ds: Encoded, bs: int, tok, shuffle: bool, rng: np.random.Generator)
         yield batch
 
 
-def predict(model, tok, ds: Encoded, bs: int, device) -> np.ndarray:
+def predict(model, tok, ds: Encoded, bs: int, device, margin: bool = False) -> np.ndarray:
+    """P(poisoned), or the raw logit margin (logit1 - logit0) when margin=True (does not saturate near 1)."""
     import torch
 
     model.eval()
@@ -46,7 +47,7 @@ def predict(model, tok, ds: Encoded, bs: int, device) -> np.ndarray:
         for batch in _batches(ds, bs * 2, tok, False, None):
             batch.pop("labels")
             logits = model(**{k: v.to(device) for k, v in batch.items()}).logits.float()
-            out.append(torch.softmax(logits, -1)[:, 1].cpu().numpy())
+            out.append((logits[:, 1] - logits[:, 0] if margin else torch.softmax(logits, -1)[:, 1]).cpu().numpy())
     return np.concatenate(out) if out else np.array([])
 
 
@@ -146,11 +147,12 @@ def train_detector(train, val, dcfg: dict, use_context: bool, seed: int, log, fi
     return model, tok, hist, device
 
 
-def score(model, tok, examples, dcfg, use_context, device, field="description", contexts=None) -> np.ndarray:
+def score(model, tok, examples, dcfg, use_context, device, field="description", contexts=None,
+          margin: bool = False) -> np.ndarray:
     pairs = [detector_text(e, use_context, field, None if contexts is None else contexts[i])
              for i, e in enumerate(examples)]
     ds = Encoded(tok, pairs, [e["label"] for e in examples], dcfg["max_len"])
-    return predict(model, tok, ds, int(dcfg["batch_size"]), device)
+    return predict(model, tok, ds, int(dcfg["batch_size"]), device, margin=margin)
 
 
 def save_detector(model, tok, dcfg, use_context, out_dir, field="description"):
@@ -181,6 +183,11 @@ class LoadedDetector:
     def score(self, examples):
         return score(self.model, self.tok, examples, self.dcfg, self.meta["use_context"], self.device,
                      field=self.meta.get("field", "description"))
+
+    def margin(self, examples):
+        """Logit margin (logit_poisoned - logit_benign); > 0 means flagged at p > 0.5."""
+        return score(self.model, self.tok, examples, self.dcfg, self.meta["use_context"], self.device,
+                     field=self.meta.get("field", "description"), margin=True)
 
 
 def train_default_detector(cfg, paths, use_context, out_dir, log, seed=42):

@@ -30,7 +30,7 @@ from mcptp.data.io import ensure_examples, load_para
 from mcptp.eval.metrics import auroc, threshold_at_fpr
 from mcptp.utils.env import REPO_ROOT
 
-ROUNDS = ("r0", "r1", "r1t")
+ROUNDS = ("r0", "r1", "r1t", "r2", "r2t")
 
 
 def attack_sets(registries, top_k, floor=0.2):

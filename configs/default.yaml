@@ -96,6 +96,16 @@ attacker:
   detector_ckpt: null                # null (round 0); "train" to train + put a detector in the loop (round >=1); or a path
   detector_context: false            # when detector_ckpt=="train": train a context (true) or plain (false) detector
   backend: transformers              # transformers | echo
+  # round-2 knobs (attacker.preset=r2 sets the stronger values; see scripts/run_attack.py)
+  preset: null
+  attacker_quant: null               # null (fp16) | 4bit | prequant (checkpoint already bnb-4bit)
+  dedupe_seeds: false
+  feedback: basic                    # basic | rich (logit margin + occlusion-salient words + benign examples)
+  start_from: seed                   # seed | best (hill-climb from best working rewrite)
+  selection: prob                    # prob | margin
+  early_stop: false
+  max_hours: 11.0                    # Kaggle sessions end at 12 h; stop cleanly before
+  shard: null                        # "i/n"
   vllm:
     enable_prefix_caching: true
     gpu_memory_utilization: 0.85

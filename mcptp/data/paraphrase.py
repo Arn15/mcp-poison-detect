@@ -132,6 +132,8 @@ class HFBackend:
             kw["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
                                                            bnb_4bit_compute_dtype=torch.float16)
             kw["device_map"] = {"": device if device != "auto" else "cuda:0"}
+        elif cuda and quant == "prequant":   # checkpoint already bnb-4bit (e.g. unsloth/Qwen3-14B-bnb-4bit)
+            kw["device_map"] = {"": device if device != "auto" else "cuda:0"}
         elif cuda and device == "auto":
             kw["device_map"] = "auto"
         self.model = AutoModelForCausalLM.from_pretrained(model_name, **kw)
