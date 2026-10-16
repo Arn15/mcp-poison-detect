@@ -1,0 +1,112 @@
+17:18:21 | INFO | score_robustness | stage=score_robustness runtime=kaggle commit=3fd236e run_dir=/kaggle/working/outputs/score_robustness/20261016-171821_robust2
+17:18:24 | INFO | score_robustness | eval sets: {'val_neg': 138, 'test_neg': 392, 'test_hardneg': 245, 'test_pos': 571, 'r0_opt': 161, 'r0_orig': 30, 'r1_opt': 202, 'r1_orig': 28, 'r1t_opt': 35, 'r1t_orig': 4} | seeds [42, 43, 44]
+17:18:25 | INFO | score_robustness | B0_tfidf_lr seed 0: matched@1% {'thr@0.01': 0.499, 'test_hardneg@0.01': 0.008, 'test_pos@0.01': 0.772, 'r0_opt@0.01': 0.689, 'r0_orig@0.01': 1.0, 'r1_opt@0.01': 0.673, 'r1_orig@0.01': 1.0, 'r1t_opt@0.01': 0.971, 'r1t_orig@0.01': 1.0} | auroc {'test_pos': 0.991, 'r0_opt': 0.987, 'r0_orig': 1.0, 'r1_opt': 0.986, 'r1_orig': 1.0, 'r1t_opt': 0.999, 'r1t_orig': 1.0, 'test_pos_vs_hardneg': 0.993}
+17:18:25 | INFO | score_robustness | training B1_e5+para seed 42
+17:19:25 | INFO | score_robustness |   ep 0 loss 0.2839 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0008 (27s)
+17:19:52 | INFO | score_robustness |   ep 1 loss 0.0085 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0003 (26s)
+17:20:19 | INFO | score_robustness |   ep 2 loss 0.0005 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (26s)
+17:20:47 | INFO | score_robustness |   ep 3 loss 0.0004 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (26s)
+17:20:56 | INFO | score_robustness | B1_e5+para seed 42: matched@1% {'thr@0.01': 0.009, 'test_hardneg@0.01': 0.004, 'test_pos@0.01': 0.995, 'r0_opt@0.01': 1.0, 'r0_orig@0.01': 1.0, 'r1_opt@0.01': 1.0, 'r1_orig@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r1t_orig@0.01': 1.0} | auroc {'test_pos': 1.0, 'r0_opt': 1.0, 'r0_orig': 1.0, 'r1_opt': 1.0, 'r1_orig': 1.0, 'r1t_opt': 1.0, 'r1t_orig': 1.0, 'test_pos_vs_hardneg': 1.0}
+17:20:56 | INFO | score_robustness | training B3_plain_deberta+para seed 42
+17:21:36 | INFO | score_robustness |   ep 0 loss 0.2667 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0005 (36s)
+17:22:07 | INFO | score_robustness |   ep 1 loss 0.0048 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0008 (31s)
+17:22:38 | INFO | score_robustness |   ep 2 loss 0.0045 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (31s)
+17:23:10 | INFO | score_robustness |   ep 3 loss 0.0003 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (31s)
+17:23:19 | INFO | score_robustness | B3_plain_deberta+para seed 42: matched@1% {'thr@0.01': 0.001, 'test_hardneg@0.01': 0.0, 'test_pos@0.01': 1.0, 'r0_opt@0.01': 1.0, 'r0_orig@0.01': 1.0, 'r1_opt@0.01': 1.0, 'r1_orig@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r1t_orig@0.01': 1.0} | auroc {'test_pos': 1.0, 'r0_opt': 1.0, 'r0_orig': 1.0, 'r1_opt': 1.0, 'r1_orig': 1.0, 'r1t_opt': 1.0, 'r1t_orig': 1.0, 'test_pos_vs_hardneg': 1.0}
+17:23:20 | INFO | score_robustness | training ours_context_deberta+para seed 42
+17:24:13 | INFO | score_robustness |   ep 0 loss 0.3040 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0102 (52s)
+17:25:05 | INFO | score_robustness |   ep 1 loss 0.0010 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (51s)
+17:25:55 | INFO | score_robustness |   ep 2 loss 0.0093 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (49s)
+17:26:45 | INFO | score_robustness |   ep 3 loss 0.0003 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (50s)
+17:27:03 | INFO | score_robustness | ours_context_deberta+para seed 42: matched@1% {'thr@0.01': 0.0, 'test_hardneg@0.01': 0.0, 'test_pos@0.01': 1.0, 'r0_opt@0.01': 0.994, 'r0_orig@0.01': 1.0, 'r1_opt@0.01': 0.995, 'r1_orig@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r1t_orig@0.01': 1.0} | auroc {'test_pos': 1.0, 'r0_opt': 1.0, 'r0_orig': 1.0, 'r1_opt': 1.0, 'r1_orig': 1.0, 'r1t_opt': 1.0, 'r1t_orig': 1.0, 'test_pos_vs_hardneg': 1.0}
+17:27:04 | INFO | score_robustness | training B1_e5+para seed 43
+17:27:33 | INFO | score_robustness |   ep 0 loss 0.2598 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0006 (26s)
+17:28:02 | INFO | score_robustness |   ep 1 loss 0.0018 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (27s)
+17:28:30 | INFO | score_robustness |   ep 2 loss 0.0084 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (27s)
+17:28:57 | INFO | score_robustness |   ep 3 loss 0.0004 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (27s)
+17:29:06 | INFO | score_robustness | B1_e5+para seed 43: matched@1% {'thr@0.01': 0.16, 'test_hardneg@0.01': 0.004, 'test_pos@0.01': 0.993, 'r0_opt@0.01': 1.0, 'r0_orig@0.01': 1.0, 'r1_opt@0.01': 1.0, 'r1_orig@0.01': 1.0, 'r1t_opt@0.01': 0.943, 'r1t_orig@0.01': 1.0} | auroc {'test_pos': 0.999, 'r0_opt': 1.0, 'r0_orig': 1.0, 'r1_opt': 1.0, 'r1_orig': 1.0, 'r1t_opt': 0.998, 'r1t_orig': 0.999, 'test_pos_vs_hardneg': 1.0}
+17:29:07 | INFO | score_robustness | training B3_plain_deberta+para seed 43
+17:29:39 | INFO | score_robustness |   ep 0 loss 0.2630 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0004 (31s)
+17:30:13 | INFO | score_robustness |   ep 1 loss 0.0122 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (32s)
+17:30:45 | INFO | score_robustness |   ep 2 loss 0.0055 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (31s)
+17:31:17 | INFO | score_robustness |   ep 3 loss 0.0003 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (31s)
+17:31:26 | INFO | score_robustness | B3_plain_deberta+para seed 43: matched@1% {'thr@0.01': 0.001, 'test_hardneg@0.01': 0.0, 'test_pos@0.01': 0.996, 'r0_opt@0.01': 0.994, 'r0_orig@0.01': 1.0, 'r1_opt@0.01': 0.995, 'r1_orig@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r1t_orig@0.01': 1.0} | auroc {'test_pos': 1.0, 'r0_opt': 1.0, 'r0_orig': 1.0, 'r1_opt': 1.0, 'r1_orig': 1.0, 'r1t_opt': 1.0, 'r1t_orig': 1.0, 'test_pos_vs_hardneg': 1.0}
+17:31:26 | INFO | score_robustness | training ours_context_deberta+para seed 43
+17:32:19 | INFO | score_robustness |   ep 0 loss 0.3015 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0007 (51s)
+17:33:10 | INFO | score_robustness |   ep 1 loss 0.0149 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (50s)
+17:33:59 | INFO | score_robustness |   ep 2 loss 0.0005 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (49s)
+17:34:49 | INFO | score_robustness |   ep 3 loss 0.0003 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (49s)
+17:35:07 | INFO | score_robustness | ours_context_deberta+para seed 43: matched@1% {'thr@0.01': 0.02, 'test_hardneg@0.01': 0.0, 'test_pos@0.01': 0.996, 'r0_opt@0.01': 1.0, 'r0_orig@0.01': 1.0, 'r1_opt@0.01': 1.0, 'r1_orig@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r1t_orig@0.01': 1.0} | auroc {'test_pos': 1.0, 'r0_opt': 1.0, 'r0_orig': 1.0, 'r1_opt': 1.0, 'r1_orig': 1.0, 'r1t_opt': 1.0, 'r1t_orig': 1.0, 'test_pos_vs_hardneg': 1.0}
+17:35:07 | INFO | score_robustness | training B1_e5+para seed 44
+17:35:37 | INFO | score_robustness |   ep 0 loss 0.2821 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0233 (26s)
+17:36:05 | INFO | score_robustness |   ep 1 loss 0.0101 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (26s)
+17:36:33 | INFO | score_robustness |   ep 2 loss 0.0005 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (27s)
+17:37:01 | INFO | score_robustness |   ep 3 loss 0.0004 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (27s)
+17:37:09 | INFO | score_robustness | B1_e5+para seed 44: matched@1% {'thr@0.01': 0.991, 'test_hardneg@0.01': 0.004, 'test_pos@0.01': 0.986, 'r0_opt@0.01': 1.0, 'r0_orig@0.01': 1.0, 'r1_opt@0.01': 1.0, 'r1_orig@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r1t_orig@0.01': 1.0} | auroc {'test_pos': 1.0, 'r0_opt': 1.0, 'r0_orig': 1.0, 'r1_opt': 1.0, 'r1_orig': 1.0, 'r1t_opt': 1.0, 'r1t_orig': 1.0, 'test_pos_vs_hardneg': 1.0}
+17:37:09 | INFO | score_robustness | training B3_plain_deberta+para seed 44
+17:37:42 | INFO | score_robustness |   ep 0 loss 0.2685 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0163 (32s)
+17:38:14 | INFO | score_robustness |   ep 1 loss 0.0008 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (31s)
+17:38:46 | INFO | score_robustness |   ep 2 loss 0.0004 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (31s)
+17:39:19 | INFO | score_robustness |   ep 3 loss 0.0003 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (32s)
+17:39:28 | INFO | score_robustness | B3_plain_deberta+para seed 44: matched@1% {'thr@0.01': 0.001, 'test_hardneg@0.01': 0.008, 'test_pos@0.01': 0.998, 'r0_opt@0.01': 0.988, 'r0_orig@0.01': 1.0, 'r1_opt@0.01': 0.99, 'r1_orig@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r1t_orig@0.01': 1.0} | auroc {'test_pos': 1.0, 'r0_opt': 0.999, 'r0_orig': 1.0, 'r1_opt': 0.999, 'r1_orig': 1.0, 'r1t_opt': 1.0, 'r1t_orig': 1.0, 'test_pos_vs_hardneg': 1.0}
+17:39:28 | INFO | score_robustness | training ours_context_deberta+para seed 44
+17:40:19 | INFO | score_robustness |   ep 0 loss 0.2980 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0201 (49s)
+17:41:10 | INFO | score_robustness |   ep 1 loss 0.0287 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0232 (50s)
+17:42:02 | INFO | score_robustness |   ep 2 loss 0.0005 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0110 (51s)
+17:42:53 | INFO | score_robustness |   ep 3 loss 0.0003 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0069 (50s)
+17:43:10 | INFO | score_robustness | ours_context_deberta+para seed 44: matched@1% {'thr@0.01': 0.001, 'test_hardneg@0.01': 0.004, 'test_pos@0.01': 0.995, 'r0_opt@0.01': 0.988, 'r0_orig@0.01': 1.0, 'r1_opt@0.01': 0.99, 'r1_orig@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r1t_orig@0.01': 1.0} | auroc {'test_pos': 1.0, 'r0_opt': 0.999, 'r0_orig': 1.0, 'r1_opt': 0.999, 'r1_orig': 1.0, 'r1t_opt': 1.0, 'r1t_orig': 1.0, 'test_pos_vs_hardneg': 1.0}
+17:52:01 | INFO | score_robustness | B2_llm_judge seed 0: matched@1% {'thr@0.01': 0.0, 'test_hardneg@0.01': 0.0, 'test_pos@0.01': 0.743, 'r0_opt@0.01': 0.168, 'r0_orig@0.01': 0.6, 'r1_opt@0.01': 0.208, 'r1_orig@0.01': 0.679, 'r1t_opt@0.01': 0.857, 'r1t_orig@0.01': 1.0} | auroc {'test_pos': 0.967, 'r0_opt': 0.619, 'r0_orig': 0.904, 'r1_opt': 0.65, 'r1_orig': 0.901, 'r1t_opt': 0.996, 'r1t_orig': 1.0, 'test_pos_vs_hardneg': 0.962}
+17:52:01 | INFO | score_robustness | 
+Trained classifiers: mean±std over seeds [42, 43, 44]; B0 and B2 are deterministic (single run).
+
+### Val-fixed threshold @ 1% val FPR (deployable; realized FPR in *_neg columns)
+
+| defender | test_pos | test_neg | test_hardneg | r0_orig | r0_opt | r1_orig | r1_opt | r1t_orig | r1t_opt |
+|---|---|---|---|---|---|---|---|---|---|
+| B0_tfidf_lr | 0.835 | 0.018 | 0.020 | 1.000 | 0.720 | 1.000 | 0.693 | 1.000 | 0.971 |
+| B1_e5+para | 0.999±0.001 | 0.068±0.024 | 0.031±0.007 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 |
+| B3_plain_deberta+para | 1.000±0.000 | 0.094±0.020 | 0.039±0.008 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 |
+| ours_context_deberta+para | 1.000±0.000 | 0.234±0.030 | 0.252±0.033 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 |
+| B2_llm_judge | 0.650 | 0.000 | 0.000 | 0.600 | 0.106 | 0.679 | 0.153 | 1.000 | 0.771 |
+
+### Matched threshold @ 1% TEST FPR (oracle; equal FPR for every defender)
+
+| defender | test_pos | test_hardneg | r0_orig | r0_opt | r1_orig | r1_opt | r1t_orig | r1t_opt |
+|---|---|---|---|---|---|---|---|---|
+| B0_tfidf_lr | 0.772 | 0.008 | 1.000 | 0.689 | 1.000 | 0.673 | 1.000 | 0.971 |
+| B1_e5+para | 0.991±0.004 | 0.004±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.981±0.027 |
+| B3_plain_deberta+para | 0.998±0.001 | 0.003±0.004 | 1.000±0.000 | 0.994±0.005 | 1.000±0.000 | 0.995±0.004 | 1.000±0.000 | 1.000±0.000 |
+| ours_context_deberta+para | 0.997±0.002 | 0.001±0.002 | 1.000±0.000 | 0.994±0.005 | 1.000±0.000 | 0.995±0.004 | 1.000±0.000 | 1.000±0.000 |
+| B2_llm_judge | 0.743 | 0.000 | 0.600 | 0.168 | 0.679 | 0.208 | 1.000 | 0.857 |
+
+### Val-fixed threshold @ 5% val FPR (deployable; realized FPR in *_neg columns)
+
+| defender | test_pos | test_neg | test_hardneg | r0_orig | r0_opt | r1_orig | r1_opt | r1t_orig | r1t_opt |
+|---|---|---|---|---|---|---|---|---|---|
+| B0_tfidf_lr | 0.982 | 0.082 | 0.053 | 1.000 | 0.957 | 1.000 | 0.970 | 1.000 | 1.000 |
+| B1_e5+para | 0.999±0.001 | 0.105±0.029 | 0.049±0.020 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 |
+| B3_plain_deberta+para | 1.000±0.000 | 0.119±0.009 | 0.056±0.010 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 |
+| ours_context_deberta+para | 1.000±0.000 | 0.272±0.022 | 0.298±0.026 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 |
+| B2_llm_judge | 0.905 | 0.087 | 0.106 | 0.833 | 0.317 | 0.821 | 0.371 | 1.000 | 1.000 |
+
+### Matched threshold @ 5% TEST FPR (oracle; equal FPR for every defender)
+
+| defender | test_pos | test_hardneg | r0_orig | r0_opt | r1_orig | r1_opt | r1t_orig | r1t_opt |
+|---|---|---|---|---|---|---|---|---|
+| B0_tfidf_lr | 0.956 | 0.033 | 1.000 | 0.938 | 1.000 | 0.926 | 1.000 | 1.000 |
+| B1_e5+para | 0.999±0.001 | 0.022±0.002 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 |
+| B3_plain_deberta+para | 1.000±0.000 | 0.020±0.000 | 1.000±0.000 | 0.996±0.006 | 1.000±0.000 | 0.997±0.005 | 1.000±0.000 | 1.000±0.000 |
+| ours_context_deberta+para | 1.000±0.000 | 0.030±0.002 | 1.000±0.000 | 0.998±0.003 | 1.000±0.000 | 0.998±0.002 | 1.000±0.000 | 1.000±0.000 |
+| B2_llm_judge | 0.858 | 0.057 | 0.733 | 0.280 | 0.714 | 0.297 | 1.000 | 0.971 |
+
+### AUROC vs test negatives (threshold-free)
+
+| defender | test_pos | test_pos_vs_hardneg | r0_orig | r0_opt | r1_orig | r1_opt | r1t_orig | r1t_opt |
+|---|---|---|---|---|---|---|---|---|
+| B0_tfidf_lr | 0.991 | 0.993 | 1.000 | 0.987 | 1.000 | 0.986 | 1.000 | 0.999 |
+| B1_e5+para | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.001 | 0.999±0.001 |
+| B3_plain_deberta+para | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 |
+| ours_context_deberta+para | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 |
+| B2_llm_judge | 0.967 | 0.962 | 0.904 | 0.619 | 0.901 | 0.650 | 1.000 | 0.996 |
+
+n per set: {"val_neg": 138, "test_neg": 392, "test_hardneg": 245, "test_pos": 571, "r0_opt": 161, "r0_orig": 30, "r1_opt": 202, "r1_orig": 28, "r1t_opt": 35, "r1t_orig": 4}
