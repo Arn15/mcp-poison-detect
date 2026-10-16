@@ -14,3 +14,8 @@ TEST-split implicit attacks the detector never saw.
 
 Takeaway: on held-out seeds the plain DeBERTa+para detector is not evaded by the adaptive black-box attacker at all.
 Small sample (12 seeds with working attacks) -> report with that caveat.
+
+CORRECTION (2026-10-16): MCPTox has several marker-variants of the same base attack; after marker stripping they are
+identical seeds. Counted by unique base attack / unique text: r0 = 30 bases, 161 unique working rewrites;
+r1 = 28 bases, 202; r1t = 4 bases, 35. The held-out (r1t) evidence therefore rests on 4 base attacks.
+Future runs should dedupe seeds by stripped description.
