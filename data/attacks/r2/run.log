@@ -1,0 +1,21 @@
+00:38:37 | INFO | run_attack | stage=run_attack runtime=kaggle commit=65f2f12 run_dir=/kaggle/working/outputs/run_attack/20261017-003837_r2
+00:38:40 | INFO | run_attack | usable seeds: 118
+00:38:41 | INFO | run_attack | training in-loop detector (False)...
+00:39:45 | INFO | run_attack |   ep 0 loss 0.2667 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0005 (35s)
+00:40:18 | INFO | run_attack |   ep 1 loss 0.0067 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (32s)
+00:40:52 | INFO | run_attack |   ep 2 loss 0.0031 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (33s)
+00:41:27 | INFO | run_attack |   ep 3 loss 0.0005 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (34s)
+00:41:31 | INFO | run_attack | in-loop detector: /kaggle/working/outputs/run_attack/20261017-003837_r2/ckpt_inloop
+00:44:35 | INFO | run_attack | attacker unsloth/Qwen3-14B-bnb-4bit (prequant) | T=5 N=5 feedback=rich start_from=best selection=margin
+00:44:35 | INFO | run_attack | 118 seeds, 0 already done
+02:05:09 | INFO | run_attack | 10/118 seeds done
+03:11:17 | INFO | run_attack | 20/118 seeds done
+04:22:04 | INFO | run_attack | 30/118 seeds done
+05:32:13 | INFO | run_attack | 40/118 seeds done
+06:36:45 | INFO | run_attack | 50/118 seeds done
+07:39:30 | INFO | run_attack | 60/118 seeds done
+08:57:33 | INFO | run_attack | 70/118 seeds done
+10:01:54 | INFO | run_attack | 80/118 seeds done
+11:03:49 | INFO | run_attack | 90/118 seeds done
+11:41:23 | WARNING | run_attack | wall-clock guard (11.0 h) hit; stopping cleanly with 96/118 seeds
+11:41:23 | INFO | run_attack | done: /kaggle/working/outputs/run_attack/20261017-003837_r2/attacks.jsonl (0 seeds failed)

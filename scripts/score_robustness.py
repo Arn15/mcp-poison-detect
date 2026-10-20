@@ -30,11 +30,20 @@ from mcptp.data.io import ensure_examples, load_para
 from mcptp.eval.metrics import auroc, threshold_at_fpr
 from mcptp.utils.env import REPO_ROOT
 
-ROUNDS = ("r0", "r1", "r1t", "r2", "r2t")
+ROUNDS = ("r0", "r1", "r1b", "r1t", "r2", "r2t")
 
 
-def attack_sets(registries, top_k, floor=0.2):
-    """{round_opt: [...], round_orig: [...]} built from committed attack runs."""
+def load_verified(path=None):
+    """data/attacks/verified.jsonl (scripts/verify_attacks.py) -> {(round, kind, desc): asr_true}."""
+    path = path or REPO_ROOT / "data" / "attacks" / "verified.jsonl"
+    if not path.exists():
+        return None
+    return {(r["round"], r["kind"], r["desc"]): r["asr_true"] for r in map(json.loads, open(path))}
+
+
+def attack_sets(registries, top_k, floor=0.2, verified=None):
+    """{round_opt: [...], round_orig: [...]} built from committed attack runs.
+    verified: if given, keep only rewrites whose control-checked ASR (asr_true) >= floor."""
     sets = {}
     for rnd in ROUNDS:
         d = REPO_ROOT / "data" / "attacks" / rnd
@@ -44,6 +53,8 @@ def attack_sets(registries, top_k, floor=0.2):
         opt, seen, orig_ids = [], set(), set()
         for t in map(json.loads, open(d / "trajectory.jsonl")):
             if (t.get("asr") or 0) < floor or t["desc"] in seen or t["seed_id"] not in seeds:
+                continue
+            if verified is not None and verified.get((rnd, "opt", t["desc"]), 0.0) < floor:
                 continue
             seen.add(t["desc"]); orig_ids.add(t["seed_id"])
             opt.append((seeds[t["seed_id"]], t["desc"]))
@@ -137,7 +148,9 @@ def main():
         "test_hardneg": [e for e in ex + para["test"] if e["split"] == "test" and e["label"] == 0 and e.get("is_hard_negative")],
         "test_pos": [e for e in ex if e["split"] == "test" and e["label"] == 1] + [e for e in para["test"] if e["label"] == 1],
     }
-    sets.update(attack_sets(registries, cfg["context"]["top_k"]))
+    verified = load_verified() if sc.get("verified", True) else None
+    log.info("attack sets: %s", "control-verified only (data/attacks/verified.jsonl)" if verified else "raw judge ASR")
+    sets.update(attack_sets(registries, cfg["context"]["top_k"], verified=verified))
     n_sets = {k: len(v_) for k, v_ in sets.items()}
     log.info("eval sets: %s | seeds %s", n_sets, seeds)
 
