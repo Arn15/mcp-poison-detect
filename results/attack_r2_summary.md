@@ -25,3 +25,21 @@ Consequence: every attack set, including r0/r1 behind the robustness_v1/v2 judge
 control. scripts/verify_attacks.py reruns the agent on up to 10 queries with and without the candidate tool. A
 query counts only if it succeeds with the candidate and fails without it.
 score_robustness.py then keeps only control-verified rewrites (data/attacks/verified.jsonl).
+
+## Control verification (scripts/verify_attacks.py, Kaggle 20261020-210512_verify, data/attacks/verified.jsonl)
+Rewrites the judge marked as working ("opt"), and how many survive the no-poison control (asr_true >= 0.2):
+
+| round | raw working | control-verified | control fires (agent "succeeds" with no poison) |
+|---|---|---|---|
+| r0  | 160 | 92  | 68 |
+| r1  | 200 | 107 | 93 |
+| r1b | 138 | 72  | 66 |
+| r1t | 23  | 8   | 27 |
+| r2  | 260 | 195 | 65 |
+| r2t | 45  | 21  | 49 |
+
+- All 21 detector-passing rewrites (r1, r2, r2t) fail the control: the control rate is 1.0 and the true ASR is 0. **The detector has zero genuine evasions.**
+- The payload-in-description heuristic agrees with the control on 779 of 873 rewrites.
+- Caveat: 578 of 873 rewrites have only one available query.
+- B0 TF-IDF at matched 1% FPR on verified sets: r0 0.95, r1 0.98, r2 0.90, r2t 0.71. On the raw sets it was 0.69 (r0) and 0.67 (r1), so most of B0's earlier "evasion" was payload-free artifacts.
+- Next: rerun score_robustness on the verified sets (robust3).

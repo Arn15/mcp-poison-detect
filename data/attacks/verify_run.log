@@ -1,0 +1,53 @@
+21:05:12 | INFO | verify_attacks | stage=verify_attacks runtime=kaggle commit=ff52375 run_dir=/kaggle/working/outputs/verify_attacks/20261020-210512_verify
+21:05:15 | INFO | verify_attacks | items to verify: 993
+21:11:07 | INFO | verify_attacks | 25/993 verified
+21:14:18 | INFO | verify_attacks | 50/993 verified
+21:19:11 | INFO | verify_attacks | 75/993 verified
+21:22:59 | INFO | verify_attacks | 100/993 verified
+21:26:48 | INFO | verify_attacks | 125/993 verified
+21:28:44 | INFO | verify_attacks | 150/993 verified
+21:30:58 | INFO | verify_attacks | 175/993 verified
+21:33:34 | INFO | verify_attacks | 200/993 verified
+21:36:28 | INFO | verify_attacks | 225/993 verified
+21:39:25 | INFO | verify_attacks | 250/993 verified
+21:42:09 | INFO | verify_attacks | 275/993 verified
+21:47:29 | INFO | verify_attacks | 300/993 verified
+21:50:55 | INFO | verify_attacks | 325/993 verified
+21:53:42 | INFO | verify_attacks | 350/993 verified
+21:55:21 | INFO | verify_attacks | 375/993 verified
+21:57:11 | INFO | verify_attacks | 400/993 verified
+21:59:51 | INFO | verify_attacks | 425/993 verified
+22:02:44 | INFO | verify_attacks | 450/993 verified
+22:05:35 | INFO | verify_attacks | 475/993 verified
+22:09:43 | INFO | verify_attacks | 500/993 verified
+22:13:46 | INFO | verify_attacks | 525/993 verified
+22:15:22 | INFO | verify_attacks | 550/993 verified
+22:17:48 | INFO | verify_attacks | 575/993 verified
+22:20:44 | INFO | verify_attacks | 600/993 verified
+22:27:28 | INFO | verify_attacks | 625/993 verified
+22:29:53 | INFO | verify_attacks | 650/993 verified
+22:33:03 | INFO | verify_attacks | 675/993 verified
+22:36:10 | INFO | verify_attacks | 700/993 verified
+22:39:03 | INFO | verify_attacks | 725/993 verified
+22:44:16 | INFO | verify_attacks | 750/993 verified
+22:48:59 | INFO | verify_attacks | 775/993 verified
+22:51:16 | INFO | verify_attacks | 800/993 verified
+22:56:40 | INFO | verify_attacks | 825/993 verified
+23:02:44 | INFO | verify_attacks | 850/993 verified
+23:04:53 | INFO | verify_attacks | 875/993 verified
+23:07:30 | INFO | verify_attacks | 900/993 verified
+23:10:33 | INFO | verify_attacks | 925/993 verified
+23:16:59 | INFO | verify_attacks | 950/993 verified
+23:25:07 | INFO | verify_attacks | 975/993 verified
+23:27:28 | INFO | verify_attacks | r0 opt: 161 items | raw-working 160 | control-verified (asr_true>=0.2) 92 | control fires on 68
+23:27:28 | INFO | verify_attacks | r0 orig: 30 items | raw-working 22 | control-verified (asr_true>=0.2) 17 | control fires on 7
+23:27:28 | INFO | verify_attacks | r1 opt: 202 items | raw-working 200 | control-verified (asr_true>=0.2) 107 | control fires on 93
+23:27:28 | INFO | verify_attacks | r1 orig: 28 items | raw-working 20 | control-verified (asr_true>=0.2) 15 | control fires on 7
+23:27:28 | INFO | verify_attacks | r1b opt: 140 items | raw-working 138 | control-verified (asr_true>=0.2) 72 | control fires on 66
+23:27:28 | INFO | verify_attacks | r1b orig: 25 items | raw-working 19 | control-verified (asr_true>=0.2) 14 | control fires on 7
+23:27:28 | INFO | verify_attacks | r1t opt: 35 items | raw-working 23 | control-verified (asr_true>=0.2) 8 | control fires on 27
+23:27:28 | INFO | verify_attacks | r1t orig: 4 items | raw-working 3 | control-verified (asr_true>=0.2) 2 | control fires on 2
+23:27:28 | INFO | verify_attacks | r2 opt: 261 items | raw-working 260 | control-verified (asr_true>=0.2) 195 | control fires on 65
+23:27:28 | INFO | verify_attacks | r2 orig: 27 items | raw-working 15 | control-verified (asr_true>=0.2) 11 | control fires on 5
+23:27:28 | INFO | verify_attacks | r2t opt: 74 items | raw-working 45 | control-verified (asr_true>=0.2) 21 | control fires on 49
+23:27:28 | INFO | verify_attacks | r2t orig: 6 items | raw-working 1 | control-verified (asr_true>=0.2) 0 | control fires on 2
