@@ -14,6 +14,7 @@ Eval sets
 
 Kaggle: SCRIPT="scripts/score_robustness.py"  ARGS="--tag robust2"  GPU_DEPS=True  (~1.5-2 h for 3 seeds)
 One seed: --set score.seeds=[42]
+Registry reference scores (set "registry", all servers' benign tools) are written by default for scripts/calibrate.py.
 Skip the judge: --set score.judge=false
 
 Judge comparison (robust4: 8B/14B x zero/few-shot; classifiers skipped, B0 kept as reference):
@@ -93,7 +94,7 @@ def rates(scores_by_set, val_neg_key="val_neg"):
         thr = threshold_at_fpr(vs, fp)
         out[f"thr@{fp:g}"] = float(thr)
         for name, s in scores_by_set.items():
-            if name == val_neg_key:
+            if name in (val_neg_key, "registry"):
                 continue
             out[f"{name}@{fp:g}"] = float((np.asarray(s) >= thr).mean()) if len(s) else None
     return out
@@ -109,7 +110,7 @@ def matched_rates(scores_by_set, neg_key="test_neg"):
         thr = threshold_at_fpr(ns, fp)
         out[f"thr@{fp:g}"] = float(thr)
         for name, s in scores_by_set.items():
-            if name in (neg_key, "val_neg"):
+            if name in (neg_key, "val_neg", "registry"):
                 continue
             out[f"{name}@{fp:g}"] = float((np.asarray(s) >= thr).mean()) if len(s) else None
     return out
@@ -120,7 +121,7 @@ def aurocs(scores_by_set, neg_key="test_neg"):
     ns = np.asarray(scores_by_set[neg_key])
     out = {}
     for name, s in scores_by_set.items():
-        if name in (neg_key, "val_neg", "test_hardneg") or not len(s):
+        if name in (neg_key, "val_neg", "test_hardneg", "registry") or not len(s):
             continue
         y = np.r_[np.zeros(len(ns)), np.ones(len(s))]
         out[name] = float(auroc(y, np.r_[ns, np.asarray(s)]))
@@ -161,6 +162,8 @@ def main():
         "test_hardneg": [e for e in ex + para["test"] if e["split"] == "test" and e["label"] == 0 and e.get("is_hard_negative")],
         "test_pos": [e for e in ex if e["split"] == "test" and e["label"] == 1] + [e for e in para["test"] if e["label"] == 1],
     }
+    if sc.get("registry", True):   # every server's original benign tools -> reference scores for scripts/calibrate.py
+        sets["registry"] = [e for e in ex if e["kind"] == "benign"]
     verified = load_verified() if sc.get("verified", True) else None
     log.info("attack sets: %s", "control-verified only (data/attacks/verified.jsonl)" if verified else "raw judge ASR")
     sets.update(attack_sets(registries, cfg["context"]["top_k"], verified=verified))
