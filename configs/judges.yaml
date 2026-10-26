@@ -1,0 +1,9 @@
+# Stronger-judge comparison (robust4). Inherits configs/default.yaml; only overrides score.*.
+_base: default.yaml
+score:
+  skip: [B1_e5+para, B3_plain_deberta+para, ours_context_deberta+para]   # classifier scores reused from robust3
+  judges:
+    - {name: B2_judge_8b_zs,  model: Qwen/Qwen3-8B,                 quant: 4bit,     shots: 0, batch: 8}
+    - {name: B2_judge_8b_fs,  model: Qwen/Qwen3-8B,                 quant: 4bit,     shots: 6, batch: 4}
+    - {name: B2_judge_14b_zs, model: unsloth/Qwen3-14B-bnb-4bit,    quant: prequant, shots: 0, batch: 4}
+    - {name: B2_judge_14b_fs, model: unsloth/Qwen3-14B-bnb-4bit,    quant: prequant, shots: 6, batch: 2}

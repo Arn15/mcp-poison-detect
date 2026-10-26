@@ -15,6 +15,9 @@ Eval sets
 Kaggle: SCRIPT="scripts/score_robustness.py"  ARGS="--tag robust2"  GPU_DEPS=True  (~1.5-2 h for 3 seeds)
 One seed: --set score.seeds=[42]
 Skip the judge: --set score.judge=false
+
+Judge comparison (robust4: 8B/14B x zero/few-shot; classifiers skipped, B0 kept as reference):
+  ARGS="--tag robust4 --config configs/judges.yaml"  GPU_DEPS=True  (~2 h on one T4)
 """
 from __future__ import annotations
 
@@ -39,6 +42,16 @@ def load_verified(path=None):
     if not path.exists():
         return None
     return {(r["round"], r["kind"], r["desc"]): r["asr_true"] for r in map(json.loads, open(path))}
+
+
+def attack_base_ids():
+    """Seed ids used as bases for any attack round (excluded from few-shot judge demos)."""
+    ids = set()
+    for rnd in ROUNDS:
+        f = REPO_ROOT / "data" / "attacks" / rnd / "attacks.jsonl"
+        if f.exists():
+            ids |= {a["seed_id"] for a in map(json.loads, open(f)) if a}
+    return ids
 
 
 def attack_sets(registries, top_k, floor=0.2, verified=None):
@@ -209,12 +222,31 @@ def main():
                 if not sc.get("keep_ckpt", False):
                     shutil.rmtree(ck_dir, ignore_errors=True)
 
-    # B2: LLM judge (greedy, deterministic -> one run; needs GPU + bitsandbytes)
+    # B2: LLM judge(s) (deterministic -> one run each; needs GPU + bitsandbytes).
+    # score.judges: list of {name, model, quant, shots, batch}; default = the original zero-shot Qwen3-8B judge.
     if sc.get("judge", True):
-        from mcptp.baselines.llm_judge import LLMJudge
-        judge = LLMJudge(sc.get("judge_model", "Qwen/Qwen3-8B"), device=sc.get("judge_device", "cuda:0"),
-                         quant="4bit", batch_size=int(sc.get("judge_batch", 8)))
-        record("B2_llm_judge", 0, {k: judge.score(s) if s else [] for k, s in sets.items()})
+        from mcptp.baselines.llm_judge import LLMJudge, select_shots
+        judges = sc.get("judges") or [{"name": "B2_llm_judge", "model": sc.get("judge_model", "Qwen/Qwen3-8B"),
+                                       "quant": "4bit", "shots": 0, "batch": int(sc.get("judge_batch", 8))}]
+        base_ids = attack_base_ids()
+        shot_log = {}
+        for j in judges:
+            k = int(j.get("shots", 0))
+            shots = select_shots(ex, k_pos=k // 2, k_neg=k - k // 2, exclude_ids=base_ids,
+                                 seed=cfg["project"]["seed"]) if k else []
+            shot_log[j["name"]] = {**j, "shot_ids": [s["id"] for s in shots]}
+            log.info("judge %s: model=%s quant=%s shots=%d", j["name"], j["model"], j.get("quant"), len(shots))
+            judge = LLMJudge(j["model"], device=sc.get("judge_device", "cuda:0"), quant=j.get("quant", "4bit"),
+                             batch_size=int(j.get("batch", 8)), shots=shots)
+            record(j["name"], 0, {k_: judge.score(s) if s else [] for k_, s in sets.items()})
+            del judge
+            gc.collect()
+            try:
+                import torch
+                torch.cuda.empty_cache()
+            except Exception:
+                pass
+        (run_dir / "judge_shots.json").write_text(json.dumps(shot_log, indent=1))
     scores_f.close()
 
     summary = {name: {kind: summarize_runs([r[kind] for r in runs]) for kind in ("val", "matched", "auroc")}

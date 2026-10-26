@@ -35,10 +35,23 @@ def apply_overrides(cfg: dict, overrides: Iterable[str]) -> dict:
     return cfg
 
 
-def load_config(path: str | Path = "configs/default.yaml", overrides: Iterable[str] | None = None) -> dict:
+def _deep_merge(base: dict, over: dict) -> dict:
+    out = dict(base)
+    for k, v in over.items():
+        out[k] = _deep_merge(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
+    return out
+
+
+def _load_yaml(path: Path) -> dict:
+    """Load a YAML config; `_base: other.yaml` (relative to this file) is loaded first and deep-merged under it."""
     with open(path) as f:
         cfg = yaml.safe_load(f) or {}
-    return apply_overrides(cfg, overrides or [])
+    base = cfg.pop("_base", None)
+    return _deep_merge(_load_yaml(Path(path).parent / base), cfg) if base else cfg
+
+
+def load_config(path: str | Path = "configs/default.yaml", overrides: Iterable[str] | None = None) -> dict:
+    return apply_overrides(_load_yaml(Path(path)), overrides or [])
 
 
 def save_config(cfg: dict, path: str | Path) -> None:
