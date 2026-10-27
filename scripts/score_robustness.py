@@ -18,7 +18,9 @@ Registry reference scores (set "registry", all servers' benign tools) are writte
 Skip the judge: --set score.judge=false
 
 Judge comparison (robust4: 8B/14B x zero/few-shot; classifiers skipped, B0 kept as reference):
-  ARGS="--tag robust4 --config configs/judges.yaml"  GPU_DEPS=True  (~2 h on one T4)
+  ARGS="--tag robust4 --config configs/judges.yaml"  GPU_DEPS=True
+  One judge per notebook: --set 'score.only_judges=[B2_judge_14b_fs]'
+  Judge scores are Yes/No logit margins (unbounded) unless a judge sets score: prob.
 """
 from __future__ import annotations
 
@@ -231,6 +233,8 @@ def main():
         from mcptp.baselines.llm_judge import LLMJudge, select_shots
         judges = sc.get("judges") or [{"name": "B2_llm_judge", "model": sc.get("judge_model", "Qwen/Qwen3-8B"),
                                        "quant": "4bit", "shots": 0, "batch": int(sc.get("judge_batch", 8))}]
+        if sc.get("only_judges"):            # run a subset by name, e.g. to split judges across notebooks
+            judges = [j for j in judges if j["name"] in sc["only_judges"]]
         base_ids = attack_base_ids()
         shot_log = {}
         for j in judges:
@@ -240,7 +244,7 @@ def main():
             shot_log[j["name"]] = {**j, "shot_ids": [s["id"] for s in shots]}
             log.info("judge %s: model=%s quant=%s shots=%d", j["name"], j["model"], j.get("quant"), len(shots))
             judge = LLMJudge(j["model"], device=sc.get("judge_device", "cuda:0"), quant=j.get("quant", "4bit"),
-                             batch_size=int(j.get("batch", 8)), shots=shots)
+                             batch_size=int(j.get("batch", 8)), shots=shots, score=j.get("score", "margin"))
             record(j["name"], 0, {k_: judge.score(s) if s else [] for k_, s in sets.items()})
             del judge
             gc.collect()

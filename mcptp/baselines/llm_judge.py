@@ -1,8 +1,11 @@
-"""B2: LLM-as-judge baseline (AI-Infra-Guard-style audit prompt), scored by P("Yes").
+"""B2: LLM-as-judge baseline (AI-Infra-Guard-style audit prompt), scored by the Yes/No logit margin.
 
 The judge reads one tool description (plus the names of the server's registered tools) and is asked whether it
-tries to steer the agent. Instead of parsing generated text, we read the next-token logits for "Yes" vs "No",
-which gives a continuous score in [0, 1] that can be thresholded at a fixed FPR like the trained classifiers.
+tries to steer the agent. Instead of parsing generated text, we read the next-token logits for "Yes" vs "No".
+score="margin" (default since robust6) returns logsumexp(Yes) - logsumexp(No), an unbounded score that can be
+thresholded at a fixed FPR like the trained classifiers. score="prob" returns sigmoid(margin) = P(Yes) as in
+robust3/robust4; it saturates to exactly 1.0 for confident judges (margin > ~17 in float32), which made the 14B
+judges' 1%-FPR operating point undefined in robust4 (ties at 1.0 on >1% of negatives).
 
 Variants (score_robustness.py, score.judges):
   - model size: Qwen3-8B (on-the-fly 4-bit) or Qwen3-14B (pre-quantized unsloth bnb-4bit checkpoint)
@@ -82,13 +85,15 @@ def select_shots(examples: list[dict], k_pos: int = 3, k_neg: int = 3, exclude_i
 
 class LLMJudge:
     def __init__(self, model_name: str = "Qwen/Qwen3-8B", device: str = "cuda:0", quant: str | None = "4bit",
-                 batch_size: int = 8, shots: list[dict] | None = None, max_length: int = 4096):
+                 batch_size: int = 8, shots: list[dict] | None = None, max_length: int = 4096,
+                 score: str = "margin"):
         import torch
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
         self.torch = torch
         self.shots = shots or []
         self.max_length = max_length
+        self.score_type = score
         self.tok = AutoTokenizer.from_pretrained(model_name, padding_side="left")
         if self.tok.pad_token is None:
             self.tok.pad_token = self.tok.eos_token
@@ -99,8 +104,20 @@ class LLMJudge:
                                                            bnb_4bit_compute_dtype=torch.float16)
             kw["device_map"] = {"": device}
         elif quant == "prequant":       # checkpoint already bnb-4bit (e.g. unsloth/Qwen3-14B-bnb-4bit)
+            # unsloth checkpoints store bnb_4bit_compute_dtype=bfloat16, which T4 GPUs emulate slowly (robust4:
+            # 14B ~10x slower than 8B). Override the compute dtype (a loading attribute) to float16.
+            from transformers import BitsAndBytesConfig
+            kw["quantization_config"] = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4",
+                                                           bnb_4bit_use_double_quant=True,
+                                                           bnb_4bit_compute_dtype=torch.float16)
             kw["device_map"] = {"": device}
-        self.model = AutoModelForCausalLM.from_pretrained(model_name, **kw).eval()
+        try:
+            self.model = AutoModelForCausalLM.from_pretrained(model_name, **kw).eval()
+        except Exception:
+            if quant != "prequant":
+                raise
+            kw.pop("quantization_config")       # fall back to the checkpoint's own quantization config
+            self.model = AutoModelForCausalLM.from_pretrained(model_name, **kw).eval()
         if "device_map" not in kw:
             self.model.to(device)
         self.bs = batch_size
@@ -128,5 +145,6 @@ class LLMJudge:
                 logits = self.model(**enc).logits[:, -1, :].float()
             y = self.torch.logsumexp(logits[:, self.yes_ids], dim=-1)
             n = self.torch.logsumexp(logits[:, self.no_ids], dim=-1)
-            out.append(self.torch.sigmoid(y - n).cpu().numpy())
+            m = y - n
+            out.append((m if self.score_type == "margin" else self.torch.sigmoid(m)).cpu().numpy())
         return np.concatenate(out) if out else np.array([])
