@@ -1,0 +1,17 @@
+{
+ "B2_judge_14b_fs": {
+  "name": "B2_judge_14b_fs",
+  "model": "unsloth/Qwen3-14B-bnb-4bit",
+  "quant": "prequant",
+  "shots": 6,
+  "batch": 4,
+  "shot_ids": [
+   "p_cd189b70e702",
+   "h_402983f11f60",
+   "p_fdf0c4d2dbbb",
+   "h_93abcf2f3e9a",
+   "p_ae6f304bd535",
+   "b_c8830ba9b747"
+  ]
+ }
+}
