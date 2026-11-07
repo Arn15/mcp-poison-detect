@@ -1,0 +1,39 @@
+{
+  "detector": "/kaggle/working/outputs/adv_train/20261107-185241_adv1e5/ckpt_adv",
+  "backbone": "intfloat/multilingual-e5-base",
+  "threshold_margin": -9.136718749999998,
+  "target_fpr": 0.01,
+  "max_frac": 0.15,
+  "n_items": 379,
+  "n_missed_before_attack": 0,
+  "n_evaded": 1,
+  "n_evaded_p05": 8,
+  "mean_words_changed_evaders": 4.0,
+  "n_verified": 1,
+  "n_genuine_evasions": 0,
+  "genuine_rate": 0.0,
+  "evaders_still_working": 0.0,
+  "by_round": {
+    "r0": {
+      "n": 92,
+      "evaded": 0
+    },
+    "r1": {
+      "n": 63,
+      "evaded": 0
+    },
+    "r1t": {
+      "n": 8,
+      "evaded": 0
+    },
+    "r2": {
+      "n": 195,
+      "evaded": 1
+    },
+    "r2t": {
+      "n": 21,
+      "evaded": 0
+    }
+  },
+  "hours": 0.2605461549096637
+}
