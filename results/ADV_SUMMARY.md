@@ -14,3 +14,18 @@ Re-attack: same white-box attack (15% word budget, 1%-val-FPR threshold) against
 - Cost: DeBERTa's global-threshold FPR rises ~2 points (within ~1 std); E5's does not. Registry-relative calibration (results/calibration) addresses the global-threshold FPR gap separately.
 - Caveats: one adversarial round; the re-attack uses the same budget as the attack that generated the training data (a larger budget, e.g. max_frac=0.30, is the obvious next adaptive test); held-out white-box set is small (29).
 - Base FPR numbers differ from robust5 (0.106 / 0.071) because these are separate re-trainings; compare base vs adv within this table.
+
+## Stronger adaptive attack: 30% word budget, 100 steps (Step 7b, commit a81788c)
+
+Same protocol; the ADV detector is re-created with seed 42 and attacked with twice the word budget the training rewrites used.
+BASE is a normally trained twin attacked with the same budget.
+
+| detector | evaders BASE -> ADV | genuine evasions BASE -> ADV | seeds with a genuine evasion BASE -> ADV |
+|---|---|---|---|
+| DeBERTa-v3 + para | 252 -> 30 | 81 -> **9** | 11 -> 3 |
+| E5 + para | 311 -> 10 | 82 -> **0** | 12 -> 0 |
+
+- At 30% the attack is much stronger on undefended models (genuine 48 -> 81 DeBERTa, 40 -> 82 E5; ~7.5 words changed).
+- Adversarial training still removes ~89% (DeBERTa) and 100% (E5) of genuine evasions, although it only saw 15%-budget rewrites.
+- DeBERTa's 9 residual genuine evasions come from 3 seeds, 7 of them held-out test seeds (r2t), and all rest on 1-2 agent queries; they need ~10 words changed.
+- Takeaway: one round of adversarial training generalizes beyond its attack budget, but not fully for DeBERTa; a second round on 30%-budget rewrites is the natural next step.

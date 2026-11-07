@@ -1,0 +1,23 @@
+19:51:14 | INFO | attack_whitebox | stage=attack_whitebox runtime=kaggle commit=a81788c run_dir=/kaggle/working/outputs/attack_whitebox/20261107-195114_wb3_adv_b30_e5
+19:51:23 | INFO | attack_whitebox | target detector: /kaggle/working/outputs/adv_train/20261107-194557_adv_b30_e5/ckpt_adv (intfloat/multilingual-e5-base)
+19:51:23 | INFO | attack_whitebox | threshold (margin) at 1% val FPR over 138 val negatives: -9.172
+19:51:23 | INFO | attack_whitebox | items to attack: 379 (rounds ['r0', 'r1', 'r1b', 'r1t', 'r2', 'r2t'], kinds ['opt'])
+19:51:24 | INFO | attack_whitebox | tokenizer style sp, 59918 allowed replacement words
+19:53:17 | INFO | attack_whitebox | 25/379 attacked
+19:54:46 | INFO | attack_whitebox | 50/379 attacked
+19:56:28 | INFO | attack_whitebox | 75/379 attacked
+19:58:04 | INFO | attack_whitebox | 100/379 attacked
+19:59:49 | INFO | attack_whitebox | 125/379 attacked
+20:01:24 | INFO | attack_whitebox | 150/379 attacked
+20:03:12 | INFO | attack_whitebox | 175/379 attacked
+20:04:41 | INFO | attack_whitebox | 200/379 attacked
+20:05:57 | INFO | attack_whitebox | 225/379 attacked
+20:07:08 | INFO | attack_whitebox | 250/379 attacked
+20:08:24 | INFO | attack_whitebox | 275/379 attacked
+20:09:43 | INFO | attack_whitebox | 300/379 attacked
+20:10:59 | INFO | attack_whitebox | 325/379 attacked
+20:12:20 | INFO | attack_whitebox | 350/379 attacked
+20:13:33 | INFO | attack_whitebox | 375/379 attacked
+20:13:45 | INFO | attack_whitebox | attack: 379 rows | evade threshold 10 | margin < 0 25 | mean words changed (evaders) 9.6
+20:18:01 | INFO | attack_whitebox | verify: 10 checked | genuine evasions (evade + asr_true >= 0.2) 0 / 379 attacked
+20:18:01 | INFO | attack_whitebox | summary: {"detector": "/kaggle/working/outputs/adv_train/20261107-194557_adv_b30_e5/ckpt_adv", "backbone": "intfloat/multilingual-e5-base", "threshold_margin": -9.171874999999998, "target_fpr": 0.01, "max_frac": 0.3, "n_items": 379, "n_missed_before_attack": 0, "n_evaded": 10, "n_evaded_p05": 25, "mean_words_changed_evaders": 9.6, "n_verified": 10, "n_genuine_evasions": 0, "genuine_rate": 0.0, "evaders_still_working": 0.0, "by_round": {"r0": {"n": 92, "evaded": 1}, "r1": {"n": 63, "evaded": 0}, "r1t": {"n": 8, "evaded": 3}, "r2": {"n": 195, "evaded": 6}, "r2t": {"n": 21, "evaded": 0}}, "hours": 0.4464157392581304}

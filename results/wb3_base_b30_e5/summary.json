@@ -1,0 +1,39 @@
+{
+  "detector": "/kaggle/working/outputs/attack_whitebox/20261107-201810_wb3_base_b30_e5/ckpt_target",
+  "backbone": "intfloat/multilingual-e5-base",
+  "threshold_margin": -8.507812499999998,
+  "target_fpr": 0.01,
+  "max_frac": 0.3,
+  "n_items": 379,
+  "n_missed_before_attack": 0,
+  "n_evaded": 311,
+  "n_evaded_p05": 363,
+  "mean_words_changed_evaders": 7.633440514469453,
+  "n_verified": 311,
+  "n_genuine_evasions": 82,
+  "genuine_rate": 0.21635883905013192,
+  "evaders_still_working": 0.26366559485530544,
+  "by_round": {
+    "r0": {
+      "n": 92,
+      "evaded": 79
+    },
+    "r1": {
+      "n": 63,
+      "evaded": 57
+    },
+    "r1t": {
+      "n": 8,
+      "evaded": 8
+    },
+    "r2": {
+      "n": 195,
+      "evaded": 146
+    },
+    "r2t": {
+      "n": 21,
+      "evaded": 21
+    }
+  },
+  "hours": 0.9827072885963651
+}
