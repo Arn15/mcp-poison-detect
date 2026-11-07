@@ -44,3 +44,11 @@ All use the Kaggle runner, GPU_DEPS=False (transformers backend; vLLM optional l
    (detector_ckpt left null: round 0 optimizes ASR + naturalness only; detector-in-loop is Step 5).
 4. Score (~5 min): `score_attacks --tag r0 --set score.attacks=/kaggle/input/<atk>/.../attacks.jsonl
    'score.ckpts=[/kaggle/input/<ck>/.../ckpt_B3_plain+para,/kaggle/input/<ck>/.../ckpt_ours_context+para]'`
+
+## Step 6 (white-box attack on the classifiers)
+`scripts/attack_whitebox.py`, GPU_DEPS=True (4-bit agent for the control check). One notebook per target:
+- DeBERTa+para: `ARGS="--tag wb1"`
+- E5+para: `ARGS="--tag wb1e5 --set detector.backbone=intfloat/multilingual-e5-base"`
+- Budget ablation: add `whitebox.max_frac=0.30` (tag wb1_b30)
+Outputs: whitebox.jsonl (attack per description), wb_verified.jsonl (agent control on evaders), summary.json.
+Headline number = summary.n_genuine_evasions (evades the 1%-val-FPR threshold AND asr_true >= 0.2).

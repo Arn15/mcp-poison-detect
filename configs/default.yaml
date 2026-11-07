@@ -112,6 +112,25 @@ attacker:
     max_model_len: 8192
     quantization: null               # e.g. awq / bitsandbytes for 8B on T4
 
+whitebox:                            # Step 6: gradient-guided word-substitution attack (scripts/attack_whitebox.py)
+  detector_ckpt: train               # "train" = train the +para plain detector (detector.backbone) in-run; or a ckpt path
+  rounds: [r0, r1, r1b, r1t, r2, r2t]  # start from control-verified working attacks of these rounds
+  kinds: [opt]                       # opt (optimized rewrites) and/or orig (MCPTox originals)
+  max_items: null
+  shard: null                        # "i/n"
+  steps: 60                          # max accepted-or-rejected swap steps per description
+  batch: 64                          # candidate swaps scored exactly per step
+  topk: 32                           # gradient top-k replacement words per position
+  max_frac: 0.15                     # word budget: at most max(min_budget, max_frac * n_words) words changed
+  min_budget: 2
+  patience: 15                       # stop after this many steps without improvement
+  min_word_len: 2
+  target_fpr: 0.01                   # success = margin below the val-negative threshold at this FPR
+  verify: true                       # agent no-poison control on every evading rewrite (needs GPU_DEPS for 4-bit agent)
+  verify_all: false
+  queries: 10
+  max_hours: 11.0
+
 adversarial:
   rounds: 2
 

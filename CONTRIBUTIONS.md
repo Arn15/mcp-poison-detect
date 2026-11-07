@@ -39,5 +39,8 @@ design · **Library** = called via a third-party package, not reimplemented.
 | `scripts/run_attack.py` | Own | Attacker loop orchestration (N rewrites x T iters, resumable) | — |
 | `scripts/verify_agent.py` | Own | Validate our ASR against MCPTox's recorded ASR | — |
 | `scripts/score_attacks.py` | Own | Score an attack set against B0/B3/context/B2 defenders | — |
+| `mcptp/attacker/whitebox.py` | Adapted | White-box word-substitution attack on the detector: one-hot gradient top-k (HotFlip) + exact scoring of sampled single-word swaps (GCG), whole-word / protected-payload / word-budget constraints | Ebrahimi et al., 2018 (HotFlip); Zou et al., 2023 (GCG) |
+| `scripts/attack_whitebox.py` | Own | Step 6 orchestration: deployable threshold, attack verified attacks, agent no-poison control on evaders, summary | — |
+| `tests/test_whitebox.py` | Own | Unit tests for white-box attack constraints | — |
 | *(Step 5)* `mcptp/baselines/e5.py` | Adapted | MCP-Guard Stage II classifier | Xing et al., arXiv 2508.10991 |
 | — | Library | DeBERTa-v3 / E5 weights, HF Transformers, vLLM, scikit-learn | — |
