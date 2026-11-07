@@ -57,3 +57,6 @@ Headline number = summary.n_genuine_evasions (evades the 1%-val-FPR threshold AN
 `notebooks/kaggle_adv1_deberta.ipynb` and `kaggle_adv1e5_e5.ipynb` (GPU T4 x2, GPU_DEPS=True). Each runs
 `scripts/adv_train.py` (base vs adv, 3 seeds -> adv_results.md) then `scripts/attack_whitebox.py` against the saved
 ADV checkpoint (-> summary.json; compare n_genuine_evasions with results/wb1 and results/wb1e5).
+
+## Step 8 (defense checks)
+`notebooks/kaggle_def1.ipynb` (one GPU, GPU_DEPS=False) -> defense_results.md: fluency filter, registry-relative calibration, and both combined, on the wb1 / wb1e5 evaders.

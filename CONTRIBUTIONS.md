@@ -43,5 +43,6 @@ design · **Library** = called via a third-party package, not reimplemented.
 | `scripts/attack_whitebox.py` | Own | Step 6 orchestration: deployable threshold, attack verified attacks, agent no-poison control on evaders, summary | — |
 | `tests/test_whitebox.py` | Own | Unit tests for white-box attack constraints | — |
 | `scripts/adv_train.py` | Own | Step 7: adversarial training on white-box rewrites of train seeds; base-vs-adv comparison at val-fixed FPR on clean, hard-negative, black-box and held-out white-box sets | Madry et al., 2018 (adversarial training) |
+| `scripts/defense_checks.py` | Own | Step 8: GPT-2 perplexity filter and registry-relative calibration against white-box evasions, plus their combination | — |
 | *(Step 5)* `mcptp/baselines/e5.py` | Adapted | MCP-Guard Stage II classifier | Xing et al., arXiv 2508.10991 |
 | — | Library | DeBERTa-v3 / E5 weights, HF Transformers, vLLM, scikit-learn | — |
