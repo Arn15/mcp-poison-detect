@@ -29,3 +29,17 @@ BASE is a normally trained twin attacked with the same budget.
 - Adversarial training still removes ~89% (DeBERTa) and 100% (E5) of genuine evasions, although it only saw 15%-budget rewrites.
 - DeBERTa's 9 residual genuine evasions come from 3 seeds, 7 of them held-out test seeds (r2t), and all rest on 1-2 agent queries; they need ~10 words changed.
 - Takeaway: one round of adversarial training generalizes beyond its attack budget, but not fully for DeBERTa; a second round on 30%-budget rewrites is the natural next step.
+
+## Final system: adversarial training + registry-relative calibration (Step 9, results/cal_adv_*; seed 42 twins, 1% val-FPR target)
+
+| | DeBERTa base global | DeBERTa **adv + rel** | E5 base global | E5 **adv + rel** |
+|---|---|---|---|---|
+| FPR unseen-server benign (n=392) | 0.125 | **0.031** | 0.102 | **0.031** |
+| FPR hard negatives (n=245) | 0.057 | **0.000** | 0.053 | **0.020** |
+| test positives + all black-box rounds | 1.00 | **1.00** | 1.00 | **1.00** |
+| white-box 15%, held-out seeds (genuine, n=20) | 1.00 | **1.00** | 1.00 | **1.00** |
+| white-box 30% vs base (genuine, n=81 / 82) | 0.57 | **1.00** | 0.79 | **1.00** |
+| white-box 30% vs ADV itself (genuine, n=9 / 0) | 0.00 | **0.00** (adv global 0.67) | — | — |
+
+- The combination keeps every gain: false alarms ~3% (from 10-13%), hard negatives 0-2%, detection 1.00 on all non-adaptive and transferred white-box sets.
+- Caveat (adaptive): the 9 DeBERTa evasions found against the ADV model at 30% budget still pass after calibration (the global threshold would have caught 6 of 9, at 12.8% FPR). Calibration trades some adaptive robustness for a 4x lower false-alarm rate; a second adversarial round at 30% is the fix.
