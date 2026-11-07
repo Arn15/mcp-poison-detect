@@ -1,0 +1,184 @@
+{
+  "sizes": {
+    "val_neg": 138,
+    "test_neg": 392,
+    "test_hardneg": 245,
+    "test_pos": 571,
+    "blackbox_opt": 379,
+    "wb1_evaders": 95,
+    "wb1_genuine": 48,
+    "wb1e5_evaders": 110,
+    "wb1e5_genuine": 40
+  },
+  "fluency": {
+    "thr@0.01": 9.167453765869142,
+    "test_neg@0.01": 0.002551020408163265,
+    "test_hardneg@0.01": 0.0,
+    "test_pos@0.01": 0.0,
+    "blackbox_opt@0.01": 0.0,
+    "wb1_evaders@0.01": 0.0,
+    "wb1_genuine@0.01": 0.0,
+    "wb1e5_evaders@0.01": 0.0,
+    "wb1e5_genuine@0.01": 0.0,
+    "thr@0.05": 8.732023239135744,
+    "test_neg@0.05": 0.002551020408163265,
+    "test_hardneg@0.05": 0.0,
+    "test_pos@0.05": 0.0,
+    "blackbox_opt@0.05": 0.0,
+    "wb1_evaders@0.05": 0.0,
+    "wb1_genuine@0.05": 0.0,
+    "wb1e5_evaders@0.05": 0.0,
+    "wb1e5_genuine@0.05": 0.0,
+    "median_nll": {
+      "val_neg": 4.368791818618774,
+      "test_neg": 4.160677194595337,
+      "test_hardneg": 4.1814093589782715,
+      "test_pos": 3.9392731189727783,
+      "blackbox_opt": 4.065718173980713,
+      "wb1_evaders": 5.371936321258545,
+      "wb1_genuine": 5.370747804641724,
+      "wb1e5_evaders": 5.675941705703735,
+      "wb1e5_genuine": 5.750540256500244
+    }
+  },
+  "calibration": {
+    "results/wb1": {
+      "detector": "/kaggle/working/outputs/defense_checks/20261107-192920_def1/ckpt_wb1",
+      "backbone": "microsoft/deberta-v3-base",
+      "test_neg@0.01": {
+        "global": 0.11224489795918367,
+        "rel_max": 0.031088082901554404,
+        "coverage": "386/392",
+        "rel_max_or_fluency": 0.03571428571428571
+      },
+      "test_hardneg@0.01": {
+        "global": 0.04897959183673469,
+        "rel_max": 0.012244897959183673,
+        "coverage": "245/245",
+        "rel_max_or_fluency": 0.012244897959183673
+      },
+      "test_pos@0.01": {
+        "global": 1.0,
+        "rel_max": 1.0,
+        "coverage": "571/571",
+        "rel_max_or_fluency": 1.0
+      },
+      "blackbox_opt@0.01": {
+        "global": 1.0,
+        "rel_max": 1.0,
+        "coverage": "379/379"
+      },
+      "evaders@0.01": {
+        "global": 0.6631578947368421,
+        "rel_max": 0.30526315789473685,
+        "coverage": "95/95",
+        "rel_max_or_fluency": 0.30526315789473685
+      },
+      "genuine@0.01": {
+        "global": 0.7291666666666666,
+        "rel_max": 0.3333333333333333,
+        "coverage": "48/48",
+        "rel_max_or_fluency": 0.3333333333333333
+      },
+      "test_neg@0.05": {
+        "global": 0.16326530612244897,
+        "rel_max": 0.04145077720207254,
+        "coverage": "386/392"
+      },
+      "test_hardneg@0.05": {
+        "global": 0.10204081632653061,
+        "rel_max": 0.02857142857142857,
+        "coverage": "245/245"
+      },
+      "test_pos@0.05": {
+        "global": 1.0,
+        "rel_max": 1.0,
+        "coverage": "571/571"
+      },
+      "blackbox_opt@0.05": {
+        "global": 1.0,
+        "rel_max": 1.0,
+        "coverage": "379/379"
+      },
+      "evaders@0.05": {
+        "global": 0.8947368421052632,
+        "rel_max": 0.4421052631578947,
+        "coverage": "95/95"
+      },
+      "genuine@0.05": {
+        "global": 0.9583333333333334,
+        "rel_max": 0.4375,
+        "coverage": "48/48"
+      }
+    },
+    "results/wb1e5": {
+      "detector": "/kaggle/working/outputs/defense_checks/20261107-192920_def1/ckpt_wb1e5",
+      "backbone": "intfloat/multilingual-e5-base",
+      "test_neg@0.01": {
+        "global": 0.04081632653061224,
+        "rel_max": 0.04145077720207254,
+        "coverage": "386/392",
+        "rel_max_or_fluency": 0.04336734693877551
+      },
+      "test_hardneg@0.01": {
+        "global": 0.0163265306122449,
+        "rel_max": 0.024489795918367346,
+        "coverage": "245/245",
+        "rel_max_or_fluency": 0.024489795918367346
+      },
+      "test_pos@0.01": {
+        "global": 1.0,
+        "rel_max": 1.0,
+        "coverage": "571/571",
+        "rel_max_or_fluency": 1.0
+      },
+      "blackbox_opt@0.01": {
+        "global": 1.0,
+        "rel_max": 1.0,
+        "coverage": "379/379"
+      },
+      "evaders@0.01": {
+        "global": 0.37272727272727274,
+        "rel_max": 0.1,
+        "coverage": "110/110",
+        "rel_max_or_fluency": 0.1
+      },
+      "genuine@0.01": {
+        "global": 0.375,
+        "rel_max": 0.05,
+        "coverage": "40/40",
+        "rel_max_or_fluency": 0.05
+      },
+      "test_neg@0.05": {
+        "global": 0.061224489795918366,
+        "rel_max": 0.05181347150259067,
+        "coverage": "386/392"
+      },
+      "test_hardneg@0.05": {
+        "global": 0.02040816326530612,
+        "rel_max": 0.02857142857142857,
+        "coverage": "245/245"
+      },
+      "test_pos@0.05": {
+        "global": 1.0,
+        "rel_max": 1.0,
+        "coverage": "571/571"
+      },
+      "blackbox_opt@0.05": {
+        "global": 1.0,
+        "rel_max": 1.0,
+        "coverage": "379/379"
+      },
+      "evaders@0.05": {
+        "global": 0.7636363636363637,
+        "rel_max": 0.10909090909090909,
+        "coverage": "110/110"
+      },
+      "genuine@0.05": {
+        "global": 0.8,
+        "rel_max": 0.05,
+        "coverage": "40/40"
+      }
+    }
+  }
+}

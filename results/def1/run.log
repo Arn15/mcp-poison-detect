@@ -1,0 +1,54 @@
+19:29:20 | INFO | defense_checks | stage=defense_checks runtime=kaggle commit=f7deb3f run_dir=/kaggle/working/outputs/defense_checks/20261107-192920_def1
+19:29:22 | INFO | defense_checks | sets: {'val_neg': 138, 'test_neg': 392, 'test_hardneg': 245, 'test_pos': 571, 'blackbox_opt': 379, 'wb1_evaders': 95, 'wb1_genuine': 48, 'wb1e5_evaders': 110, 'wb1e5_genuine': 40}
+19:30:09 | INFO | defense_checks | LM scored 2018 texts
+19:30:09 | INFO | defense_checks | fluency: {'thr@0.01': 9.167, 'test_neg@0.01': 0.003, 'test_hardneg@0.01': 0.0, 'test_pos@0.01': 0.0, 'blackbox_opt@0.01': 0.0, 'wb1_evaders@0.01': 0.0, 'wb1_genuine@0.01': 0.0, 'wb1e5_evaders@0.01': 0.0, 'wb1e5_genuine@0.01': 0.0}
+19:30:50 | INFO | defense_checks |   ep 0 loss 0.2667 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0005 (34s)
+19:31:23 | INFO | defense_checks |   ep 1 loss 0.0077 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (33s)
+19:31:58 | INFO | defense_checks |   ep 2 loss 0.0101 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (34s)
+19:32:32 | INFO | defense_checks |   ep 3 loss 0.0003 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (33s)
+19:32:45 | INFO | defense_checks | calibration results/wb1: {'test_neg@0.01': {'global': 0.11224489795918367, 'rel_max': 0.031088082901554404, 'coverage': '386/392', 'rel_max_or_fluency': 0.03571428571428571}, 'test_hardneg@0.01': {'global': 0.04897959183673469, 'rel_max': 0.012244897959183673, 'coverage': '245/245', 'rel_max_or_fluency': 0.012244897959183673}, 'test_pos@0.01': {'global': 1.0, 'rel_max': 1.0, 'coverage': '571/571', 'rel_max_or_fluency': 1.0}, 'blackbox_opt@0.01': {'global': 1.0, 'rel_max': 1.0, 'coverage': '379/379'}, 'evaders@0.01': {'global': 0.6631578947368421, 'rel_max': 0.30526315789473685, 'coverage': '95/95', 'rel_max_or_fluency': 0.30526315789473685}, 'genuine@0.01': {'global': 0.7291666666666666, 'rel_max': 0.3333333333333333, 'coverage': '48/48', 'rel_max_or_fluency': 0.3333333333333333}}
+19:33:27 | INFO | defense_checks |   ep 0 loss 0.2850 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0008 (29s)
+19:33:57 | INFO | defense_checks |   ep 1 loss 0.0061 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0003 (29s)
+19:34:26 | INFO | defense_checks |   ep 2 loss 0.0005 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0003 (28s)
+19:34:54 | INFO | defense_checks |   ep 3 loss 0.0004 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (28s)
+19:35:06 | INFO | defense_checks | calibration results/wb1e5: {'test_neg@0.01': {'global': 0.04081632653061224, 'rel_max': 0.04145077720207254, 'coverage': '386/392', 'rel_max_or_fluency': 0.04336734693877551}, 'test_hardneg@0.01': {'global': 0.0163265306122449, 'rel_max': 0.024489795918367346, 'coverage': '245/245', 'rel_max_or_fluency': 0.024489795918367346}, 'test_pos@0.01': {'global': 1.0, 'rel_max': 1.0, 'coverage': '571/571', 'rel_max_or_fluency': 1.0}, 'blackbox_opt@0.01': {'global': 1.0, 'rel_max': 1.0, 'coverage': '379/379'}, 'evaders@0.01': {'global': 0.37272727272727274, 'rel_max': 0.1, 'coverage': '110/110', 'rel_max_or_fluency': 0.1}, 'genuine@0.01': {'global': 0.375, 'rel_max': 0.05, 'coverage': '40/40', 'rel_max_or_fluency': 0.05}}
+19:35:06 | INFO | defense_checks | 
+# Defense checks against white-box evasions
+
+Set sizes: {'val_neg': 138, 'test_neg': 392, 'test_hardneg': 245, 'test_pos': 571, 'blackbox_opt': 379, 'wb1_evaders': 95, 'wb1_genuine': 48, 'wb1e5_evaders': 110, 'wb1e5_genuine': 40}
+
+## A. Fluency filter (gpt2 log-perplexity, threshold on val negatives)
+
+| set | flagged @1% | flagged @5% | median NLL |
+|---|---|---|---|
+| test_neg | 0.003 | 0.003 | 4.16 |
+| test_hardneg | 0.000 | 0.000 | 4.18 |
+| test_pos | 0.000 | 0.000 | 3.94 |
+| blackbox_opt | 0.000 | 0.000 | 4.07 |
+| wb1_evaders | 0.000 | 0.000 | 5.37 |
+| wb1_genuine | 0.000 | 0.000 | 5.37 |
+| wb1e5_evaders | 0.000 | 0.000 | 5.68 |
+| wb1e5_genuine | 0.000 | 0.000 | 5.75 |
+
+## B/C. Calibration on results/wb1 (microsoft/deberta-v3-base, twin detector)
+
+| set @1% | global | rel_max | rel_max OR fluency | coverage |
+|---|---|---|---|---|
+| test_neg | 0.112 | 0.031 | 0.036 | 386/392 |
+| test_hardneg | 0.049 | 0.012 | 0.012 | 245/245 |
+| test_pos | 1.000 | 1.000 | 1.000 | 571/571 |
+| blackbox_opt | 1.000 | 1.000 |  | 379/379 |
+| evaders | 0.663 | 0.305 | 0.305 | 95/95 |
+| genuine | 0.729 | 0.333 | 0.333 | 48/48 |
+
+## B/C. Calibration on results/wb1e5 (intfloat/multilingual-e5-base, twin detector)
+
+| set @1% | global | rel_max | rel_max OR fluency | coverage |
+|---|---|---|---|---|
+| test_neg | 0.041 | 0.041 | 0.043 | 386/392 |
+| test_hardneg | 0.016 | 0.024 | 0.024 | 245/245 |
+| test_pos | 1.000 | 1.000 | 1.000 | 571/571 |
+| blackbox_opt | 1.000 | 1.000 |  | 379/379 |
+| evaders | 0.373 | 0.100 | 0.100 | 110/110 |
+| genuine | 0.375 | 0.050 | 0.050 | 40/40 |
+
