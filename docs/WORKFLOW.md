@@ -52,3 +52,8 @@ All use the Kaggle runner, GPU_DEPS=False (transformers backend; vLLM optional l
 - Budget ablation: add `whitebox.max_frac=0.30` (tag wb1_b30)
 Outputs: whitebox.jsonl (attack per description), wb_verified.jsonl (agent control on evaders), summary.json.
 Headline number = summary.n_genuine_evasions (evades the 1%-val-FPR threshold AND asr_true >= 0.2).
+
+## Step 7 (adversarial training + white-box re-attack)
+`notebooks/kaggle_adv1_deberta.ipynb` and `kaggle_adv1e5_e5.ipynb` (GPU T4 x2, GPU_DEPS=True). Each runs
+`scripts/adv_train.py` (base vs adv, 3 seeds -> adv_results.md) then `scripts/attack_whitebox.py` against the saved
+ADV checkpoint (-> summary.json; compare n_genuine_evasions with results/wb1 and results/wb1e5).

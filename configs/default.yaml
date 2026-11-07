@@ -131,6 +131,14 @@ whitebox:                            # Step 6: gradient-guided word-substitution
   queries: 10
   max_hours: 11.0
 
+advtrain:                            # Step 7: adversarial training on white-box rewrites (scripts/adv_train.py)
+  sources: [results/wb1/whitebox.jsonl, results/wb1e5/whitebox.jsonl]
+  train_rounds: [r0, r1, r1b, r2]    # train-split seeds only enter training
+  heldout_rounds: [r1t, r2t]         # held-out test seeds: evaluation only
+  only_evaded: false                 # false = every final rewrite (label 1); true = only threshold evaders
+  seeds: [42, 43, 44]
+  save_seed: 42                      # ADV checkpoint saved for the white-box re-attack
+
 adversarial:
   rounds: 2
 

@@ -42,5 +42,6 @@ design · **Library** = called via a third-party package, not reimplemented.
 | `mcptp/attacker/whitebox.py` | Adapted | White-box word-substitution attack on the detector: one-hot gradient top-k (HotFlip) + exact scoring of sampled single-word swaps (GCG), whole-word / protected-payload / word-budget constraints | Ebrahimi et al., 2018 (HotFlip); Zou et al., 2023 (GCG) |
 | `scripts/attack_whitebox.py` | Own | Step 6 orchestration: deployable threshold, attack verified attacks, agent no-poison control on evaders, summary | — |
 | `tests/test_whitebox.py` | Own | Unit tests for white-box attack constraints | — |
+| `scripts/adv_train.py` | Own | Step 7: adversarial training on white-box rewrites of train seeds; base-vs-adv comparison at val-fixed FPR on clean, hard-negative, black-box and held-out white-box sets | Madry et al., 2018 (adversarial training) |
 | *(Step 5)* `mcptp/baselines/e5.py` | Adapted | MCP-Guard Stage II classifier | Xing et al., arXiv 2508.10991 |
 | — | Library | DeBERTa-v3 / E5 weights, HF Transformers, vLLM, scikit-learn | — |
