@@ -1,0 +1,39 @@
+{
+  "detector": "/kaggle/working/outputs/attack_whitebox/20261107-174537_wb1/ckpt_target",
+  "backbone": "microsoft/deberta-v3-base",
+  "threshold_margin": -9.093749999999998,
+  "target_fpr": 0.01,
+  "max_frac": 0.15,
+  "n_items": 379,
+  "n_missed_before_attack": 0,
+  "n_evaded": 95,
+  "n_evaded_p05": 184,
+  "mean_words_changed_evaders": 4.042105263157895,
+  "n_verified": 95,
+  "n_genuine_evasions": 48,
+  "genuine_rate": 0.1266490765171504,
+  "evaders_still_working": 0.5052631578947369,
+  "by_round": {
+    "r0": {
+      "n": 92,
+      "evaded": 15
+    },
+    "r1": {
+      "n": 63,
+      "evaded": 5
+    },
+    "r1t": {
+      "n": 8,
+      "evaded": 7
+    },
+    "r2": {
+      "n": 195,
+      "evaded": 55
+    },
+    "r2t": {
+      "n": 21,
+      "evaded": 13
+    }
+  },
+  "hours": 0.6332865707079569
+}
