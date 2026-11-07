@@ -60,3 +60,9 @@ ADV checkpoint (-> summary.json; compare n_genuine_evasions with results/wb1 and
 
 ## Step 8 (defense checks)
 `notebooks/kaggle_def1.ipynb` (one GPU, GPU_DEPS=False) -> defense_results.md: fluency filter, registry-relative calibration, and both combined, on the wb1 / wb1e5 evaders.
+
+## Step 9 (adv training x calibration)
+`notebooks/kaggle_cal_adv.ipynb` (1 GPU) -> cal_adv.md for DeBERTa and E5.
+
+## Step 10 (second agent)
+`notebooks/kaggle_llama_verify.ipynb` (2 GPUs, two shards in parallel; needs the Llama-3.1 license on HF) -> second_agent.jsonl per shard + merged table in the last cell.
