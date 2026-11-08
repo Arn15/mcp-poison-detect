@@ -1,0 +1,605 @@
+{
+  "n_adv": 1400,
+  "sets": {
+    "val_neg": 138,
+    "test_neg": 392,
+    "test_hardneg": 245,
+    "test_pos": 571,
+    "r0_opt": 92,
+    "r1_opt": 107,
+    "r1b_opt": 72,
+    "r1t_opt": 8,
+    "r2_opt": 195,
+    "r2t_opt": 21,
+    "wb_heldout_wb1": 29,
+    "wb_heldout_genuine": 43,
+    "wb_heldout_wb1e5": 29,
+    "wb_heldout_wb3_base_b30_deb": 29,
+    "wb_heldout_wb3_adv_b30_deb": 29
+  },
+  "per_seed": {
+    "base": {
+      "42": {
+        "test_neg@0.01": 0.11479591836734694,
+        "test_hardneg@0.01": 0.044897959183673466,
+        "test_pos@0.01": 1.0,
+        "r0_opt@0.01": 1.0,
+        "r1_opt@0.01": 1.0,
+        "r1b_opt@0.01": 1.0,
+        "r1t_opt@0.01": 1.0,
+        "r2_opt@0.01": 1.0,
+        "r2t_opt@0.01": 1.0,
+        "wb_heldout_wb1@0.01": 0.8275862068965517,
+        "wb_heldout_genuine@0.01": 0.4418604651162791,
+        "wb_heldout_wb1e5@0.01": 1.0,
+        "wb_heldout_wb3_base_b30_deb@0.01": 0.2413793103448276,
+        "wb_heldout_wb3_adv_b30_deb@0.01": 0.27586206896551724,
+        "test_neg@0.05": 0.17091836734693877,
+        "test_hardneg@0.05": 0.09387755102040816,
+        "test_pos@0.05": 1.0,
+        "r0_opt@0.05": 1.0,
+        "r1_opt@0.05": 1.0,
+        "r1b_opt@0.05": 1.0,
+        "r1t_opt@0.05": 1.0,
+        "r2_opt@0.05": 1.0,
+        "r2t_opt@0.05": 1.0,
+        "wb_heldout_wb1@0.05": 0.9655172413793104,
+        "wb_heldout_genuine@0.05": 0.4883720930232558,
+        "wb_heldout_wb1e5@0.05": 1.0,
+        "wb_heldout_wb3_base_b30_deb@0.05": 0.3793103448275862,
+        "wb_heldout_wb3_adv_b30_deb@0.05": 0.5517241379310345,
+        "auroc_test_pos": 0.9999999999999999,
+        "auroc_r0_opt": 1.0,
+        "auroc_r1_opt": 1.0,
+        "auroc_r1b_opt": 1.0,
+        "auroc_r1t_opt": 1.0,
+        "auroc_r2_opt": 1.0,
+        "auroc_r2t_opt": 1.0,
+        "auroc_wb_heldout_wb1": 0.9233374384236454,
+        "auroc_wb_heldout_genuine": 0.8022365923113431,
+        "auroc_wb_heldout_wb1e5": 0.995469739619986,
+        "auroc_wb_heldout_wb3_base_b30_deb": 0.8173821252638986,
+        "auroc_wb_heldout_wb3_adv_b30_deb": 0.7857582688247713
+      },
+      "43": {
+        "test_neg@0.01": 0.1096938775510204,
+        "test_hardneg@0.01": 0.044897959183673466,
+        "test_pos@0.01": 1.0,
+        "r0_opt@0.01": 1.0,
+        "r1_opt@0.01": 1.0,
+        "r1b_opt@0.01": 1.0,
+        "r1t_opt@0.01": 1.0,
+        "r2_opt@0.01": 1.0,
+        "r2t_opt@0.01": 1.0,
+        "wb_heldout_wb1@0.01": 0.7586206896551724,
+        "wb_heldout_genuine@0.01": 0.5116279069767442,
+        "wb_heldout_wb1e5@0.01": 1.0,
+        "wb_heldout_wb3_base_b30_deb@0.01": 0.20689655172413793,
+        "wb_heldout_wb3_adv_b30_deb@0.01": 0.2413793103448276,
+        "test_neg@0.05": 0.13520408163265307,
+        "test_hardneg@0.05": 0.04897959183673469,
+        "test_pos@0.05": 1.0,
+        "r0_opt@0.05": 1.0,
+        "r1_opt@0.05": 1.0,
+        "r1b_opt@0.05": 1.0,
+        "r1t_opt@0.05": 1.0,
+        "r2_opt@0.05": 1.0,
+        "r2t_opt@0.05": 1.0,
+        "wb_heldout_wb1@0.05": 0.7586206896551724,
+        "wb_heldout_genuine@0.05": 0.5813953488372093,
+        "wb_heldout_wb1e5@0.05": 1.0,
+        "wb_heldout_wb3_base_b30_deb@0.05": 0.3448275862068966,
+        "wb_heldout_wb3_adv_b30_deb@0.05": 0.3103448275862069,
+        "auroc_test_pos": 0.9999017119982844,
+        "auroc_r0_opt": 1.0,
+        "auroc_r1_opt": 1.0,
+        "auroc_r1b_opt": 1.0,
+        "auroc_r1t_opt": 1.0,
+        "auroc_r2_opt": 0.9999869178440607,
+        "auroc_r2t_opt": 1.0,
+        "auroc_wb_heldout_wb1": 0.8946604503870514,
+        "auroc_wb_heldout_genuine": 0.8518331751305173,
+        "auroc_wb_heldout_wb1e5": 0.985661505981703,
+        "auroc_wb_heldout_wb3_base_b30_deb": 0.7831632653061225,
+        "auroc_wb_heldout_wb3_adv_b30_deb": 0.6177427867698804
+      },
+      "44": {
+        "test_neg@0.01": 0.09693877551020408,
+        "test_hardneg@0.01": 0.0326530612244898,
+        "test_pos@0.01": 1.0,
+        "r0_opt@0.01": 1.0,
+        "r1_opt@0.01": 1.0,
+        "r1b_opt@0.01": 1.0,
+        "r1t_opt@0.01": 1.0,
+        "r2_opt@0.01": 1.0,
+        "r2t_opt@0.01": 1.0,
+        "wb_heldout_wb1@0.01": 0.5172413793103449,
+        "wb_heldout_genuine@0.01": 0.32558139534883723,
+        "wb_heldout_wb1e5@0.01": 0.9655172413793104,
+        "wb_heldout_wb3_base_b30_deb@0.01": 0.20689655172413793,
+        "wb_heldout_wb3_adv_b30_deb@0.01": 0.2413793103448276,
+        "test_neg@0.05": 0.10714285714285714,
+        "test_hardneg@0.05": 0.044897959183673466,
+        "test_pos@0.05": 1.0,
+        "r0_opt@0.05": 1.0,
+        "r1_opt@0.05": 1.0,
+        "r1b_opt@0.05": 1.0,
+        "r1t_opt@0.05": 1.0,
+        "r2_opt@0.05": 1.0,
+        "r2t_opt@0.05": 1.0,
+        "wb_heldout_wb1@0.05": 0.5172413793103449,
+        "wb_heldout_genuine@0.05": 0.37209302325581395,
+        "wb_heldout_wb1e5@0.05": 1.0,
+        "wb_heldout_wb3_base_b30_deb@0.05": 0.27586206896551724,
+        "wb_heldout_wb3_adv_b30_deb@0.05": 0.27586206896551724,
+        "auroc_test_pos": 0.9999597912720255,
+        "auroc_r0_opt": 1.0,
+        "auroc_r1_opt": 1.0,
+        "auroc_r1b_opt": 1.0,
+        "auroc_r1t_opt": 1.0,
+        "auroc_r2_opt": 1.0,
+        "auroc_r2t_opt": 1.0,
+        "auroc_wb_heldout_wb1": 0.8546358198451794,
+        "auroc_wb_heldout_genuine": 0.7355541053630754,
+        "auroc_wb_heldout_wb1e5": 0.9855295566502463,
+        "auroc_wb_heldout_wb3_base_b30_deb": 0.727304714989444,
+        "auroc_wb_heldout_wb3_adv_b30_deb": 0.5904732582688248
+      }
+    },
+    "adv": {
+      "42": {
+        "test_neg@0.01": 0.17091836734693877,
+        "test_hardneg@0.01": 0.10612244897959183,
+        "test_pos@0.01": 1.0,
+        "r0_opt@0.01": 1.0,
+        "r1_opt@0.01": 1.0,
+        "r1b_opt@0.01": 1.0,
+        "r1t_opt@0.01": 1.0,
+        "r2_opt@0.01": 1.0,
+        "r2t_opt@0.01": 1.0,
+        "wb_heldout_wb1@0.01": 1.0,
+        "wb_heldout_genuine@0.01": 1.0,
+        "wb_heldout_wb1e5@0.01": 1.0,
+        "wb_heldout_wb3_base_b30_deb@0.01": 1.0,
+        "wb_heldout_wb3_adv_b30_deb@0.01": 1.0,
+        "test_neg@0.05": 0.21173469387755103,
+        "test_hardneg@0.05": 0.14285714285714285,
+        "test_pos@0.05": 1.0,
+        "r0_opt@0.05": 1.0,
+        "r1_opt@0.05": 1.0,
+        "r1b_opt@0.05": 1.0,
+        "r1t_opt@0.05": 1.0,
+        "r2_opt@0.05": 1.0,
+        "r2t_opt@0.05": 1.0,
+        "wb_heldout_wb1@0.05": 1.0,
+        "wb_heldout_genuine@0.05": 1.0,
+        "wb_heldout_wb1e5@0.05": 1.0,
+        "wb_heldout_wb3_base_b30_deb@0.05": 1.0,
+        "wb_heldout_wb3_adv_b30_deb@0.05": 1.0,
+        "auroc_test_pos": 1.0,
+        "auroc_r0_opt": 1.0,
+        "auroc_r1_opt": 1.0,
+        "auroc_r1b_opt": 1.0,
+        "auroc_r1t_opt": 1.0,
+        "auroc_r2_opt": 1.0,
+        "auroc_r2t_opt": 1.0,
+        "auroc_wb_heldout_wb1": 1.0,
+        "auroc_wb_heldout_genuine": 1.0,
+        "auroc_wb_heldout_wb1e5": 1.0,
+        "auroc_wb_heldout_wb3_base_b30_deb": 1.0,
+        "auroc_wb_heldout_wb3_adv_b30_deb": 0.9996481351161155
+      },
+      "43": {
+        "test_neg@0.01": 0.17857142857142858,
+        "test_hardneg@0.01": 0.09387755102040816,
+        "test_pos@0.01": 1.0,
+        "r0_opt@0.01": 1.0,
+        "r1_opt@0.01": 1.0,
+        "r1b_opt@0.01": 1.0,
+        "r1t_opt@0.01": 1.0,
+        "r2_opt@0.01": 1.0,
+        "r2t_opt@0.01": 1.0,
+        "wb_heldout_wb1@0.01": 1.0,
+        "wb_heldout_genuine@0.01": 1.0,
+        "wb_heldout_wb1e5@0.01": 1.0,
+        "wb_heldout_wb3_base_b30_deb@0.01": 1.0,
+        "wb_heldout_wb3_adv_b30_deb@0.01": 1.0,
+        "test_neg@0.05": 0.18622448979591838,
+        "test_hardneg@0.05": 0.09387755102040816,
+        "test_pos@0.05": 1.0,
+        "r0_opt@0.05": 1.0,
+        "r1_opt@0.05": 1.0,
+        "r1b_opt@0.05": 1.0,
+        "r1t_opt@0.05": 1.0,
+        "r2_opt@0.05": 1.0,
+        "r2t_opt@0.05": 1.0,
+        "wb_heldout_wb1@0.05": 1.0,
+        "wb_heldout_genuine@0.05": 1.0,
+        "wb_heldout_wb1e5@0.05": 1.0,
+        "wb_heldout_wb3_base_b30_deb@0.05": 1.0,
+        "wb_heldout_wb3_adv_b30_deb@0.05": 1.0,
+        "auroc_test_pos": 0.9999999999999999,
+        "auroc_r0_opt": 0.9999999999999999,
+        "auroc_r1_opt": 0.9999999999999999,
+        "auroc_r1b_opt": 0.9999999999999999,
+        "auroc_r1t_opt": 0.9999999999999999,
+        "auroc_r2_opt": 0.9999999999999999,
+        "auroc_r2t_opt": 0.9999999999999999,
+        "auroc_wb_heldout_wb1": 0.9999999999999999,
+        "auroc_wb_heldout_genuine": 0.9999999999999999,
+        "auroc_wb_heldout_wb1e5": 0.9999999999999999,
+        "auroc_wb_heldout_wb3_base_b30_deb": 0.9999999999999999,
+        "auroc_wb_heldout_wb3_adv_b30_deb": 0.9999999999999999
+      },
+      "44": {
+        "test_neg@0.01": 0.13520408163265307,
+        "test_hardneg@0.01": 0.09795918367346938,
+        "test_pos@0.01": 1.0,
+        "r0_opt@0.01": 1.0,
+        "r1_opt@0.01": 1.0,
+        "r1b_opt@0.01": 1.0,
+        "r1t_opt@0.01": 1.0,
+        "r2_opt@0.01": 1.0,
+        "r2t_opt@0.01": 1.0,
+        "wb_heldout_wb1@0.01": 1.0,
+        "wb_heldout_genuine@0.01": 1.0,
+        "wb_heldout_wb1e5@0.01": 1.0,
+        "wb_heldout_wb3_base_b30_deb@0.01": 1.0,
+        "wb_heldout_wb3_adv_b30_deb@0.01": 1.0,
+        "test_neg@0.05": 0.336734693877551,
+        "test_hardneg@0.05": 0.2979591836734694,
+        "test_pos@0.05": 1.0,
+        "r0_opt@0.05": 1.0,
+        "r1_opt@0.05": 1.0,
+        "r1b_opt@0.05": 1.0,
+        "r1t_opt@0.05": 1.0,
+        "r2_opt@0.05": 1.0,
+        "r2t_opt@0.05": 1.0,
+        "wb_heldout_wb1@0.05": 1.0,
+        "wb_heldout_genuine@0.05": 1.0,
+        "wb_heldout_wb1e5@0.05": 1.0,
+        "wb_heldout_wb3_base_b30_deb@0.05": 1.0,
+        "wb_heldout_wb3_adv_b30_deb@0.05": 1.0,
+        "auroc_test_pos": 1.0,
+        "auroc_r0_opt": 1.0,
+        "auroc_r1_opt": 1.0,
+        "auroc_r1b_opt": 1.0,
+        "auroc_r1t_opt": 1.0,
+        "auroc_r2_opt": 1.0,
+        "auroc_r2t_opt": 1.0,
+        "auroc_wb_heldout_wb1": 1.0,
+        "auroc_wb_heldout_genuine": 1.0,
+        "auroc_wb_heldout_wb1e5": 0.9999999999999999,
+        "auroc_wb_heldout_wb3_base_b30_deb": 1.0,
+        "auroc_wb_heldout_wb3_adv_b30_deb": 1.0
+      }
+    }
+  },
+  "mean_std": {
+    "base": {
+      "auroc_r0_opt": [
+        1.0,
+        0.0
+      ],
+      "auroc_r1_opt": [
+        1.0,
+        0.0
+      ],
+      "auroc_r1b_opt": [
+        1.0,
+        0.0
+      ],
+      "auroc_r1t_opt": [
+        1.0,
+        0.0
+      ],
+      "auroc_r2_opt": [
+        0.9999956392813535,
+        6.166987451486153e-06
+      ],
+      "auroc_r2t_opt": [
+        1.0,
+        0.0
+      ],
+      "auroc_test_pos": [
+        0.9999538344234367,
+        4.034638235861116e-05
+      ],
+      "auroc_wb_heldout_genuine": [
+        0.7965412909349787,
+        0.0476412486529696
+      ],
+      "auroc_wb_heldout_wb1": [
+        0.890877902885292,
+        0.028174561197737136
+      ],
+      "auroc_wb_heldout_wb1e5": [
+        0.9888869340839784,
+        0.004655058123531622
+      ],
+      "auroc_wb_heldout_wb3_adv_b30_deb": [
+        0.6646581046211588,
+        0.08635139112476764
+      ],
+      "auroc_wb_heldout_wb3_base_b30_deb": [
+        0.7759500351864883,
+        0.037125983506678104
+      ],
+      "r0_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r0_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "r1_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r1_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "r1b_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r1b_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "r1t_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r1t_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "r2_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r2_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "r2t_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r2t_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "test_hardneg@0.01": [
+        0.04081632653061224,
+        0.005772300254584059
+      ],
+      "test_hardneg@0.05": [
+        0.06258503401360543,
+        0.022189804667074958
+      ],
+      "test_neg@0.01": [
+        0.10714285714285714,
+        0.007510000736673341
+      ],
+      "test_neg@0.05": [
+        0.13775510204081634,
+        0.026098655192555793
+      ],
+      "test_pos@0.01": [
+        1.0,
+        0.0
+      ],
+      "test_pos@0.05": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_genuine@0.01": [
+        0.42635658914728686,
+        0.07674027082644702
+      ],
+      "wb_heldout_genuine@0.05": [
+        0.4806201550387597,
+        0.0856229536216067
+      ],
+      "wb_heldout_wb1@0.01": [
+        0.7011494252873564,
+        0.13305559658379568
+      ],
+      "wb_heldout_wb1@0.05": [
+        0.7471264367816092,
+        0.18318824655757732
+      ],
+      "wb_heldout_wb1e5@0.01": [
+        0.9885057471264368,
+        0.016255328303139003
+      ],
+      "wb_heldout_wb1e5@0.05": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_wb3_adv_b30_deb@0.01": [
+        0.25287356321839083,
+        0.016255328303139017
+      ],
+      "wb_heldout_wb3_adv_b30_deb@0.05": [
+        0.37931034482758613,
+        0.12272503737967023
+      ],
+      "wb_heldout_wb3_base_b30_deb@0.01": [
+        0.21839080459770113,
+        0.016255328303139027
+      ],
+      "wb_heldout_wb3_base_b30_deb@0.05": [
+        0.3333333333333333,
+        0.043007556169815414
+      ]
+    },
+    "adv": {
+      "auroc_r0_opt": [
+        1.0,
+        6.409875621278546e-17
+      ],
+      "auroc_r1_opt": [
+        1.0,
+        6.409875621278546e-17
+      ],
+      "auroc_r1b_opt": [
+        1.0,
+        6.409875621278546e-17
+      ],
+      "auroc_r1t_opt": [
+        1.0,
+        6.409875621278546e-17
+      ],
+      "auroc_r2_opt": [
+        1.0,
+        6.409875621278546e-17
+      ],
+      "auroc_r2t_opt": [
+        1.0,
+        6.409875621278546e-17
+      ],
+      "auroc_test_pos": [
+        1.0,
+        6.409875621278546e-17
+      ],
+      "auroc_wb_heldout_genuine": [
+        1.0,
+        6.409875621278546e-17
+      ],
+      "auroc_wb_heldout_wb1": [
+        1.0,
+        6.409875621278546e-17
+      ],
+      "auroc_wb_heldout_wb1e5": [
+        1.0,
+        9.064933036736789e-17
+      ],
+      "auroc_wb_heldout_wb3_adv_b30_deb": [
+        0.9998827117053718,
+        0.00016587069697073886
+      ],
+      "auroc_wb_heldout_wb3_base_b30_deb": [
+        1.0,
+        6.409875621278546e-17
+      ],
+      "r0_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r0_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "r1_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r1_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "r1b_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r1b_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "r1t_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r1t_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "r2_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r2_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "r2t_opt@0.01": [
+        1.0,
+        0.0
+      ],
+      "r2t_opt@0.05": [
+        1.0,
+        0.0
+      ],
+      "test_hardneg@0.01": [
+        0.09931972789115646,
+        0.005090690322141414
+      ],
+      "test_hardneg@0.05": [
+        0.17823129251700678,
+        0.08698975435725596
+      ],
+      "test_neg@0.01": [
+        0.16156462585034015,
+        0.018899754056881688
+      ],
+      "test_neg@0.05": [
+        0.24489795918367344,
+        0.06576818890363777
+      ],
+      "test_pos@0.01": [
+        1.0,
+        0.0
+      ],
+      "test_pos@0.05": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_genuine@0.01": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_genuine@0.05": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_wb1@0.01": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_wb1@0.05": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_wb1e5@0.01": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_wb1e5@0.05": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_wb3_adv_b30_deb@0.01": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_wb3_adv_b30_deb@0.05": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_wb3_base_b30_deb@0.01": [
+        1.0,
+        0.0
+      ],
+      "wb_heldout_wb3_base_b30_deb@0.05": [
+        1.0,
+        0.0
+      ]
+    }
+  },
+  "backbone": "microsoft/deberta-v3-base"
+}

@@ -1,0 +1,37 @@
+{
+  "detector": "results/adv2_deb ckpt_adv (seed 42)",
+  "backbone": "microsoft/deberta-v3-base",
+  "threshold_margin": -9.761718749999998,
+  "target_fpr": 0.01,
+  "max_frac": 0.3,
+  "steps": 100,
+  "n_items": 379,
+  "n_missed_before_attack": 0,
+  "n_evaded": 0,
+  "n_evaded_p05": 41,
+  "n_verified": 0,
+  "n_genuine_evasions": 0,
+  "by_round": {
+    "r0": {
+      "n": 92,
+      "evaded": 0
+    },
+    "r1": {
+      "n": 63,
+      "evaded": 0
+    },
+    "r1t": {
+      "n": 8,
+      "evaded": 0
+    },
+    "r2": {
+      "n": 195,
+      "evaded": 0
+    },
+    "r2t": {
+      "n": 21,
+      "evaded": 0
+    }
+  },
+  "note": "rebuilt from whitebox.jsonl: the run crashed in the verify phase because there were no evaders (fixed in cb90361)"
+}

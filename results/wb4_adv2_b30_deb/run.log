@@ -1,0 +1,21 @@
+04:20:06 | INFO | attack_whitebox | stage=attack_whitebox runtime=kaggle commit=83de931 run_dir=/kaggle/working/outputs/attack_whitebox/20261108-042006_wb4_adv2_b30_deb
+04:20:12 | INFO | attack_whitebox | target detector: /kaggle/working/outputs/adv_train/20261108-040158_adv2_deb/ckpt_adv (microsoft/deberta-v3-base)
+04:20:13 | INFO | attack_whitebox | threshold (margin) at 1% val FPR over 138 val negatives: -9.762
+04:20:13 | INFO | attack_whitebox | items to attack: 379 (rounds ['r0', 'r1', 'r1b', 'r1t', 'r2', 'r2t'], kinds ['opt'])
+04:20:14 | INFO | attack_whitebox | tokenizer style sp, 88715 allowed replacement words
+04:22:48 | INFO | attack_whitebox | 25/379 attacked
+04:24:56 | INFO | attack_whitebox | 50/379 attacked
+04:27:39 | INFO | attack_whitebox | 75/379 attacked
+04:30:22 | INFO | attack_whitebox | 100/379 attacked
+04:32:50 | INFO | attack_whitebox | 125/379 attacked
+04:35:26 | INFO | attack_whitebox | 150/379 attacked
+04:38:08 | INFO | attack_whitebox | 175/379 attacked
+04:40:18 | INFO | attack_whitebox | 200/379 attacked
+04:42:27 | INFO | attack_whitebox | 225/379 attacked
+04:44:10 | INFO | attack_whitebox | 250/379 attacked
+04:46:12 | INFO | attack_whitebox | 275/379 attacked
+04:48:06 | INFO | attack_whitebox | 300/379 attacked
+04:50:01 | INFO | attack_whitebox | 325/379 attacked
+04:52:05 | INFO | attack_whitebox | 350/379 attacked
+04:54:02 | INFO | attack_whitebox | 375/379 attacked
+04:54:19 | INFO | attack_whitebox | attack: 379 rows | evade threshold 0 | margin < 0 41 | mean words changed (evaders) 0.0

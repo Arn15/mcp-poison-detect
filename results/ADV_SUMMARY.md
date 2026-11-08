@@ -43,3 +43,18 @@ BASE is a normally trained twin attacked with the same budget.
 
 - The combination keeps every gain: false alarms ~3% (from 10-13%), hard negatives 0-2%, detection 1.00 on all non-adaptive and transferred white-box sets.
 - Caveat (adaptive): the 9 DeBERTa evasions found against the ADV model at 30% budget still pass after calibration (the global threshold would have caught 6 of 9, at 12.8% FPR). Calibration trades some adaptive robustness for a 4x lower false-alarm rate; a second adversarial round at 30% is the fix.
+
+## Second adversarial round, DeBERTa (Step 7c, commit 83de931; results/adv2_deb, results/wb4_adv2_b30_deb)
+
+Round 2 adds the 30%-budget white-box rewrites of train seeds (from attacks on BASE and on the round-1 ADV model): 1,400 adversarial rewrites in total. Held-out test seeds never trained on.
+
+| | base | round 1 | **round 2** |
+|---|---|---|---|
+| 30%-budget re-attack: evaders | 252 | 30 | **0** |
+| 30%-budget re-attack: genuine evasions | 81 | 9 | **0** |
+| held-out white-box rewrites detected (all 4 held-out sets) | 0.22-0.99 | 1.00 (15% sets) | **1.00** |
+| test FPR @1% val, global threshold (3 seeds) | 0.107 | ~0.14 | **0.162** |
+| hard-neg FPR, global threshold | 0.041 | ~0.07 | **0.099** |
+
+- Two rounds remove all white-box evasions up to a 30% word budget; detection on test positives and all black-box rounds stays 1.00.
+- Cost: global-threshold false alarms rise further (+5.5 points on unseen servers, +5.8 on hard negatives). Registry-relative calibration brought round 1 to 3.1%; round 2 + calibration has not been measured yet (one calibrate_adv run with the round-2 sources).
