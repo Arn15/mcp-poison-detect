@@ -199,7 +199,8 @@ def main():
                         "outcomes": out, "control": ctrl})
             if i % 25 == 0:
                 log.info("%d/%d verified", i, len(todo))
-        vrows = [json.loads(l) for l in open(run_dir / "wb_verified.jsonl")]
+        vpath = run_dir / "wb_verified.jsonl"
+        vrows = [json.loads(l) for l in open(vpath)] if vpath.exists() else []   # no evaders -> nothing verified
         genuine = [v for v in vrows if v["evaded"] and v["asr_true"] >= floor]
         summary.update({"n_verified": len(vrows), "n_genuine_evasions": len(genuine),
                         "genuine_rate": len(genuine) / max(1, len(rows)),
