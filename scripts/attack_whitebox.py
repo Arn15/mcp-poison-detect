@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import json
 import time
+from collections import defaultdict
 import warnings
 
 warnings.filterwarnings("ignore", category=SyntaxWarning)
@@ -41,7 +42,8 @@ from mcptp.utils.env import REPO_ROOT
 DEFAULTS = {"detector_ckpt": "train", "rounds": ["r0", "r1", "r1b", "r1t", "r2", "r2t"], "kinds": ["opt"],
             "max_items": None, "shard": None, "steps": 60, "batch": 64, "topk": 32, "max_frac": 0.15,
             "min_budget": 2, "patience": 15, "min_word_len": 2, "target_fpr": 0.01, "verify": True,
-            "verify_all": False, "queries": 10, "max_hours": 11.0}
+            "verify_all": False, "queries": 10, "max_hours": 11.0,
+            "calibrated": False}   # True: attack the registry-relative (calibrated) per-server threshold
 
 
 def load_items(rounds, kinds, floor):
@@ -108,6 +110,28 @@ def main():
     val_neg += [e for e in load_para(paths["splits"], cfg["para"]["version"], "val") if e["label"] == 0]
     thr = threshold_at_fpr(det.margin(val_neg), float(w["target_fpr"]))
     log.info("threshold (margin) at %.0f%% val FPR over %d val negatives: %.3f", 100 * w["target_fpr"], len(val_neg), thr)
+    thr_for = lambda server, name: thr          # global rule: one threshold for every candidate
+    if w["calibrated"]:
+        # registry-relative calibration (mcptp.eval.calibration, stat=max): flag c iff m(c) - anchor(c) >= tr, where
+        # anchor(c) = max margin over the server's other registered (original benign) tools. Attacking the calibrated
+        # system = pushing m(c) below tr + anchor(c), a per-server threshold. Margins clipped like the calibrator.
+        import math
+        clip = math.log((1 - 1e-7) / 1e-7)
+        reg = [e for e in ex if e["kind"] == "benign"]
+        anchors = defaultdict(list)
+        for e, m_ in zip(reg, np.clip(det.margin(reg), -clip, clip)):
+            anchors[e["server"]].append((e["tool_name"], float(m_)))
+
+        def anchor(server, name):
+            r = [v for n, v in anchors.get(server, []) if n != name]
+            return max(r) if r else None
+
+        vm = np.clip(det.margin(val_neg), -clip, clip)
+        vr = [m_ - anc for e, m_ in zip(val_neg, vm) if (anc := anchor(e["server"], e["tool_name"])) is not None]
+        tr = threshold_at_fpr(vr, float(w["target_fpr"]))
+        thr_for = lambda server, name: (thr if anchor(server, name) is None else tr + anchor(server, name))
+        log.info("CALIBRATED target: rel threshold %.3f over %d val negatives (per-server thresholds = tr + anchor)",
+                 tr, len(vr))
 
     def margin_fn_for(name):
         return lambda descs: det.margin([{"tool_name": name, "description": d, "context": [], "label": 1,
@@ -134,14 +158,14 @@ def main():
         if (time.time() - t0) / 3600 > float(w["max_hours"]):
             log.warning("wall-clock guard hit during attack phase; rerun with --resume %s", run_dir.name)
             break
-        res = attacker.run(it["tool_name"], it["desc"], protect_list(it), margin_fn_for(it["tool_name"]), thr,
+        res = attacker.run(it["tool_name"], it["desc"], protect_list(it), margin_fn_for(it["tool_name"]), thr_for(it["server"], it["tool_name"]),
                            steps=int(w["steps"]), batch=int(w["batch"]), topk=int(w["topk"]),
                            max_frac=float(w["max_frac"]), min_budget=int(w["min_budget"]),
                            patience=int(w["patience"]), rng=rng)
         ck.append({"key": key, "round": it["round"], "kind": it["kind"], "seed_id": it["seed_id"],
                    "server": it["server"], "tool_name": it["tool_name"], "paradigm": it.get("paradigm"),
                    "spec": it["spec"], "orig_desc": it["desc"], "orig_asr_true": it["asr_true"],
-                   "threshold": thr, **res})
+                   "threshold": thr_for(it["server"], it["tool_name"]), **res})
         if n_done % 25 == 0:
             log.info("%d/%d attacked", n_done, len(items))
     rows = [json.loads(l) for l in open(run_dir / "whitebox.jsonl")]
@@ -153,7 +177,8 @@ def main():
     # ---------------------------------------------------------------- verify phase (agent control)
     summary = {"detector": ckpt, "backbone": det.meta["backbone"], "threshold_margin": thr,
                "target_fpr": w["target_fpr"], "max_frac": w["max_frac"], "n_items": len(rows),
-               "n_missed_before_attack": sum(r["margin_orig"] < thr for r in rows),
+               "calibrated": bool(w["calibrated"]),
+               "n_missed_before_attack": sum(r["margin_orig"] < r["threshold"] for r in rows),
                "n_evaded": len(ev), "n_evaded_p05": sum(r["evaded_p05"] for r in rows),
                "mean_words_changed_evaders": float(np.mean([r["n_changed"] for r in ev])) if ev else None}
     if w["verify"]:
