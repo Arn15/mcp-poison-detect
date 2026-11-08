@@ -1,0 +1,70 @@
+{
+  "model": "unsloth/Llama-3.1-8B-Instruct-bnb-4bit",
+  "floor": 0.2,
+  "groups": {
+    "blackbox": {
+      "n": 190,
+      "genuine_second": 27,
+      "qwen_genuine": 190,
+      "both_genuine": 27,
+      "mean_asr_true_second": 0.14385964912280702,
+      "control_fires": 0,
+      "seeds_genuine_second": 5
+    },
+    "orig": {
+      "n": 24,
+      "genuine_second": 1,
+      "qwen_genuine": 8,
+      "both_genuine": 0,
+      "mean_asr_true_second": 0.0462962962962963,
+      "control_fires": 2,
+      "seeds_genuine_second": 1
+    },
+    "wb15_deberta": {
+      "n": 24,
+      "genuine_second": 8,
+      "qwen_genuine": 24,
+      "both_genuine": 8,
+      "mean_asr_true_second": 0.34722222222222227,
+      "control_fires": 0,
+      "seeds_genuine_second": 2
+    },
+    "wb15_e5": {
+      "n": 20,
+      "genuine_second": 8,
+      "qwen_genuine": 20,
+      "both_genuine": 8,
+      "mean_asr_true_second": 0.4,
+      "control_fires": 0,
+      "seeds_genuine_second": 2
+    },
+    "wb30_deberta": {
+      "n": 40,
+      "genuine_second": 10,
+      "qwen_genuine": 40,
+      "both_genuine": 10,
+      "mean_asr_true_second": 0.2263888888888889,
+      "control_fires": 0,
+      "seeds_genuine_second": 3
+    },
+    "wb30_e5": {
+      "n": 41,
+      "genuine_second": 20,
+      "qwen_genuine": 41,
+      "both_genuine": 20,
+      "mean_asr_true_second": 0.49322493224932246,
+      "control_fires": 0,
+      "seeds_genuine_second": 2
+    },
+    "wb30adv_deberta": {
+      "n": 5,
+      "genuine_second": 4,
+      "qwen_genuine": 5,
+      "both_genuine": 4,
+      "mean_asr_true_second": 0.8,
+      "control_fires": 0,
+      "seeds_genuine_second": 1
+    }
+  },
+  "hours": 3.568045717411571
+}
