@@ -58,3 +58,16 @@ Round 2 adds the 30%-budget white-box rewrites of train seeds (from attacks on B
 
 - Two rounds remove all white-box evasions up to a 30% word budget; detection on test positives and all black-box rounds stays 1.00.
 - Cost: global-threshold false alarms rise further (+5.5 points on unseen servers, +5.8 on hard negatives). Registry-relative calibration brought round 1 to 3.1%; round 2 + calibration has not been measured yet (one calibrate_adv run with the round-2 sources).
+
+## Round 2 + calibration (Step 9b, results/cal_adv2_deb; seed 42, 1% val-FPR target) — FINAL SYSTEM (DeBERTa)
+
+| | base global | base rel | round-2 adv global | **round-2 adv + rel** |
+|---|---|---|---|---|
+| FPR unseen-server benign (n=392) | 0.102 | 0.031 | 0.133 | **0.031** |
+| FPR hard negatives (n=245) | 0.037 | 0.008 | 0.086 | **0.008** |
+| test positives + all black-box rounds | 1.00 | 1.00 | 1.00 | **1.00** |
+| held-out white-box genuine, 15% (n=43) | 0.67 | 0.47 | 1.00 | **1.00** |
+| held-out white-box genuine, 30% (n=16) | 0.44 | 0.00 | 1.00 | **1.00** |
+
+- Calibration removes round 2's false-alarm cost entirely (13.3% -> 3.1%, hard negatives 8.6% -> 0.8%) with no detection loss on any set, including held-out white-box evasions.
+- Adaptive re-attack at 30% against the round-2 model (global threshold) found 0 evaders (results/wb4_adv2_b30_deb). An adaptive attack aimed at the calibrated score was not run; that and E5 round 2 are the remaining gaps.
