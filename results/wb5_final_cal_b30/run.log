@@ -1,0 +1,24 @@
+05:38:56 | INFO | attack_whitebox | stage=attack_whitebox runtime=kaggle commit=8743d9e run_dir=/kaggle/working/outputs/attack_whitebox/20261108-053856_wb5_final_cal_b30
+05:39:03 | INFO | attack_whitebox | target detector: /kaggle/working/outputs/adv_train/20261108-053238_adv2_final/ckpt_adv (microsoft/deberta-v3-base)
+05:39:04 | INFO | attack_whitebox | threshold (margin) at 1% val FPR over 138 val negatives: -9.723
+05:39:08 | INFO | attack_whitebox | CALIBRATED target: rel threshold 0.137 over 136 val negatives (per-server thresholds = tr + anchor)
+05:39:08 | INFO | attack_whitebox | items to attack: 379 (rounds ['r0', 'r1', 'r1b', 'r1t', 'r2', 'r2t'], kinds ['opt'])
+05:39:08 | INFO | attack_whitebox | tokenizer style sp, 88715 allowed replacement words
+05:41:41 | INFO | attack_whitebox | 25/379 attacked
+05:43:56 | INFO | attack_whitebox | 50/379 attacked
+05:46:30 | INFO | attack_whitebox | 75/379 attacked
+05:49:16 | INFO | attack_whitebox | 100/379 attacked
+05:51:36 | INFO | attack_whitebox | 125/379 attacked
+05:54:09 | INFO | attack_whitebox | 150/379 attacked
+05:57:01 | INFO | attack_whitebox | 175/379 attacked
+05:59:00 | INFO | attack_whitebox | 200/379 attacked
+06:01:24 | INFO | attack_whitebox | 225/379 attacked
+06:03:19 | INFO | attack_whitebox | 250/379 attacked
+06:05:11 | INFO | attack_whitebox | 275/379 attacked
+06:07:12 | INFO | attack_whitebox | 300/379 attacked
+06:09:05 | INFO | attack_whitebox | 325/379 attacked
+06:11:04 | INFO | attack_whitebox | 350/379 attacked
+06:12:57 | INFO | attack_whitebox | 375/379 attacked
+06:13:17 | INFO | attack_whitebox | attack: 379 rows | evade threshold 2 | margin < 0 37 | mean words changed (evaders) 8.0
+06:15:46 | INFO | attack_whitebox | verify: 2 checked | genuine evasions (evade + asr_true >= 0.2) 0 / 379 attacked
+06:15:46 | INFO | attack_whitebox | summary: {"detector": "/kaggle/working/outputs/adv_train/20261108-053238_adv2_final/ckpt_adv", "backbone": "microsoft/deberta-v3-base", "threshold_margin": -9.722656249999998, "target_fpr": 0.01, "max_frac": 0.3, "n_items": 379, "calibrated": true, "n_missed_before_attack": 0, "n_evaded": 2, "n_evaded_p05": 37, "mean_words_changed_evaders": 8.0, "n_verified": 2, "n_genuine_evasions": 0, "genuine_rate": 0.0, "evaders_still_working": 0.0, "by_round": {"r0": {"n": 92, "evaded": 0}, "r1": {"n": 63, "evaded": 0}, "r1t": {"n": 8, "evaded": 0}, "r2": {"n": 195, "evaded": 2}, "r2t": {"n": 21, "evaded": 0}}, "hours": 0.613908411860466}

@@ -1,0 +1,61 @@
+06:21:55 | INFO | calibrate_adv | stage=calibrate_adv runtime=kaggle commit=8743d9e run_dir=/kaggle/working/outputs/calibrate_adv/20261108-062155_cal_adv2_s44
+06:21:56 | INFO | calibrate_adv | adversarial rewrites: 1400 | sets: {'val_neg': 138, 'test_neg': 392, 'test_hardneg': 245, 'test_pos': 571, 'r0_opt': 92, 'r1_opt': 107, 'r1b_opt': 72, 'r1t_opt': 8, 'r2_opt': 195, 'r2t_opt': 21, 'wb15_heldout_evaders': 72, 'wb15_heldout_genuine': 43, 'wb30_evaders': 252, 'wb30_genuine': 81, 'wb30_heldout_genuine': 16, 'wb30adv_evaders': 30, 'wb30adv_genuine': 9}
+06:21:56 | INFO | calibrate_adv | training base (1801 examples, seed 44)
+06:22:37 | INFO | calibrate_adv |   ep 0 loss 0.2686 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0159 (33s)
+06:23:09 | INFO | calibrate_adv |   ep 1 loss 0.0008 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (32s)
+06:23:42 | INFO | calibrate_adv |   ep 2 loss 0.0004 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (32s)
+06:24:15 | INFO | calibrate_adv |   ep 3 loss 0.0003 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (32s)
+06:24:25 | INFO | calibrate_adv | base @1%: {'test_neg@0.01': {'global': 0.09693877551020408, 'rel': 0.03571428571428571}, 'test_hardneg@0.01': {'global': 0.036734693877551024, 'rel': 0.0163265306122449}, 'test_pos@0.01': {'global': 1.0, 'rel': 1.0}, 'r0_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'r1_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'r1b_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'r1t_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'r2_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'r2t_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'wb15_heldout_evaders@0.01': {'global': 0.3055555555555556, 'rel': 0.2222222222222222}, 'wb15_heldout_genuine@0.01': {'global': 0.32558139534883723, 'rel': 0.16279069767441862}, 'wb30_evaders@0.01': {'global': 0.4166666666666667, 'rel': 0.19047619047619047}, 'wb30_genuine@0.01': {'global': 0.3950617283950617, 'rel': 0.1111111111111111}, 'wb30_heldout_genuine@0.01': {'global': 0.0, 'rel': 0.0}, 'wb30adv_evaders@0.01': {'global': 0.03333333333333333, 'rel': 0.0}, 'wb30adv_genuine@0.01': {'global': 0.0, 'rel': 0.0}}
+06:24:25 | INFO | calibrate_adv | training adv (3201 examples, seed 44)
+06:25:16 | INFO | calibrate_adv |   ep 0 loss 0.2030 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0003 (48s)
+06:26:04 | INFO | calibrate_adv |   ep 1 loss 0.0003 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (48s)
+06:26:53 | INFO | calibrate_adv |   ep 2 loss 0.0007 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0000 (48s)
+06:27:42 | INFO | calibrate_adv |   ep 3 loss 0.0008 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0000 (48s)
+06:27:51 | INFO | calibrate_adv | adv @1%: {'test_neg@0.01': {'global': 0.1913265306122449, 'rel': 0.03316326530612245}, 'test_hardneg@0.01': {'global': 0.1346938775510204, 'rel': 0.02040816326530612}, 'test_pos@0.01': {'global': 1.0, 'rel': 1.0}, 'r0_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'r1_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'r1b_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'r1t_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'r2_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'r2t_opt@0.01': {'global': 1.0, 'rel': 1.0}, 'wb15_heldout_evaders@0.01': {'global': 1.0, 'rel': 1.0}, 'wb15_heldout_genuine@0.01': {'global': 1.0, 'rel': 1.0}, 'wb30_evaders@0.01': {'global': 1.0, 'rel': 1.0}, 'wb30_genuine@0.01': {'global': 1.0, 'rel': 1.0}, 'wb30_heldout_genuine@0.01': {'global': 1.0, 'rel': 1.0}, 'wb30adv_evaders@0.01': {'global': 1.0, 'rel': 1.0}, 'wb30adv_genuine@0.01': {'global': 1.0, 'rel': 1.0}}
+06:27:52 | INFO | calibrate_adv | 
+# Adversarial training x registry-relative calibration (microsoft/deberta-v3-base, seed 44)
+
+Flag rates at thresholds fixed on val negatives. FPR rows (test_neg, test_hardneg): lower is better.
+
+## Target 1%
+
+| set | n | base global | base rel | adv global | **adv rel** |
+|---|---|---|---|---|---|
+| test_neg | 392 | 0.097 | 0.036 | 0.191 | **0.033** |
+| test_hardneg | 245 | 0.037 | 0.016 | 0.135 | **0.020** |
+| test_pos | 571 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r0_opt | 92 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r1_opt | 107 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r1b_opt | 72 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r1t_opt | 8 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r2_opt | 195 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r2t_opt | 21 | 1.000 | 1.000 | 1.000 | **1.000** |
+| wb15_heldout_evaders | 72 | 0.306 | 0.222 | 1.000 | **1.000** |
+| wb15_heldout_genuine | 43 | 0.326 | 0.163 | 1.000 | **1.000** |
+| wb30_evaders | 252 | 0.417 | 0.190 | 1.000 | **1.000** |
+| wb30_genuine | 81 | 0.395 | 0.111 | 1.000 | **1.000** |
+| wb30_heldout_genuine | 16 | 0.000 | 0.000 | 1.000 | **1.000** |
+| wb30adv_evaders | 30 | 0.033 | 0.000 | 1.000 | **1.000** |
+| wb30adv_genuine | 9 | 0.000 | 0.000 | 1.000 | **1.000** |
+
+## Target 5%
+
+| set | n | base global | base rel | adv global | **adv rel** |
+|---|---|---|---|---|---|
+| test_neg | 392 | 0.110 | 0.041 | 0.253 | **0.046** |
+| test_hardneg | 245 | 0.045 | 0.020 | 0.192 | **0.024** |
+| test_pos | 571 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r0_opt | 92 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r1_opt | 107 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r1b_opt | 72 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r1t_opt | 8 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r2_opt | 195 | 1.000 | 1.000 | 1.000 | **1.000** |
+| r2t_opt | 21 | 1.000 | 1.000 | 1.000 | **1.000** |
+| wb15_heldout_evaders | 72 | 0.333 | 0.250 | 1.000 | **1.000** |
+| wb15_heldout_genuine | 43 | 0.349 | 0.163 | 1.000 | **1.000** |
+| wb30_evaders | 252 | 0.520 | 0.210 | 1.000 | **1.000** |
+| wb30_genuine | 81 | 0.519 | 0.111 | 1.000 | **1.000** |
+| wb30_heldout_genuine | 16 | 0.062 | 0.000 | 1.000 | **1.000** |
+| wb30adv_evaders | 30 | 0.067 | 0.000 | 1.000 | **1.000** |
+| wb30adv_genuine | 9 | 0.000 | 0.000 | 1.000 | **1.000** |
+
