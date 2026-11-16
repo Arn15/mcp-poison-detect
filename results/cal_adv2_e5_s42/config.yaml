@@ -1,0 +1,210 @@
+project:
+  name: mcp-poison-detect
+  seed: 42
+paths:
+  data_raw: data/raw
+  data_processed: data/processed
+  splits: data/splits
+  outputs: outputs
+  hf_cache: hf_cache
+data:
+  mcptox_repo: https://github.com/zhiqiangwang4/MCPTox-Benchmark
+  mcptox_commit: f85189f9ad12504c197c7f920ab818a40657b1fa
+  split_version: v1
+  split_strategy: server_disjoint
+  test_frac: 0.2
+  val_frac: 0.1
+  heldout_risk_families:
+  - Financial Loss
+  - Message Hijacking
+  include_explicit: true
+  hard_negatives_per_server: 8
+  max_cases: 300
+para:
+  version: v1
+  model: Qwen/Qwen3-4B
+  backend: transformers
+  splits:
+  - test
+  n_per_example:
+    train: 1
+    val: 1
+    test: 2
+  styles:
+  - formal API reference
+  - concise developer note
+  - plain friendly English
+  - verbose explanatory documentation
+  - terse changelog-like
+  - technical specification
+  temperature: 0.8
+  top_p: 0.95
+  max_new_tokens: 384
+  batch_size: 16
+  max_retries: 2
+  min_value_recall: 0.8
+  length_ratio:
+  - 0.5
+  - 2.2
+context:
+  name_match: true
+  semantic_match: true
+  embedder: intfloat/e5-base-v2
+  top_k: 3
+  sim_threshold: 0.8
+  max_context_tokens: 256
+detector:
+  backbone: intfloat/multilingual-e5-base
+  use_context: true
+  max_len: 384
+  seeds:
+  - 42
+  - 43
+  - 44
+  lr: 2.0e-05
+  batch_size: 16
+  epochs: 4
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  fp16: true
+  max_steps: null
+  context_dropout: 0.3
+  context_swap: 0.5
+  variants:
+    B3_plain:
+      use_context: false
+      train_para: false
+    B3_plain+para:
+      use_context: false
+      train_para: true
+    ours_context:
+      use_context: true
+      train_para: false
+    ours_context+para:
+      use_context: true
+      train_para: true
+  compare:
+  - - ours_context
+    - B3_plain
+  - - ours_context+para
+    - B3_plain+para
+  - - B3_plain+para
+    - B3_plain
+  - - ours_context+para
+    - ours_context
+  - - ours_context
+    - ours_context/SHUFFLED
+  - - ours_context+para
+    - ours_context+para/SHUFFLED
+  - - ours_context
+    - B0_tfidf_lr
+attacker:
+  attacker_model: Qwen/Qwen3-4B
+  evaluator_model: Qwen/Qwen3-8B
+  agent_device: cuda:1
+  agent_quant: 4bit
+  attacker_device: cuda:0
+  target_models:
+  - Qwen/Qwen3-8B
+  - meta-llama/Llama-3.1-8B-Instruct
+  n_candidates: 5
+  iterations: 2
+  shadow_queries: 5
+  temperature: 0.9
+  max_new_tokens: 384
+  asr_weight: 1.0
+  evasion_weight: 1.0
+  asr_floor: 0.2
+  max_seeds: null
+  seed_split: train
+  detector_ckpt: null
+  detector_context: false
+  backend: transformers
+  preset: null
+  attacker_quant: null
+  dedupe_seeds: false
+  feedback: basic
+  start_from: seed
+  selection: prob
+  early_stop: false
+  max_hours: 11.0
+  shard: null
+  vllm:
+    enable_prefix_caching: true
+    gpu_memory_utilization: 0.85
+    max_model_len: 8192
+    quantization: null
+whitebox:
+  detector_ckpt: train
+  rounds:
+  - r0
+  - r1
+  - r1b
+  - r1t
+  - r2
+  - r2t
+  kinds:
+  - opt
+  max_items: null
+  shard: null
+  steps: 60
+  batch: 64
+  topk: 32
+  max_frac: 0.15
+  min_budget: 2
+  patience: 15
+  min_word_len: 2
+  target_fpr: 0.01
+  verify: true
+  verify_all: false
+  queries: 10
+  max_hours: 11.0
+advtrain:
+  sources:
+  - results/wb1/whitebox.jsonl
+  - results/wb1e5/whitebox.jsonl
+  train_rounds:
+  - r0
+  - r1
+  - r1b
+  - r2
+  heldout_rounds:
+  - r1t
+  - r2t
+  only_evaded: false
+  seeds:
+  - 42
+  - 43
+  - 44
+  save_seed: 42
+adversarial:
+  rounds: 2
+baselines:
+  b1_e5:
+    backbone: intfloat/multilingual-e5-base
+    lr: 2.0e-05
+    epochs: 4
+  b2_llm_judge:
+    model: Qwen/Qwen3-8B
+  b3_plain_deberta:
+    use_context: false
+eval:
+  target_fpr: 0.01
+  extra_fprs:
+  - 0.05
+  bootstrap_iters: 1000
+  ci: 0.95
+checkpoint:
+  every_n_items: 20
+caladv:
+  adv_sources:
+  - results/wb1
+  - results/wb1e5
+  - results/wb3_base_b30_e5
+  - results/wb3_adv_b30_e5
+  seed: 42
+_run:
+  stage: calibrate_adv
+  runtime: kaggle
+  git_commit: 7ed37c0
+  run_dir: /kaggle/working/outputs/calibrate_adv/20261116-170750_cal_adv2_e5_s42

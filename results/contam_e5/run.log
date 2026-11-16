@@ -1,0 +1,74 @@
+17:24:13 | INFO | registry_contam | stage=registry_contam runtime=kaggle commit=7ed37c0 run_dir=/kaggle/working/outputs/registry_contam/20261116-172413_contam_e5
+17:24:13 | INFO | registry_contam | backbone intfloat/multilingual-e5-base | sources ['results/wb1', 'results/wb1e5', 'results/wb3_base_b30_e5', 'results/wb3_adv_b30_e5'] | adversarial rewrites 1400 | sets {'val_neg': 138, 'test_neg': 392, 'test_hardneg': 245, 'test_pos': 571, 'bb_opt': 495, 'wb_heldout_genuine': 38}
+17:24:13 | INFO | registry_contam | seed 42: training round-2 ADV intfloat/multilingual-e5-base (3201 examples)
+17:25:07 | INFO | registry_contam |   ep 0 loss 0.2154 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0005 (45s)
+17:25:53 | INFO | registry_contam |   ep 1 loss 0.0032 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (44s)
+17:26:39 | INFO | registry_contam |   ep 2 loss 0.0002 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (45s)
+17:27:24 | INFO | registry_contam |   ep 3 loss 0.0002 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (44s)
+17:27:32 | INFO | registry_contam | seed 42: thresholds {'global': -9.402343749999998, 'rel_max': 0.12109375000000001, 'rel_approved': 0.12109375000000001, 'rel_median': 0.22656250000000003} | naive max K=1 {'test_pos': 0.23257443082311732, 'bb_opt': 0.5345454545454545, 'wb_heldout_genuine': 0.4842105263157895, 'test_neg': 0.0, 'test_hardneg': 0.0} | ratchet no-cap test_pos {'k=0': 1.0, 'k=1': 1.0, 'k=2': 1.0, 'k=3': 1.0, 'k=5': 1.0, 'k=10': 1.0}
+17:27:32 | INFO | registry_contam | seed 43: training round-2 ADV intfloat/multilingual-e5-base (3201 examples)
+17:28:20 | INFO | registry_contam |   ep 0 loss 0.2051 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0116 (45s)
+17:29:06 | INFO | registry_contam |   ep 1 loss 0.0022 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (45s)
+17:29:52 | INFO | registry_contam |   ep 2 loss 0.0002 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (44s)
+17:30:38 | INFO | registry_contam |   ep 3 loss 0.0002 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (44s)
+17:30:46 | INFO | registry_contam | seed 43: thresholds {'global': -9.421874999999998, 'rel_max': 0.09375000000000001, 'rel_approved': 0.09375000000000001, 'rel_median': 0.26757812500000006} | naive max K=1 {'test_pos': 0.32784588441331, 'bb_opt': 0.6634343434343435, 'wb_heldout_genuine': 0.5789473684210527, 'test_neg': 0.001530612244897959, 'test_hardneg': 0.0} | ratchet no-cap test_pos {'k=0': 1.0, 'k=1': 0.9982486865148862, 'k=2': 0.9982486865148862, 'k=3': 0.9982486865148862, 'k=5': 0.9982486865148862, 'k=10': 0.9982486865148862}
+17:30:46 | INFO | registry_contam | seed 44: training round-2 ADV intfloat/multilingual-e5-base (3201 examples)
+17:31:34 | INFO | registry_contam |   ep 0 loss 0.2176 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0004 (44s)
+17:32:20 | INFO | registry_contam |   ep 1 loss 0.0048 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0451 (44s)
+17:33:04 | INFO | registry_contam |   ep 2 loss 0.0027 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0942 (44s)
+17:33:49 | INFO | registry_contam |   ep 3 loss 0.0005 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0729 (45s)
+17:33:56 | INFO | registry_contam | seed 44: thresholds {'global': -6.726562499999999, 'rel_max': 1.0527343750000002, 'rel_approved': 1.0527343750000002, 'rel_median': 1.2021484375000002} | naive max K=1 {'test_pos': 0.05253940455341506, 'bb_opt': 0.006868686868686869, 'wb_heldout_genuine': 0.0, 'test_neg': 0.000510204081632653, 'test_hardneg': 0.0} | ratchet no-cap test_pos {'k=0': 0.9964973730297724, 'k=1': 0.9964973730297724, 'k=2': 0.9929947460595446, 'k=3': 0.9929947460595446, 'k=5': 0.9929947460595446, 'k=10': 0.9929947460595446}
+17:33:56 | INFO | registry_contam | 
+# Contaminated-registry test of registry-relative calibration (intfloat/multilingual-e5-base, round-2 ADV, seeds [42, 43, 44], 1% val-FPR target)
+
+Sizes: {'val_neg': 138, 'test_neg': 392, 'test_hardneg': 245, 'test_pos': 571, 'bb_opt': 495, 'wb_heldout_genuine': 38}. Mean ± std over seeds. FPR columns: lower is better; detection columns: higher is better.
+
+## A. Naive contamination (K poisoned tools already registered on every server)
+
+| anchor rule | K | test_neg FPR | hard-neg FPR | test_pos | black-box opt | held-out wb genuine |
+|---|---|---|---|---|---|---|
+| max | 0 | 0.037 ± 0.007 | 0.014 ± 0.008 | 0.999 ± 0.002 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| max | 1 | 0.001 ± 0.001 | 0.000 ± 0.000 | 0.204 ± 0.114 | 0.402 ± 0.284 | 0.354 ± 0.254 |
+| max | 2 | 0.000 ± 0.000 | 0.000 ± 0.000 | 0.123 ± 0.087 | 0.243 ± 0.176 | 0.158 ± 0.201 |
+| max | 3 | 0.000 ± 0.000 | 0.000 ± 0.000 | 0.040 ± 0.028 | 0.237 ± 0.213 | 0.232 ± 0.305 |
+| approved | 0 | 0.049 ± 0.010 | 0.022 ± 0.011 | 0.999 ± 0.002 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| approved | 1 | 0.049 ± 0.010 | 0.022 ± 0.011 | 0.999 ± 0.002 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| approved | 2 | 0.048 ± 0.010 | 0.022 ± 0.011 | 0.999 ± 0.002 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| approved | 3 | 0.048 ± 0.012 | 0.021 ± 0.011 | 0.999 ± 0.002 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| median | 0 | 0.062 ± 0.021 | 0.035 ± 0.021 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| median | 1 | 0.051 ± 0.013 | 0.030 ± 0.016 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| median | 2 | 0.048 ± 0.008 | 0.026 ± 0.011 | 0.988 ± 0.001 | 0.935 ± 0.011 | 1.000 ± 0.000 |
+| median | 3 | 0.039 ± 0.006 | 0.024 ± 0.009 | 0.987 ± 0.002 | 0.933 ± 0.012 | 1.000 ± 0.000 |
+
+Share of planted poisoned tools that would pass registration (and so enter an approved-only registry): 0.001 ± 0.000
+
+## B. Adaptive anchor ratchet (k stepping-stone tools registered first, each passing the check)
+
+### Detection on test_pos (n=571)
+
+| anchor | clean test_neg FPR | clean hard-neg FPR | k=0 | k=1 | k=2 | k=3 | k=5 | k=10 |
+|---|---|---|---|---|---|---|---|---|
+| no cap | 0.037 ± 0.007 | 0.014 ± 0.008 | 0.999 ± 0.002 | 0.998 ± 0.001 | 0.997 ± 0.003 | 0.997 ± 0.003 | 0.997 ± 0.003 | 0.997 ± 0.003 |
+| cap = val max + 0 | 0.084 ± 0.040 | 0.045 ± 0.038 | 1.000 ± 0.000 | 0.999 ± 0.001 | 0.999 ± 0.001 | 0.999 ± 0.001 | 0.999 ± 0.001 | 0.999 ± 0.001 |
+| cap = val max + 2 | 0.048 ± 0.024 | 0.023 ± 0.021 | 1.000 ± 0.000 | 0.999 ± 0.001 | 0.999 ± 0.001 | 0.999 ± 0.001 | 0.999 ± 0.001 | 0.999 ± 0.001 |
+| cap = val max + 4 | 0.044 ± 0.018 | 0.018 ± 0.013 | 0.999 ± 0.001 | 0.999 ± 0.001 | 0.999 ± 0.001 | 0.999 ± 0.001 | 0.999 ± 0.001 | 0.999 ± 0.001 |
+
+### Detection on bb_opt (n=495)
+
+| anchor | clean test_neg FPR | clean hard-neg FPR | k=0 | k=1 | k=2 | k=3 | k=5 | k=10 |
+|---|---|---|---|---|---|---|---|---|
+| no cap | 0.037 ± 0.007 | 0.014 ± 0.008 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| cap = val max + 0 | 0.084 ± 0.040 | 0.045 ± 0.038 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| cap = val max + 2 | 0.048 ± 0.024 | 0.023 ± 0.021 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| cap = val max + 4 | 0.044 ± 0.018 | 0.018 ± 0.013 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+
+### Detection on wb_heldout_genuine (n=38)
+
+| anchor | clean test_neg FPR | clean hard-neg FPR | k=0 | k=1 | k=2 | k=3 | k=5 | k=10 |
+|---|---|---|---|---|---|---|---|---|
+| no cap | 0.037 ± 0.007 | 0.014 ± 0.008 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| cap = val max + 0 | 0.084 ± 0.040 | 0.045 ± 0.038 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| cap = val max + 2 | 0.048 ± 0.024 | 0.023 ± 0.021 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| cap = val max + 4 | 0.044 ± 0.018 | 0.018 ± 0.013 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+
+Median plants needed before a test positive passes (no cap / caps): no cap: 11.000 ± 0.000, cap = val max + 0: 11.000 ± 0.000, cap = val max + 2: 11.000 ± 0.000, cap = val max + 4: 11.000 ± 0.000

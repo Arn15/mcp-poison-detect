@@ -1,0 +1,61 @@
+16:27:55 | INFO | adv_train | stage=adv_train runtime=kaggle commit=7ed37c0 run_dir=/kaggle/working/outputs/adv_train/20261116-162755_adv2_e5
+16:27:55 | INFO | adv_train | adversarial training rewrites (train seeds): 1400 | held-out sets: {'wb_heldout_wb1': 29, 'wb_heldout_genuine': 38, 'wb_heldout_wb1e5': 29, 'wb_heldout_wb3_base_b30_e5': 29, 'wb_heldout_wb3_adv_b30_e5': 29}
+16:27:55 | INFO | adv_train | eval sets: {'val_neg': 138, 'test_neg': 392, 'test_hardneg': 245, 'test_pos': 571, 'r0_opt': 92, 'r1_opt': 107, 'r1b_opt': 72, 'r1t_opt': 8, 'r2_opt': 195, 'r2t_opt': 21, 'wb_heldout_wb1': 29, 'wb_heldout_genuine': 38, 'wb_heldout_wb1e5': 29, 'wb_heldout_wb3_base_b30_e5': 29, 'wb_heldout_wb3_adv_b30_e5': 29}
+16:27:55 | INFO | adv_train | seed 42 | base | 1801 training examples
+16:28:44 | INFO | adv_train |   ep 0 loss 0.2836 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0009 (29s)
+16:29:14 | INFO | adv_train |   ep 1 loss 0.0041 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (28s)
+16:29:42 | INFO | adv_train |   ep 2 loss 0.0045 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (27s)
+16:30:11 | INFO | adv_train |   ep 3 loss 0.0004 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (27s)
+16:30:16 | INFO | adv_train |   {'test_neg@0.01': 0.041, 'test_hardneg@0.01': 0.016, 'test_pos@0.01': 1.0, 'r0_opt@0.01': 1.0, 'r1_opt@0.01': 1.0, 'r1b_opt@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r2_opt@0.01': 1.0, 'r2t_opt@0.01': 1.0, 'wb_heldout_wb1@0.01': 0.966, 'wb_heldout_genuine@0.01': 0.395, 'wb_heldout_wb1e5@0.01': 0.655, 'wb_heldout_wb3_base_b30_e5@0.01': 0.0, 'wb_heldout_wb3_adv_b30_e5@0.01': 0.724}
+16:30:17 | INFO | adv_train | seed 42 | adv | 3201 training examples
+16:31:04 | INFO | adv_train |   ep 0 loss 0.2143 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0013 (44s)
+16:31:50 | INFO | adv_train |   ep 1 loss 0.0031 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (44s)
+16:32:36 | INFO | adv_train |   ep 2 loss 0.0002 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0043 (44s)
+16:33:20 | INFO | adv_train |   ep 3 loss 0.0002 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0025 (44s)
+16:33:25 | INFO | adv_train |   {'test_neg@0.01': 0.156, 'test_hardneg@0.01': 0.106, 'test_pos@0.01': 1.0, 'r0_opt@0.01': 1.0, 'r1_opt@0.01': 1.0, 'r1b_opt@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r2_opt@0.01': 1.0, 'r2t_opt@0.01': 1.0, 'wb_heldout_wb1@0.01': 1.0, 'wb_heldout_genuine@0.01': 1.0, 'wb_heldout_wb1e5@0.01': 1.0, 'wb_heldout_wb3_base_b30_e5@0.01': 1.0, 'wb_heldout_wb3_adv_b30_e5@0.01': 1.0}
+16:33:26 | INFO | adv_train | saved /kaggle/working/outputs/adv_train/20261116-162755_adv2_e5/ckpt_adv
+16:33:26 | INFO | adv_train | seed 43 | base | 1801 training examples
+16:33:57 | INFO | adv_train |   ep 0 loss 0.2596 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0006 (27s)
+16:34:26 | INFO | adv_train |   ep 1 loss 0.0023 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (28s)
+16:34:55 | INFO | adv_train |   ep 2 loss 0.0038 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (28s)
+16:35:24 | INFO | adv_train |   ep 3 loss 0.0003 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (28s)
+16:35:30 | INFO | adv_train |   {'test_neg@0.01': 0.048, 'test_hardneg@0.01': 0.029, 'test_pos@0.01': 0.998, 'r0_opt@0.01': 1.0, 'r1_opt@0.01': 1.0, 'r1b_opt@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r2_opt@0.01': 1.0, 'r2t_opt@0.01': 1.0, 'wb_heldout_wb1@0.01': 0.862, 'wb_heldout_genuine@0.01': 0.632, 'wb_heldout_wb1e5@0.01': 0.69, 'wb_heldout_wb3_base_b30_e5@0.01': 0.31, 'wb_heldout_wb3_adv_b30_e5@0.01': 0.759}
+16:35:30 | INFO | adv_train | seed 43 | adv | 3201 training examples
+16:36:18 | INFO | adv_train |   ep 0 loss 0.2103 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0004 (45s)
+16:37:04 | INFO | adv_train |   ep 1 loss 0.0031 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0029 (44s)
+16:37:49 | INFO | adv_train |   ep 2 loss 0.0002 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0003 (45s)
+16:38:35 | INFO | adv_train |   ep 3 loss 0.0002 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0003 (44s)
+16:38:40 | INFO | adv_train |   {'test_neg@0.01': 0.082, 'test_hardneg@0.01': 0.02, 'test_pos@0.01': 1.0, 'r0_opt@0.01': 1.0, 'r1_opt@0.01': 1.0, 'r1b_opt@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r2_opt@0.01': 1.0, 'r2t_opt@0.01': 1.0, 'wb_heldout_wb1@0.01': 1.0, 'wb_heldout_genuine@0.01': 1.0, 'wb_heldout_wb1e5@0.01': 1.0, 'wb_heldout_wb3_base_b30_e5@0.01': 1.0, 'wb_heldout_wb3_adv_b30_e5@0.01': 1.0}
+16:38:41 | INFO | adv_train | seed 44 | base | 1801 training examples
+16:39:11 | INFO | adv_train |   ep 0 loss 0.2847 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0009 (28s)
+16:39:40 | INFO | adv_train |   ep 1 loss 0.0086 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0046 (28s)
+16:40:08 | INFO | adv_train |   ep 2 loss 0.0010 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0002 (28s)
+16:40:37 | INFO | adv_train |   ep 3 loss 0.0004 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0001 (28s)
+16:40:43 | INFO | adv_train |   {'test_neg@0.01': 0.056, 'test_hardneg@0.01': 0.016, 'test_pos@0.01': 1.0, 'r0_opt@0.01': 1.0, 'r1_opt@0.01': 1.0, 'r1b_opt@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r2_opt@0.01': 1.0, 'r2t_opt@0.01': 1.0, 'wb_heldout_wb1@0.01': 1.0, 'wb_heldout_genuine@0.01': 0.921, 'wb_heldout_wb1e5@0.01': 0.966, 'wb_heldout_wb3_base_b30_e5@0.01': 0.931, 'wb_heldout_wb3_adv_b30_e5@0.01': 0.69}
+16:40:44 | INFO | adv_train | seed 44 | adv | 3201 training examples
+16:41:31 | INFO | adv_train |   ep 0 loss 0.2225 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0946 (45s)
+16:42:17 | INFO | adv_train |   ep 1 loss 0.0081 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0479 (44s)
+16:43:02 | INFO | adv_train |   ep 2 loss 0.0003 val AUROC 1.000 TPR@5% 1.000 val-loss 0.1211 (44s)
+16:43:47 | INFO | adv_train |   ep 3 loss 0.0002 val AUROC 1.000 TPR@5% 1.000 val-loss 0.0708 (45s)
+16:43:52 | INFO | adv_train |   {'test_neg@0.01': 0.069, 'test_hardneg@0.01': 0.008, 'test_pos@0.01': 1.0, 'r0_opt@0.01': 1.0, 'r1_opt@0.01': 1.0, 'r1b_opt@0.01': 1.0, 'r1t_opt@0.01': 1.0, 'r2_opt@0.01': 1.0, 'r2t_opt@0.01': 1.0, 'wb_heldout_wb1@0.01': 1.0, 'wb_heldout_genuine@0.01': 1.0, 'wb_heldout_wb1e5@0.01': 1.0, 'wb_heldout_wb3_base_b30_e5@0.01': 1.0, 'wb_heldout_wb3_adv_b30_e5@0.01': 1.0}
+16:43:52 | INFO | adv_train | 
+# Adversarial training (intfloat/multilingual-e5-base, seeds [42, 43, 44], 1400 adversarial rewrites)
+
+Rates at thresholds fixed on val negatives (mean ± std over seeds). FPR rows: lower is better.
+
+| set | base @1% | adv @1% | base @5% | adv @5% |
+|---|---|---|---|---|
+| test_neg (n=392) | 0.048 ± 0.006 | 0.102 ± 0.038 | 0.081 ± 0.012 | 0.150 ± 0.034 |
+| test_hardneg (n=245) | 0.020 ± 0.006 | 0.045 ± 0.044 | 0.031 ± 0.010 | 0.072 ± 0.045 |
+| test_pos (n=571) | 0.999 ± 0.001 | 1.000 ± 0.000 | 0.999 ± 0.001 | 1.000 ± 0.000 |
+| r0_opt (n=92) | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| r1_opt (n=107) | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| r1b_opt (n=72) | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| r1t_opt (n=8) | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| r2_opt (n=195) | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| r2t_opt (n=21) | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 |
+| wb_heldout_wb1 (n=29) | 0.943 ± 0.059 | 1.000 ± 0.000 | 0.966 ± 0.028 | 1.000 ± 0.000 |
+| wb_heldout_genuine (n=38) | 0.649 ± 0.215 | 1.000 ± 0.000 | 0.807 ± 0.183 | 1.000 ± 0.000 |
+| wb_heldout_wb1e5 (n=29) | 0.770 ± 0.139 | 1.000 ± 0.000 | 0.943 ± 0.081 | 1.000 ± 0.000 |
+| wb_heldout_wb3_base_b30_e5 (n=29) | 0.414 ± 0.387 | 1.000 ± 0.000 | 0.621 ± 0.282 | 1.000 ± 0.000 |
+| wb_heldout_wb3_adv_b30_e5 (n=29) | 0.724 ± 0.028 | 1.000 ± 0.000 | 0.770 ± 0.033 | 1.000 ± 0.000 |
