@@ -23,6 +23,11 @@ Constraints keep the attack meaningful and the payload intact:
 Evading rewrites must still pass the agent no-poison control (scripts/attack_whitebox.py, verify phase)
 before they count as genuine evasions.
 
+Natural mode (enable_natural, Step 13): every swap must also be one of a masked LM's top-k predictions for that
+position in context (BERT-Attack / TextFooler style), candidates are ranked by the detector gradient, and the
+whole description's GPT-2 log-perplexity may rise by at most max_dnll nats/token over the starting text. This
+tests whether evasions exist that a reader (or a fluency filter) would not notice.
+
 Only the plain (no-context) detector input is supported: "NEW TOOL <name>: <description>".
 """
 from __future__ import annotations
@@ -173,6 +178,14 @@ class WhiteBoxAttacker:
 
     def grad_topk(self, name: str, desc: str, prot_strings, k: int):
         """Return (positions [(tok_i, desc_s, desc_e)], topk ids LongTensor (P, k)) for editable words."""
+        pos, score = self.grad_scores(name, desc, prot_strings)
+        if not pos:
+            return [], None
+        return pos, score.topk(min(k, int(self.allowed.sum())), dim=1).indices.cpu()
+
+    def grad_scores(self, name: str, desc: str, prot_strings):
+        """Return (positions [(tok_i, desc_s, desc_e)], score (P, V') on the embedding device): first-order
+        decrease of the margin for swapping each editable word to each allowed vocabulary word (-inf if not)."""
         import torch
 
         text, d0 = self.detector_text(name, desc)
@@ -199,22 +212,116 @@ class WhiteBoxAttacker:
         score = -onehot.grad.detach()                        # direction that lowers the margin
         score[:, ~self.allowed] = -float("inf")
         score[torch.arange(len(pos)), ids_d[idx]] = -float("inf")
-        top = score.topk(min(k, int(self.allowed.sum())), dim=1).indices.cpu()
-        return [(i, s - d0, e - d0) for i, s, e in pos], top
+        return [(i, s - d0, e - d0) for i, s, e in pos], score
+
+    # ------------------------------------------------------------------------- natural (fluency-constrained) mode
+    def enable_natural(self, mlm: str = "distilroberta-base", lm: str = "gpt2", mlm_k: int = 50,
+                       max_dnll: float = 0.25, n_positions: int = 16, per_position: int = 4):
+        """Load a masked LM (contextual candidates) and a causal LM (log-perplexity budget) on self.device."""
+        import torch
+        from transformers import AutoModelForCausalLM, AutoModelForMaskedLM, AutoTokenizer
+
+        self.nat = {"mlm_k": int(mlm_k), "max_dnll": float(max_dnll), "n_positions": int(n_positions),
+                    "per_position": int(per_position)}
+        self.mtok = AutoTokenizer.from_pretrained(mlm)
+        self.mlm = AutoModelForMaskedLM.from_pretrained(mlm).to(self.device).eval()
+        self.ltok = AutoTokenizer.from_pretrained(lm)
+        self.ltok.pad_token = self.ltok.eos_token
+        self.lm = AutoModelForCausalLM.from_pretrained(lm).to(self.device).eval()
+        # detector vocabulary word -> token id (lower-case key; match_case restores the original casing)
+        self.wid = {}
+        for i, w in self.words.items():
+            self.wid.setdefault(w.lower(), i)
+        mp = self.mtok.convert_ids_to_tokens(list(range(len(self.mtok))))
+        mstyle = "sp" if any(p.startswith(SP_PREFIX) for p in mp[:5000] if p) else (
+            "bpe" if any(p.startswith("\u0120") for p in mp[:5000] if p) else "wp")
+        self.mlm_word = {}                      # MLM id -> lower-case word, for word-initial alphabetic pieces only
+        for i, p in enumerate(mp):
+            if not p:
+                continue
+            w = p[1:] if (mstyle == "bpe" and p.startswith("\u0120")) or (mstyle == "sp" and p.startswith(SP_PREFIX)) \
+                else (p if mstyle == "wp" and not p.startswith("##") else None)
+            if w and w.isascii() and w.isalpha() and len(w) >= 2:
+                self.mlm_word[i] = w.lower()
+        ok = torch.zeros(self.mlm.get_output_embeddings().weight.shape[0], dtype=torch.bool)
+        ok[list(self.mlm_word)] = True
+        self.mlm_ok = ok.to(self.device)
+
+    def nll(self, texts, bs: int = 16):
+        """Mean token NLL under the causal LM (same definition as scripts/defense_checks.py lm_nll)."""
+        import torch
+
+        out = []
+        with torch.inference_mode():
+            for i in range(0, len(texts), bs):
+                enc = self.ltok([self.ltok.bos_token + t for t in texts[i:i + bs]], return_tensors="pt",
+                                padding=True, truncation=True, max_length=256).to(self.device)
+                logits = self.lm(**enc).logits[:, :-1].float()
+                tgt, mask = enc["input_ids"][:, 1:], enc["attention_mask"][:, 1:].float()
+                ce = torch.nn.functional.cross_entropy(logits.transpose(1, 2), tgt, reduction="none")
+                out += ((ce * mask).sum(1) / mask.sum(1).clamp(min=1)).cpu().tolist()
+        return np.asarray(out)
+
+    def mlm_candidates(self, desc: str, spans, window: int = 600):
+        """For each (s, e) word span in desc: the MLM's top-k word predictions (lower case) with that word masked."""
+        import torch
+
+        texts = []
+        for s, e in spans:
+            lo, hi = max(0, s - window), min(len(desc), e + window)
+            texts.append(desc[lo:s] + self.mtok.mask_token + desc[e:hi])
+        out = []
+        with torch.inference_mode():
+            enc = self.mtok(texts, return_tensors="pt", padding=True, truncation=True, max_length=512).to(self.device)
+            logits = self.mlm(**enc).logits.float()
+            for r in range(len(texts)):
+                where = (enc["input_ids"][r] == self.mtok.mask_token_id).nonzero()
+                if not len(where):
+                    out.append([]); continue
+                lg = logits[r, int(where[0])].masked_fill(~self.mlm_ok, -float("inf"))
+                ids = lg.topk(min(self.nat["mlm_k"], int(self.mlm_ok.sum()))).indices.tolist()
+                out.append(list(dict.fromkeys(self.mlm_word[i] for i in ids if i in self.mlm_word)))
+        return out
+
+    def _natural_candidates(self, orig, cur, pos, score, cand_pos, budget, rng):
+        """Swaps that are (a) MLM top-k in context, (b) in the detector vocabulary, (c) best by gradient score."""
+        sel = rng.choice(cand_pos, size=min(self.nat["n_positions"], len(cand_pos)), replace=False)
+        preds = self.mlm_candidates(cur, [(pos[j][1], pos[j][2]) for j in sel])
+        texts = []
+        for j, words in zip(sel, preds):
+            _, s, e = pos[j]
+            here = cur[s:e].lower()
+            ids = [self.wid[w] for w in words if w in self.wid and w != here]
+            if not ids:
+                continue
+            sc = score[int(j), ids].float().cpu().numpy()
+            for k in np.argsort(-sc)[: self.nat["per_position"]]:
+                if not np.isfinite(sc[k]):
+                    continue
+                t = replace_span(cur, s, e, self.words[ids[k]])
+                if t != cur and len(changed_words(orig, t)) <= budget:
+                    texts.append(t)
+        return list(dict.fromkeys(texts))
 
     def run(self, name: str, desc: str, prot_strings, margin_fn, threshold: float, steps: int = 60,
             batch: int = 64, topk: int = 32, max_frac: float = 0.15, min_budget: int = 2, patience: int = 15,
             rng: np.random.Generator | None = None) -> dict:
         rng = rng or np.random.default_rng(0)
+        natural = getattr(self, "nat", None) is not None
         orig, cur = desc, desc
         cur_m = float(margin_fn([cur])[0])
         m0 = cur_m
+        nll0 = float(self.nll([orig])[0]) if natural else None
+        cur_nll = nll0
         budget = word_budget(len(orig.split()), max_frac, min_budget)
         hist, stale, step = [cur_m], 0, 0
         for step in range(1, steps + 1):
             if cur_m < threshold:
                 break
-            pos, top = self.grad_topk(name, cur, prot_strings, topk)
+            if natural:
+                pos, score = self.grad_scores(name, cur, prot_strings)
+            else:
+                pos, top = self.grad_topk(name, cur, prot_strings, topk)
             if not pos:
                 break
             changed = changed_words(orig, cur)
@@ -225,7 +332,7 @@ class WhiteBoxAttacker:
             if not cand_pos:
                 break
             seen, texts = set(), []
-            for _ in range(batch * 3):
+            for _ in range(0 if natural else batch * 3):
                 if len(texts) >= batch:
                     break
                 j = int(rng.choice(cand_pos))
@@ -237,12 +344,27 @@ class WhiteBoxAttacker:
                 t = replace_span(cur, s, e, self.words[tid])
                 if t != cur and len(changed_words(orig, t)) <= budget:
                     texts.append(t)
+            nlls = None
+            if natural:
+                texts = self._natural_candidates(orig, cur, pos, score, cand_pos, budget, rng)
+                if texts:
+                    nlls = self.nll(texts)
+                    keep = nlls <= nll0 + self.nat["max_dnll"]       # fluency budget relative to the start text
+                    texts, nlls = [t for t, k in zip(texts, keep) if k], nlls[keep]
+                if not texts:
+                    stale += 1
+                    hist.append(cur_m)
+                    if stale >= patience:
+                        break
+                    continue
             if not texts:
                 break
             ms = np.asarray(margin_fn(texts), dtype=float)
             b = int(np.argmin(ms))
             if ms[b] < cur_m:
                 cur, cur_m, stale = texts[b], float(ms[b]), 0
+                if nlls is not None:
+                    cur_nll = float(nlls[b])
             else:
                 stale += 1
             hist.append(cur_m)
@@ -253,4 +375,5 @@ class WhiteBoxAttacker:
         return {"adv_desc": cur, "margin_orig": m0, "margin_adv": cur_m, "evaded": cur_m < threshold,
                 "evaded_p05": cur_m < 0.0, "steps": step, "n_words": len(ow), "budget": budget,
                 "n_changed": len(diff), "changes": [[ow[i], cw[i]] for i in diff if i < len(cw)],
-                "margin_trace": [round(x, 3) for x in hist]}
+                "margin_trace": [round(x, 3) for x in hist],
+                **({"nll_orig": nll0, "nll_adv": cur_nll} if natural else {})}

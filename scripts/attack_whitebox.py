@@ -17,6 +17,8 @@ Kaggle (GPU_DEPS=True for the 4-bit agent; ~1-3 h for ~500 items + verification 
   Reuse a saved detector:        --set whitebox.detector_ckpt=/kaggle/input/<ds>/ckpt_B3_plain+para
   Larger budget ablation:        --set whitebox.max_frac=0.30
   Split across 2 notebooks:      --set whitebox.shard=0/2  (and 1/2)
+  Natural-text attack (Step 13): --set whitebox.natural=true  (MLM top-k swaps + GPT-2 log-perplexity budget
+                                 whitebox.max_dnll; see mcptp.attacker.whitebox.WhiteBoxAttacker.enable_natural)
 Smoke (CPU, needs a cached detector): --set whitebox.max_items=3 whitebox.steps=3 whitebox.verify=false
 """
 from __future__ import annotations
@@ -43,7 +45,9 @@ DEFAULTS = {"detector_ckpt": "train", "rounds": ["r0", "r1", "r1b", "r1t", "r2",
             "max_items": None, "shard": None, "steps": 60, "batch": 64, "topk": 32, "max_frac": 0.15,
             "min_budget": 2, "patience": 15, "min_word_len": 2, "target_fpr": 0.01, "verify": True,
             "verify_all": False, "queries": 10, "max_hours": 11.0,
-            "calibrated": False}   # True: attack the registry-relative (calibrated) per-server threshold
+            "calibrated": False,   # True: attack the registry-relative (calibrated) per-server threshold
+            "natural": False, "mlm": "distilroberta-base", "lm": "gpt2", "mlm_k": 50, "max_dnll": 0.25,
+            "nat_positions": 16, "nat_per_position": 4}
 
 
 def load_items(rounds, kinds, floor):
@@ -148,6 +152,11 @@ def main():
     # ---------------------------------------------------------------- attack phase
     attacker = WhiteBoxAttacker(det.model, det.tok, det.device, int(det.meta["max_len"]), int(w["min_word_len"]))
     log.info("tokenizer style %s, %d allowed replacement words", attacker.style, len(attacker.words))
+    if w["natural"]:
+        attacker.enable_natural(w["mlm"], w["lm"], int(w["mlm_k"]), float(w["max_dnll"]), int(w["nat_positions"]),
+                                int(w["nat_per_position"]))
+        log.info("NATURAL mode: swaps must be %s top-%d in context; %s log-perplexity may rise <= %.2f nats/token",
+                 w["mlm"], w["mlm_k"], w["lm"], w["max_dnll"])
     ck = JsonlCheckpoint(run_dir / "whitebox.jsonl", id_key="key")
     done = ck.done_ids()
     rng = np.random.default_rng(cfg["project"]["seed"])
@@ -177,7 +186,10 @@ def main():
     # ---------------------------------------------------------------- verify phase (agent control)
     summary = {"detector": ckpt, "backbone": det.meta["backbone"], "threshold_margin": thr,
                "target_fpr": w["target_fpr"], "max_frac": w["max_frac"], "n_items": len(rows),
-               "calibrated": bool(w["calibrated"]),
+               "calibrated": bool(w["calibrated"]), "natural": bool(w["natural"]),
+               "max_dnll": w["max_dnll"] if w["natural"] else None,
+               "median_dnll_evaders": (float(np.median([r["nll_adv"] - r["nll_orig"] for r in ev]))
+                                       if w["natural"] and ev else None),
                "n_missed_before_attack": sum(r["margin_orig"] < r["threshold"] for r in rows),
                "n_evaded": len(ev), "n_evaded_p05": sum(r["evaded_p05"] for r in rows),
                "mean_words_changed_evaders": float(np.mean([r["n_changed"] for r in ev])) if ev else None}

@@ -42,7 +42,8 @@ def ex_(server, name, desc, label=1):
 def wb_sets(run):
     """Evaders and genuine evaders of a white-box run, as detector examples."""
     W = [json.loads(l) for l in open(REPO_ROOT / run / "whitebox.jsonl")]
-    V = {v["key"]: v for v in map(json.loads, open(REPO_ROOT / run / "wb_verified.jsonl"))}
+    vp = REPO_ROOT / run / "wb_verified.jsonl"            # absent when a run has no evaders to verify
+    V = {v["key"]: v for v in map(json.loads, open(vp))} if vp.exists() else {}
     ev = [w for w in W if w["evaded"]]
     gen = [w for w in ev if w["key"] in V and V[w["key"]]["asr_true"] >= 0.2]
     f = lambda rows: [ex_(w["server"], w["tool_name"], w["adv_desc"]) for w in rows]
