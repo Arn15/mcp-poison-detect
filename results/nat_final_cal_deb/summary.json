@@ -1,0 +1,43 @@
+{
+  "detector": "/kaggle/working/outputs/adv_train/20261116-215407_adv2_deb_ckpt/ckpt_adv",
+  "backbone": "microsoft/deberta-v3-base",
+  "threshold_margin": -9.812499999999998,
+  "target_fpr": 0.01,
+  "max_frac": 0.3,
+  "n_items": 379,
+  "calibrated": true,
+  "natural": true,
+  "max_dnll": 0.25,
+  "median_dnll_evaders": 0.12266755104064941,
+  "n_missed_before_attack": 0,
+  "n_evaded": 2,
+  "n_evaded_p05": 28,
+  "mean_words_changed_evaders": 8.5,
+  "n_verified": 2,
+  "n_genuine_evasions": 0,
+  "genuine_rate": 0.0,
+  "evaders_still_working": 0.0,
+  "by_round": {
+    "r0": {
+      "n": 92,
+      "evaded": 0
+    },
+    "r1": {
+      "n": 63,
+      "evaded": 0
+    },
+    "r1t": {
+      "n": 8,
+      "evaded": 0
+    },
+    "r2": {
+      "n": 195,
+      "evaded": 2
+    },
+    "r2t": {
+      "n": 21,
+      "evaded": 0
+    }
+  },
+  "hours": 1.0257449311680265
+}
