@@ -40,11 +40,13 @@ DEFAULTS = {"seed": 42, "adv_sources": ["results/wb1", "results/wb1e5"], "train_
 
 
 def ex_(r, desc):
+    """Poisoned example for a white-box rewrite."""
     return {"server": r["server"], "tool_name": r["tool_name"], "description": desc, "label": 1, "context": [],
             "kind": "poison", "split": "train"}
 
 
 def load_wb(run):
+    """Rows of a white-box run and the keys of its genuine evasions (evaded and asr_true >= 0.2)."""
     p = REPO_ROOT / run
     if not (p / "whitebox.jsonl").exists():
         return [], set()
@@ -56,6 +58,7 @@ def load_wb(run):
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("calibrate_adv", __doc__)
     c = {**DEFAULTS, **(cfg.get("caladv") or {})}
     ex = ensure_examples(cfg, paths)

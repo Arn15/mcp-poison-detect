@@ -54,6 +54,7 @@ def protected_spans(text: str, strings) -> list[tuple[int, int]]:
 
 
 def overlaps(span: tuple[int, int], spans) -> bool:
+    """True if a character span overlaps any protected span."""
     s, e = span
     return any(s < pe and ps < e for ps, pe in spans)
 
@@ -119,6 +120,7 @@ def editable_positions(pieces, offsets, text: str, desc_start: int, prot, style:
 
 
 def match_case(new: str, old: str) -> str:
+    """Give a replacement word the casing of the word it replaces (UPPER, Title or lower)."""
     if old.isupper() and len(old) > 1:
         return new.upper()
     if old[:1].isupper():
@@ -127,6 +129,7 @@ def match_case(new: str, old: str) -> str:
 
 
 def replace_span(text: str, s: int, e: int, word: str) -> str:
+    """Replace text[s:e] by word, keeping the original word's casing."""
     return text[:s] + match_case(word, text[s:e]) + text[e:]
 
 
@@ -136,6 +139,7 @@ def word_index(desc: str, char_pos: int) -> int:
 
 
 def changed_words(orig: str, cur: str) -> set[int]:
+    """Indices of whitespace-delimited words that differ between the original and current description."""
     a, b = orig.split(), cur.split()
     if len(a) != len(b):   # whole-word swaps keep the word count; fall back to a conservative count
         return set(range(max(len(a), len(b))))
@@ -143,6 +147,7 @@ def changed_words(orig: str, cur: str) -> set[int]:
 
 
 def word_budget(n_words: int, max_frac: float, min_budget: int) -> int:
+    """Maximum number of words the attack may change: max(min_budget, floor(max_frac * n_words))."""
     return max(int(min_budget), int(np.floor(max_frac * n_words)))
 
 

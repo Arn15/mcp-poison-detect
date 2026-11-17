@@ -84,6 +84,7 @@ def select_shots(examples: list[dict], k_pos: int = 3, k_neg: int = 3, exclude_i
 
 
 class LLMJudge:
+    """LLM-as-judge defender (B2): asks a local Qwen3 model whether a tool description is poisoned and scores the Yes/No logit margin; zero- or few-shot."""
     def __init__(self, model_name: str = "Qwen/Qwen3-8B", device: str = "cuda:0", quant: str | None = "4bit",
                  batch_size: int = 8, shots: list[dict] | None = None, max_length: int = 4096,
                  score: str = "margin"):

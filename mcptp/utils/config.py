@@ -20,6 +20,7 @@ def _parse_value(raw: str) -> Any:
 
 
 def apply_overrides(cfg: dict, overrides: Iterable[str]) -> dict:
+    """Apply dotted-key KEY=VALUE overrides (values parsed as YAML) to a copy of the config."""
     cfg = copy.deepcopy(cfg)
     for item in overrides or []:
         if "=" not in item:
@@ -51,10 +52,12 @@ def _load_yaml(path: Path) -> dict:
 
 
 def load_config(path: str | Path = "configs/default.yaml", overrides: Iterable[str] | None = None) -> dict:
+    """Load a YAML config (with _base inheritance) and apply CLI overrides."""
     return apply_overrides(_load_yaml(Path(path)), overrides or [])
 
 
 def save_config(cfg: dict, path: str | Path) -> None:
+    """Write the resolved config to YAML (saved in every run dir)."""
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
         yaml.safe_dump(cfg, f, sort_keys=False)

@@ -21,4 +21,5 @@ def measure_asr(agent_backend, registry_block: str, candidate_block: str, querie
 
 
 def candidate_block(tool_name: str, description: str, arguments: str = "- No arguments") -> str:
+    """Format a candidate tool as it appears in the agent's tool list (name, description, arguments)."""
     return f"Tool: {tool_name}\nDescription: {description}\nArguments:\n{arguments}\n"

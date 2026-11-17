@@ -22,6 +22,7 @@ from mcptp.eval.metrics import threshold_at_fpr
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("score_attacks", __doc__)
     sc = dict(cfg.get("score") or {})
     # auto-discover inputs attached on Kaggle (/kaggle/input/...) when paths are not given

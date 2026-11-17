@@ -130,6 +130,14 @@ whitebox:                            # Step 6: gradient-guided word-substitution
   verify_all: false
   queries: 10
   max_hours: 11.0
+  calibrated: false                  # Step 11: attack the registry-relative per-server threshold instead of the global one
+  natural: false                     # Step 13: fluency-constrained swaps (masked-LM top-k in context + GPT-2 budget)
+  mlm: distilroberta-base            # natural mode: contextual candidate words
+  lm: gpt2                           # natural mode: log-perplexity budget
+  mlm_k: 50
+  max_dnll: 0.25                     # max rise in mean token NLL (nats) over the starting description
+  nat_positions: 16                  # word positions tried per step
+  nat_per_position: 4                # best-by-gradient MLM candidates per position
 
 advtrain:                            # Step 7: adversarial training on white-box rewrites (scripts/adv_train.py)
   sources: [results/wb1/whitebox.jsonl, results/wb1e5/whitebox.jsonl]
@@ -138,6 +146,35 @@ advtrain:                            # Step 7: adversarial training on white-box
   only_evaded: false                 # false = every final rewrite (label 1); true = only threshold evaders
   seeds: [42, 43, 44]
   save_seed: 42                      # ADV checkpoint saved for the white-box re-attack
+
+defense:                             # Step 8: cheap defenses vs white-box evaders (scripts/defense_checks.py)
+  parts: [fluency, calibration]
+  wb_runs: [results/wb1, results/wb1e5]
+  lm: gpt2
+  fprs: [0.01, 0.05]
+  ckpts: {}
+  floor: 0.2
+
+caladv:                              # Step 9: adversarial training x registry-relative calibration (scripts/calibrate_adv.py)
+  seed: 42
+  adv_sources: [results/wb1, results/wb1e5]   # round 2: add results/wb3_base_b30_<deb|e5>, results/wb3_adv_b30_<deb|e5>
+  train_rounds: [r0, r1, r1b, r2]
+  heldout_rounds: [r1t, r2t]
+  wb30: [results/wb3_base_b30_deb, results/wb3_base_b30_e5]
+  wb30adv: [results/wb3_adv_b30_deb, results/wb3_adv_b30_e5]
+  fprs: [0.01, 0.05]
+
+contam:                              # Step 12: contaminated-registry test (scripts/registry_contam.py)
+  seeds: [42]
+  adv_sources: null                  # null = round-2 sources for detector.backbone
+  train_rounds: [r0, r1, r1b, r2]
+  heldout_rounds: [r1t, r2t]
+  fpr: 0.01
+  k_naive: [1, 2, 3]                 # poisoned tools already registered per server
+  draws: 5
+  k_ratchet: [1, 2, 3, 5, 10]        # stepping-stone tools in the adaptive ratchet
+  cap_offsets: [0.0, 2.0, 4.0]       # anchor cap = max validation anchor + offset (logits)
+  fake_scores: false                 # CPU smoke test of the analysis with random margins
 
 adversarial:
   rounds: 2

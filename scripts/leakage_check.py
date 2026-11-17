@@ -23,17 +23,20 @@ KEYWORDS = ["before", "must", "first", "mandatory", "ignore", "important", "crit
 
 
 def tfidf_lr(C=1.0):
+    """TF-IDF (word 1-2 + char 3-5 grams) + logistic regression pipeline (baseline B0)."""
     feats = FeatureUnion([("w", TfidfVectorizer(ngram_range=(1, 2), min_df=2, sublinear_tf=True)),
                           ("c", TfidfVectorizer(analyzer="char_wb", ngram_range=(3, 5), min_df=2, sublinear_tf=True))])
     return make_pipeline(feats, LogisticRegression(C=C, max_iter=2000, class_weight="balanced"))
 
 
 def kw_score(t):
+    """Count of suspicious keywords in a text (rule baseline)."""
     t = t.lower()
     return sum(len(re.findall(r"\b" + k + r"\b", t)) for k in KEYWORDS)
 
 
 def subsets(test):
+    """Test subsets: all, implicit only, held-out servers only, held-out families."""
     neg = [e for e in test if e["label"] == 0]
     pos = [e for e in test if e["label"] == 1]
     return {
@@ -45,6 +48,7 @@ def subsets(test):
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("leakage_check", __doc__)
     ex = load_examples(paths["data_processed"], paths["splits"], cfg["data"]["split_version"])
     tr = [e for e in ex if e["split"] == "train"]

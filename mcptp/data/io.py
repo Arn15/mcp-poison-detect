@@ -8,6 +8,7 @@ from .splits import load_manifest, split_of, verify_manifest
 
 
 def annotate_splits(examples: list[dict], manifest: dict) -> list[dict]:
+    """Attach split, held-out-server and held-out-family flags to every example from the frozen manifest."""
     where = split_of(manifest)
     test_servers = set(manifest["servers"]["test"])
     held = set(manifest["heldout_families"])
@@ -38,6 +39,7 @@ def ensure_examples(cfg: dict, paths: dict) -> list[dict]:
 
 
 def load_examples(processed_dir, splits_dir, version: str = "v1") -> list[dict]:
+    """Load processed examples and verify them against the frozen split manifest (refuses drifted data)."""
     path = Path(processed_dir) / "examples.jsonl"
     if not path.exists():
         raise FileNotFoundError(f"{path} missing: run scripts/prepare_data.py first")

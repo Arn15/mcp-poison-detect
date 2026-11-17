@@ -12,6 +12,7 @@ from sklearn.metrics import roc_auc_score, roc_curve
 
 
 def tpr_at_fpr(y, s, fpr: float = 0.01) -> float:
+    """Highest TPR whose ROC FPR is <= fpr (oracle threshold; reporting only)."""
     y, s = np.asarray(y), np.asarray(s, dtype=float)
     if y.min() == y.max():
         return float("nan")
@@ -28,6 +29,7 @@ def threshold_at_fpr(y_neg_scores, fpr: float = 0.01) -> float:
 
 
 def rates_at_threshold(y, s, thr: float) -> dict:
+    """TPR and FPR at a fixed threshold."""
     y, s = np.asarray(y), np.asarray(s, dtype=float)
     pred = s >= thr
     pos, neg = y == 1, y == 0
@@ -36,6 +38,7 @@ def rates_at_threshold(y, s, thr: float) -> dict:
 
 
 def auroc(y, s) -> float:
+    """Area under the ROC curve (nan if only one class)."""
     y = np.asarray(y)
     return float(roc_auc_score(y, s)) if y.min() != y.max() else float("nan")
 
@@ -55,6 +58,7 @@ def bootstrap_ci(metric, y, s, n: int = 1000, ci: float = 0.95, seed: int = 0) -
 
 
 def summarize(y, s, fprs=(0.01, 0.05), n_boot: int = 1000, seed: int = 0) -> dict:
+    """AUROC and TPR@FPR with stratified bootstrap confidence intervals."""
     out = {"n_pos": int(np.sum(np.asarray(y) == 1)), "n_neg": int(np.sum(np.asarray(y) == 0))}
     out["auroc"] = bootstrap_ci(auroc, y, s, n_boot, seed=seed)
     for f in fprs:

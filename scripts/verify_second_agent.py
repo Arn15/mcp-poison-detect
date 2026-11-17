@@ -45,6 +45,7 @@ ROUNDS = ["r0", "r1", "r1b", "r1t", "r2", "r2t"]
 
 
 def collect(floor):
+    """Black-box rewrites and MCPTox originals to re-verify on the second agent."""
     items = []
     bb = load_items(ROUNDS, ["opt"], floor)
     items += [{"group": "blackbox", "desc": it["desc"], "qwen_asr_true": it["asr_true"], **_meta(it)} for it in bb]
@@ -59,6 +60,7 @@ def _meta(it):
 
 
 def collect_wb(groups, floor):
+    """White-box evasions (from the given runs) to re-verify on the second agent."""
     items = []
     for g, run in groups.items():
         p = REPO_ROOT / run
@@ -75,6 +77,7 @@ def collect_wb(groups, floor):
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("verify_second_agent", __doc__)
     s = {**DEFAULTS, **(cfg.get("second") or {})}
     s["wb"] = {**DEFAULTS["wb"], **((cfg.get("second") or {}).get("wb") or {})}

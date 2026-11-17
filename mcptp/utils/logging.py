@@ -9,6 +9,7 @@ from pathlib import Path
 
 
 def get_logger(name: str = "mcptp", log_file: str | Path | None = None) -> logging.Logger:
+    """Logger writing to stdout and optionally to a run.log file."""
     logger = logging.getLogger(name)
     if logger.handlers:
         return logger
@@ -25,6 +26,7 @@ def get_logger(name: str = "mcptp", log_file: str | Path | None = None) -> loggi
 
 
 def git_commit() -> str:
+    """Short hash of the current git commit (recorded in every run's config)."""
     try:
         return subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL).decode().strip()
     except Exception:

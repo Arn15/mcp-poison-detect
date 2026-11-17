@@ -145,6 +145,7 @@ def summarize_runs(runs):
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("score_robustness", __doc__)
     sc = dict(cfg.get("score") or {})
     seeds = [int(s) for s in (sc.get("seeds") or [42, 43, 44])]

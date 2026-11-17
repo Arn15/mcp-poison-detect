@@ -16,6 +16,7 @@ from mcptp.utils.logging import git_commit  # noqa: E402
 
 
 def parse_args(description: str = "") -> argparse.Namespace:
+    """Shared flags: --config, --set KEY=VALUE ..., --tag, --resume."""
     ap = argparse.ArgumentParser(description=description)
     ap.add_argument("--config", default="configs/default.yaml")
     ap.add_argument("--set", nargs="*", default=[], metavar="KEY=VALUE", help="dotted-key config overrides")

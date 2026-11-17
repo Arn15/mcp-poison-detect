@@ -49,6 +49,7 @@ FPR = ("test_neg", "test_hardneg")                     # false-alarm sets (lower
 
 # ------------------------------------------------------------------------------------------------------------ data
 def build_data(cfg, paths, c, log):
+    """Train/val data, round-2 adversarial rewrites, evaluation sets and registered tools."""
     ex = ensure_examples(cfg, paths)
     split_of = {e["id"]: e["split"] for e in ex}
     v = cfg["para"]["version"]
@@ -194,6 +195,7 @@ def mean_std(dicts):
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("registry_contam", __doc__)
     c = {**DEFAULTS, **(cfg.get("contam") or {})}
     dcfg = cfg["detector"]

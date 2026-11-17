@@ -1,50 +1,73 @@
-# Code authorship log
+# Code authorship
 
-The course requires stating which code is my own. Update this file in the same commit as the code.
+The course requires stating which code is my own. **All code in this repository was written by me for this project.**
+Where a module re-implements a published method, it is marked *Adapted* and the paper is cited; no third-party
+source code was copied. Pretrained models and standard libraries are used through their packages (*Library*).
 
-Legend: **Own** = written by me for this project · **Adapted** = written by me, following the cited reference's
-design · **Library** = called via a third-party package, not reimplemented.
+Legend: **Own** = my design and code · **Adapted** = my code, following the cited paper's method · **Library** = a
+third-party package or pretrained model, called but not re-implemented.
 
-| File / module | Status | Function | Reference (if any) |
+## Package `mcptp/`
+
+| File | Status | Function | Reference |
 |---|---|---|---|
-| `mcptp/utils/config.py` | Own | YAML config + dotted CLI overrides | — |
-| `mcptp/utils/env.py` | Own | Runtime detection, storage paths for local/Kaggle/Colab | — |
-| `mcptp/utils/seed.py` | Own | Seeding | — |
-| `mcptp/utils/checkpoint.py` | Own | Resumable append-only JSONL store, atomic JSON | — |
-| `mcptp/utils/logging.py` | Own | Logger, timestamped run dirs | — |
-| `scripts/common.py` | Own | Shared CLI and run setup | — |
-| `scripts/check_env.py` | Own | Environment report | — |
-| `scripts/smoke_test.py` | Own | Infrastructure smoke test | — |
-| `notebooks/*_runner.ipynb` | Own | Thin GPU runners | — |
-| `mcptp/data/mcptox.py` | Own | Parse MCPTox raw JSON into benign / poison tables; injection-marker stripping; seed ASR | MCPTox data format |
-| `mcptp/data/context.py` | Own | Registry-context retrieval (name variants + optional E5 semantic match); detector input pairs | — |
-| `mcptp/data/hard_negatives.py` | Own | Benign hard negatives (precondition-on-self, cross-tool helper, mention) with destructive-tool filter | — |
+| `mcptp/utils/config.py` | Own | YAML config with `_base` inheritance and dotted `--set KEY=VALUE` overrides | — |
+| `mcptp/utils/env.py` | Own | Runtime detection (local / Kaggle / Colab), data and output paths | — |
+| `mcptp/utils/seed.py` | Own | Seeding of python / numpy / torch | — |
+| `mcptp/utils/checkpoint.py` | Own | Resumable append-only JSONL store (`JsonlCheckpoint`), atomic JSON writes | — |
+| `mcptp/utils/logging.py` | Own | Logger, timestamped run directories, git commit capture | — |
+| `mcptp/data/mcptox.py` | Own | Parse MCPTox raw JSON into benign / poisoned tool tables; injection-marker stripping | MCPTox data format |
+| `mcptp/data/hard_negatives.py` | Own | Benign hard negatives that legitimately say "call X first" | — |
+| `mcptp/data/context.py` | Own | Registry context: which registered tools a description refers to | — |
 | `mcptp/data/build.py` | Own | Assemble labeled examples with context | — |
-| `mcptp/data/splits.py` | Own | Server-disjoint split search, held-out risk families, SHA-256 frozen manifest + verification | — |
-| `mcptp/data/io.py` | Own | Load examples with the frozen split enforced | — |
-| `mcptp/eval/metrics.py` | Own | TPR@FPR, val-fixed thresholds, AUROC, stratified bootstrap CIs | — |
-| `scripts/prepare_data.py` | Own | Step 2 pipeline: build, freeze/verify split, stats | — |
-| `scripts/leakage_check.py` | Own | TF-IDF/LR and rule baselines for shortcut detection | MCP-Poison-Bench concern |
-| `mcptp/data/paraphrase.py` | Own | MCPTox-Para prompts, faithfulness checks (names, values, length, refusal), HF / echo backends | — |
-| `scripts/paraphrase.py` | Own | Resumable batched paraphrase generation (GPU) | — |
-| `scripts/freeze_para.py` | Own | Validate generations, rebuild context, freeze MCPTox-Para with per-split hashes | — |
-| `tests/test_data.py` | Own | Unit tests for data, splits, metrics | — |
-| `mcptp/detector/model.py` | Own | Plain / context-aware cross-encoder inputs, shuffled-context control | — |
-| `mcptp/detector/train.py` | Own | AMP fine-tuning loop, context dropout + context swap augmentation, val selection with loss tie-break | — |
-| `mcptp/eval/report.py` | Own | Subset evaluation (implicit, held-out family/server), val-fixed thresholds, hard-negative FPR | — |
-| `scripts/train_detector.py` | Own | Variant sweep (B0, B3, context, +para), seeds, paired bootstrap, summary table | — |
-| `mcptp/attacker/agent.py` | Own | MCPTox-protocol agent prompt, tool-call parser, rule-based ASR judge (0.92 success precision vs MCPTox labels) | MCPTox eval protocol |
-| `mcptp/attacker/evaluate.py` | Own | Measure ASR of a candidate description on the target agent | — |
-| `mcptp/attacker/optimize.py` | Adapted | Implicit-poisoning optimizer: prompts, feedback, evasion-aware selection | Li et al., arXiv 2601.07395 (MCP-ITP) |
-| `scripts/run_attack.py` | Own | Attacker loop orchestration (N rewrites x T iters, resumable) | — |
-| `scripts/verify_agent.py` | Own | Validate our ASR against MCPTox's recorded ASR | — |
-| `scripts/score_attacks.py` | Own | Score an attack set against B0/B3/context/B2 defenders | — |
-| `mcptp/attacker/whitebox.py` | Adapted | White-box word-substitution attack on the detector: one-hot gradient top-k (HotFlip) + exact scoring of sampled single-word swaps (GCG), whole-word / protected-payload / word-budget constraints | Ebrahimi et al., 2018 (HotFlip); Zou et al., 2023 (GCG) |
-| `scripts/attack_whitebox.py` | Own | Step 6 orchestration: deployable threshold, attack verified attacks, agent no-poison control on evaders, summary | — |
-| `tests/test_whitebox.py` | Own | Unit tests for white-box attack constraints | — |
-| `scripts/adv_train.py` | Own | Step 7: adversarial training on white-box rewrites of train seeds; base-vs-adv comparison at val-fixed FPR on clean, hard-negative, black-box and held-out white-box sets | Madry et al., 2018 (adversarial training) |
-| `scripts/defense_checks.py` | Own | Step 8: GPT-2 perplexity filter and registry-relative calibration against white-box evasions, plus their combination | — |
-| `scripts/calibrate_adv.py` | Own | Step 9: adversarial training x registry-relative calibration, base vs adv twins, global vs calibrated thresholds | — |
-| `scripts/verify_second_agent.py` | Own | Step 10: re-verify all black-box and white-box attacks on a second agent (Llama-3.1-8B) with the no-poison control | — |
-| *(Step 5)* `mcptp/baselines/e5.py` | Adapted | MCP-Guard Stage II classifier | Xing et al., arXiv 2508.10991 |
-| — | Library | DeBERTa-v3 / E5 weights, HF Transformers, vLLM, scikit-learn | — |
+| `mcptp/data/splits.py` | Own | Server-disjoint split search, held-out risk families, SHA-256 frozen manifest | — |
+| `mcptp/data/io.py` | Own | Load examples / MCPTox-Para with the frozen split enforced | — |
+| `mcptp/data/paraphrase.py` | Own | MCPTox-Para prompts, faithfulness checks, generation backends | — |
+| `mcptp/detector/model.py` | Own | Detector inputs (plain / with registry context), model construction | — |
+| `mcptp/detector/train.py` | Own | AMP fine-tuning loop, context augmentation, validation selection, scoring, save / load | — |
+| `mcptp/attacker/agent.py` | Own | MCPTox-protocol agent prompt, tool-call parser, rule-based success judge | MCPTox evaluation protocol |
+| `mcptp/attacker/evaluate.py` | Own | Attack success rate of a candidate description on the target agent | — |
+| `mcptp/attacker/optimize.py` | Adapted | Black-box implicit-poisoning optimizer (attacker LLM, feedback, evasion-aware selection) | Li et al., arXiv 2601.07395 (MCP-ITP) |
+| `mcptp/attacker/whitebox.py` | Adapted | White-box word-substitution attack: gradient top-k (HotFlip) + exact scoring of sampled swaps (GCG), payload protection, word budget; natural mode with masked-LM candidates and a GPT-2 perplexity budget | Ebrahimi et al., 2018; Zou et al., 2023; Li et al., 2020 (BERT-Attack); Jin et al., 2020 (TextFooler) |
+| `mcptp/baselines/llm_judge.py` | Adapted | LLM-as-judge defender (Qwen3-8B / 14B, zero / few-shot), Yes/No logit-margin score | AI-Infra-Guard audit-prompt style |
+| `mcptp/eval/metrics.py` | Own | TPR@FPR, validation-fixed thresholds, AUROC, stratified bootstrap CIs | — |
+| `mcptp/eval/report.py` | Own | Metrics on standard test subsets and hard negatives | — |
+| `mcptp/eval/calibration.py` | **Own (method)** | Registry-relative threshold calibration: score minus the max score of the server's registered tools | — |
+
+The E5 baseline (B1, MCP-Guard Stage II style) is the same detector code with `detector.backbone =
+intfloat/multilingual-e5-base` (Adapted from Xing et al., arXiv 2508.10991; no separate module).
+
+## Scripts `scripts/` (one entry point per experiment)
+
+| File | Status | Step | Function |
+|---|---|---|---|
+| `common.py` | Own | — | Shared CLI flags and run setup for every script |
+| `check_env.py`, `smoke_test.py` | Own | 1 | Environment report; resumable-loop smoke test |
+| `prepare_data.py` | Own | 2 | Build examples, freeze / verify the split |
+| `leakage_check.py` | Own | 2 | Shortcut baselines (TF-IDF + LR, keyword rules) on MCPTox |
+| `paraphrase.py`, `freeze_para.py` | Own | 2b | Generate and freeze MCPTox-Para |
+| `train_detector.py` | Own | 3 | Train / evaluate B0, plain and context-aware detectors |
+| `verify_agent.py` | Own | 4 | Check the agent harness against MCPTox's recorded outcomes |
+| `run_attack.py` | Own | 4 | Black-box attacker loop (resumable) |
+| `score_attacks.py` | Own | 4 | Score an attack set against every defender |
+| `verify_attacks.py` | **Own (method)** | 4 | No-poison control: agent with vs without the candidate tool |
+| `score_robustness.py` | Own | 5 | Robustness comparison of all defenders incl. LLM judges |
+| `calibrate.py` | Own | 5b | Registry-relative calibration study on stored scores |
+| `attack_whitebox.py` | Own | 6, 11, 13 | White-box attack orchestration (global / calibrated threshold, natural mode) + agent control |
+| `adv_train.py` | Adapted | 7 | Adversarial training on white-box rewrites of train seeds (Madry et al., 2018) |
+| `defense_checks.py` | Own | 8 | GPT-2 fluency filter and calibration vs white-box evaders |
+| `calibrate_adv.py` | Own | 9 | Final system: adversarial training × calibration |
+| `verify_second_agent.py` | Own | 10 | Re-verify attacks on Llama-3.1-8B |
+| `registry_contam.py` | **Own (method)** | 12 | Contaminated-registry test; approved-only / median anchors; anchor-ratchet attacker |
+| `make_figures.py` | Own | — | All report figures from committed results |
+
+## Other
+
+| Path | Status | Function |
+|---|---|---|
+| `tests/*.py` | Own | CPU unit tests (data, splits, metrics, infra, judge, white-box constraints, calibration, contamination) |
+| `notebooks/kaggle_runner.ipynb`, `colab_runner.ipynb` | Own | Generic GPU runner: clone repo, install, run one script |
+| `notebooks/experiments/*.ipynb` | Own | The exact Kaggle runs behind each result (see `README.md`) |
+| `configs/default.yaml` | Own | Every experiment setting |
+| — | Library | DeBERTa-v3, multilingual-E5, Qwen3, Llama-3.1, distilroberta, GPT-2 weights; PyTorch, HF Transformers, bitsandbytes, scikit-learn, matplotlib |
+| — | Data | MCPTox (Wang et al., AAAI 2026), not redistributed |

@@ -14,6 +14,7 @@ from ..data.context import format_detector_input
 
 def detector_text(ex: dict, use_context: bool, field: str = "description", context_override=None,
                   max_ctx_chars: int = 1200):
+    """Detector input for one example: 'NEW TOOL name: description' (+ registry context as the second segment if use_context)."""
     ctx = (ex.get("context") or []) if context_override is None else context_override
     a, b = format_detector_input(ex["tool_name"], ex[field], ctx, max_ctx_chars)
     return (a, b) if use_context else (a, None)
@@ -31,6 +32,7 @@ def shuffled_contexts(examples: list[dict], seed: int = 0) -> list[list[dict]]:
 
 
 def build_model(backbone: str):
+    """Load tokenizer and a 2-class sequence classifier (fp32 master weights for AMP) for a HF backbone."""
     import torch
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
 

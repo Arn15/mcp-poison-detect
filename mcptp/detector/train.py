@@ -11,6 +11,7 @@ from .model import build_model, detector_text
 
 
 class Encoded:
+    """Tokenized (text[, context]) pairs + labels as a simple indexable dataset."""
     def __init__(self, tok, pairs, labels, max_len):
         a = [p[0] for p in pairs]
         b = [p[1] for p in pairs]
@@ -149,6 +150,7 @@ def train_detector(train, val, dcfg: dict, use_context: bool, seed: int, log, fi
 
 def score(model, tok, examples, dcfg, use_context, device, field="description", contexts=None,
           margin: bool = False) -> np.ndarray:
+    """Score examples with a trained detector: P(poisoned), or the logit margin if margin=True."""
     pairs = [detector_text(e, use_context, field, None if contexts is None else contexts[i])
              for i, e in enumerate(examples)]
     ds = Encoded(tok, pairs, [e["label"] for e in examples], dcfg["max_len"])

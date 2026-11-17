@@ -27,6 +27,7 @@ from mcptp.eval.report import evaluate
 
 
 def fit_b0(train, field="description"):
+    """Fit the TF-IDF + logistic regression baseline B0."""
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.linear_model import LogisticRegression
     from sklearn.pipeline import FeatureUnion, make_pipeline
@@ -39,10 +40,12 @@ def fit_b0(train, field="description"):
 
 
 def fmt(x):
+    """Format (mean, lo, hi) as 'm [lo, hi]'."""
     return f"{x[0]:.3f} [{x[1]:.2f}, {x[2]:.2f}]"
 
 
 def try_load_para(paths, cfg, split):
+    """MCPTox-Para examples for a split, or [] if not frozen yet."""
     try:
         return load_para(paths["splits"], cfg["para"]["version"], split)
     except (FileNotFoundError, KeyError):
@@ -50,6 +53,7 @@ def try_load_para(paths, cfg, split):
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("train_detector", __doc__)
     dcfg, ecfg = cfg["detector"], cfg["eval"]
     fprs = [ecfg["target_fpr"], *ecfg.get("extra_fprs", [])]

@@ -71,6 +71,7 @@ def load_items(rounds, kinds, floor):
 
 
 def protect_list(item):
+    """Strings the attack may never change: tool names, target tool, malicious tools, injected values."""
     sp = item["spec"]
     return ([item["tool_name"], sp.get("candidate_name"), sp.get("legit_tool")]
             + list(sp.get("malicious_tools") or []) + list(sp.get("injected_values") or []))
@@ -91,6 +92,7 @@ def tool_queries_from_mcptox(raw, specs):
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("attack_whitebox", __doc__)
     w = {**DEFAULTS, **(cfg.get("whitebox") or {})}
     a = cfg["attacker"]

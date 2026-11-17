@@ -23,6 +23,7 @@ warnings.filterwarnings("ignore", category=SyntaxWarning)
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("verify_agent", __doc__)
     a = cfg["attacker"]
     raw = json.load(open(ensure_mcptox(paths["data_raw"]) / "response_all.json"))

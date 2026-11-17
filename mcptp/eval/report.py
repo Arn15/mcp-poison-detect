@@ -17,6 +17,7 @@ def subsets(test: list[dict]) -> dict[str, np.ndarray]:
 
 
 def evaluate(test, s_test, val, s_val, fprs=(0.01, 0.05), n_boot=1000, seed=0) -> dict:
+    """Metrics on every standard test subset plus detection/FPR at thresholds fixed on validation negatives."""
     y = np.array([e["label"] for e in test])
     s_test = np.asarray(s_test, float)
     out = {name: summarize(y[m], s_test[m], fprs, n_boot, seed) for name, m in subsets(test).items()}

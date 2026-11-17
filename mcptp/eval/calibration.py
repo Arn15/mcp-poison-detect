@@ -21,12 +21,17 @@ from .metrics import threshold_at_fpr
 
 
 def logit(p: float, eps: float = 1e-7) -> float:
+    """log(p / (1 - p)) with p clipped to [eps, 1 - eps]."""
     p = min(max(float(p), eps), 1 - eps)
     return math.log(p / (1 - p))
 
 
 class RegistryCalibrator:
-    """ref: iterable of (server, tool_name, score) for registered (trusted) tools."""
+    """Registry-relative calibration: r(c) = logit s(c) - stat over logit s(t) of the server's other registered tools.
+
+    ref: iterable of (server, tool_name, score) for registered (trusted) tools; stat = "max" (default) or "median".
+    transform(server, name, score) returns r(c), or None when the server has no other registered tool.
+    """
 
     def __init__(self, ref, stat: str = "max"):
         self.stat = stat

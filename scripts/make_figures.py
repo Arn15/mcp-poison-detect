@@ -42,14 +42,16 @@ plt.rcParams.update({
 
 
 def save(fig, name):
+    """Save a figure as figures/<name>.pdf and .png."""
     OUT.mkdir(exist_ok=True)
-    for ext in ("pdf", "png"):
-        fig.savefig(OUT / f"{name}.{ext}")
+    fig.savefig(OUT / f"{name}.pdf", metadata={"CreationDate": None})   # no timestamp: reruns give identical files
+    fig.savefig(OUT / f"{name}.png", metadata={"Software": None})
     plt.close(fig)
     print("wrote", name)
 
 
 def jl(p):
+    """Read a JSONL file."""
     return [json.loads(line) for line in open(p)]
 
 
@@ -61,6 +63,7 @@ def thr_at_fpr(neg, fpr):
 
 
 def bar_labels(ax, bars, vals, fmt="{:g}", missing="n/r"):
+    """Value labels above bars ('n/r' for not run)."""
     for b, v in zip(bars, vals):
         txt = missing if v is None or (isinstance(v, float) and np.isnan(v)) else fmt.format(v)
         y = 0 if txt == missing else b.get_height()
@@ -83,6 +86,7 @@ ORIG = [s.replace("_opt", "_orig") for s in OPT]
 
 
 def load_scores():
+    """Per-defender, per-seed, per-set scores from robust5/6a/6b."""
     S = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))      # S[defender][seed][set] -> scores
     for f in {d[0] for d in DEFENDERS}:
         for r in jl(RES / f / "scores.jsonl"):
@@ -91,6 +95,7 @@ def load_scores():
 
 
 def fig2_roc(S):
+    """Figure 2: ROC on optimized rewrites."""
     grid = np.logspace(-3, 0, 200)
     fig, ax = plt.subplots(figsize=(FULL_W * 0.8, 2.3))
     for i, (_, d, lab, ls) in enumerate(DEFENDERS):
@@ -114,6 +119,7 @@ def fig2_roc(S):
 
 
 def fig3_judges(S):
+    """Figure 3: detection at 1% FPR, original vs optimized."""
     labs, orig, opt = [], [], []
     for _, d, lab, _ in DEFENDERS:
         o, p = [], []
@@ -142,6 +148,7 @@ def fig3_judges(S):
 
 # --------------------------------------------------------------------------------------------- other figures
 def fig4_verification():
+    """Figure 4: rule-judge 'working' vs control-verified rewrites."""
     rows = [r for r in jl(ROOT / "data" / "attacks" / "verified.jsonl") if r["kind"] == "opt"]
     rounds = ["r0", "r1", "r1b", "r2", "r1t", "r2t"]
     names = ["r0\nblind", "r1\nadaptive", "r1b\nrepeat", "r2\n14B", "r1t\ntest", "r2t\ntest"]
@@ -162,11 +169,13 @@ def fig4_verification():
 
 
 def summ(run):
+    """Number of genuine evasions in a white-box run summary."""
     p = RES / run / "summary.json"
     return json.load(open(p)).get("n_genuine_evasions") if p.exists() else None
 
 
 def fig5_whitebox():
+    """Figure 5: genuine white-box evasions by defense stage."""
     stages = [("Base\n15% budget", "wb1", "wb1e5"), ("Base\n30%", "wb3_base_b30_deb", "wb3_base_b30_e5"),
               ("Adv. rd. 1\n30%", "wb3_adv_b30_deb", "wb3_adv_b30_e5"), ("Adv. rd. 2\n30%", "wb4_adv2_b30_deb", None),
               ("Final\nsystem", "wb5_final_cal_b30", "wb5_e5_final_cal_b30"),
@@ -188,6 +197,7 @@ def fig5_whitebox():
 
 
 def fig6_final():
+    """Figure 6: false alarms, base vs adversarial training x global vs calibrated."""
     runs = {"DeBERTa-v3": ["cal_adv2_deb", "cal_adv2_s43", "cal_adv2_s44"],
             "multilingual-E5": ["cal_adv2_e5_s42", "cal_adv2_e5_s43", "cal_adv2_e5_s44"]}
     variants = [("base", "global", "Base, global threshold"), ("base", "rel", "Base + calibration"),
@@ -215,6 +225,7 @@ def fig6_final():
 
 
 def fig7_contam():
+    """Figure 7: detection vs contaminated registry."""
     rules = [("max", "max anchor (as deployed)", "o"), ("approved", "approved-only anchor", "s"),
              ("median", "median anchor", "^")]
     fig, axs = plt.subplots(1, 2, figsize=(FULL_W, 2.1), sharey=True)
@@ -238,6 +249,7 @@ def fig7_contam():
 
 
 def fig8_fluency():
+    """Figure 8: GPT-2 log-perplexity of evaders."""
     def med(tag, prefix):
         j = json.load(open(RES / tag / "defense_results.json"))["fluency"]["median_nll"]
         return next(v for k, v in j.items() if prefix in k and k.endswith("_evaders"))
@@ -261,6 +273,7 @@ def fig8_fluency():
 
 
 def fig1_pipeline():
+    """Figure 1: method overview."""
     fig, ax = plt.subplots(figsize=(FULL_W, 1.7))
     ax.set_xlim(0, 100); ax.set_ylim(0, 32); ax.axis("off")
     W, GAP, Y, H = 18.2, 2.25, 13, 18
@@ -292,6 +305,7 @@ def fig1_pipeline():
 
 
 def main():
+    """Build every figure."""
     S = load_scores()
     fig1_pipeline(); fig2_roc(S); fig3_judges(S); fig4_verification(); fig5_whitebox(); fig6_final()
     fig7_contam(); fig8_fluency()

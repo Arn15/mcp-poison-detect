@@ -36,6 +36,7 @@ CLIP = math.log((1 - 1e-7) / 1e-7)
 
 
 def ex_(server, name, desc, label=1):
+    """Minimal example dict for scoring a description."""
     return {"server": server, "tool_name": name, "description": desc, "label": label, "context": []}
 
 
@@ -51,6 +52,7 @@ def wb_sets(run):
 
 
 def lm_nll(texts, model_name, log, bs=16):
+    """Mean token negative log-likelihood (log-perplexity) of each text under a causal LM."""
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
     dev = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -72,11 +74,13 @@ def lm_nll(texts, model_name, log, bs=16):
 
 
 def rate(scores, thr):
+    """Fraction of scores >= threshold (None for an empty set)."""
     s = np.asarray(scores, dtype=float)
     return float((s >= thr).mean()) if len(s) else None
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("defense_checks", __doc__)
     c = {**DEFAULTS, **(cfg.get("defense") or {})}
     ex = ensure_examples(cfg, paths)

@@ -11,6 +11,7 @@ PKGS = ["torch", "transformers", "sentence_transformers", "datasets", "accelerat
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("env_check", __doc__)
     report = {"python": platform.python_version(), "runtime": cfg["_run"]["runtime"], "packages": {}, "gpu": None,
               "paths": {k: str(v) for k, v in paths.items()}}

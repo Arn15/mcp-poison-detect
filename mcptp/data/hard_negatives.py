@@ -82,6 +82,7 @@ def is_destructive(tool_name: str) -> bool:
 
 
 def singular(w: str) -> str:
+    """Naive English singular of a word (used to name hard-negative tools)."""
     if w.endswith("ies") and len(w) > 4:
         return w[:-3] + "y"
     if w.endswith(("ses", "xes", "ches", "shes")):
@@ -90,6 +91,7 @@ def singular(w: str) -> str:
 
 
 def plural(w: str) -> str:
+    """Naive English plural of a word."""
     if w.endswith("y") and w[-2:-1] not in "aeiou":
         return w[:-1] + "ies"
     return w + ("es" if w.endswith(("s", "x", "ch", "sh")) else "s")
@@ -101,6 +103,7 @@ def _tokens(name: str) -> list[str]:
 
 
 def domain_nouns(tool_names: list[str]) -> list[str]:
+    """Nouns drawn from a server's tool names, used to make hard negatives sound native to that server."""
     nouns = sorted({singular(t) for n in tool_names for t in _tokens(n)})
     return nouns or ["item"]
 

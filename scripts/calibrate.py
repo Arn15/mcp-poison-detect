@@ -80,6 +80,7 @@ def evaluate(sets, idx, method, fpr):
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--run", default="results/robust3")
     ap.add_argument("--out", default="results/calibration")

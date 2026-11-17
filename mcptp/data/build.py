@@ -7,6 +7,7 @@ from .mcptox import load_mcptox, normalize_ws, stable_id, strip_injection_marker
 
 
 def build_examples(cfg: dict, raw_dir, semantic=None) -> tuple[list[dict], dict]:
+    """Build labeled detector examples (benign, poisoned, hard negatives) with registry context from MCPTox; returns (examples, stats)."""
     dcfg, ccfg = cfg["data"], cfg["context"]
     tables = load_mcptox(raw_dir)
     benign = tables["benign"].drop_duplicates(["server", "tool_name"]).reset_index(drop=True)

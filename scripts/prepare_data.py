@@ -25,6 +25,7 @@ from mcptp.data.splits import (assign_splits, build_manifest, choose_server_spli
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("prepare_data", __doc__)
     dcfg = cfg["data"]
     if "--semantic" in flags:

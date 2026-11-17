@@ -8,6 +8,7 @@ import numpy as np
 
 
 def set_seed(seed: int = 42, deterministic: bool = False) -> None:
+    """Seed python, numpy and torch (optionally deterministic cuDNN)."""
     random.seed(seed)
     np.random.seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)

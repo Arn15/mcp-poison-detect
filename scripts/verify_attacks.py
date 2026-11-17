@@ -31,6 +31,7 @@ ROUNDS = ("r0", "r1", "r1b", "r1t", "r2", "r2t")
 
 
 def payload_in(desc, spec):
+    """True if the description still contains the attack payload (malicious tool name or injected value)."""
     d = desc.lower()
     if spec.get("paradigm") == "Template-3":
         return any(v.lower() in d for v in spec.get("injected_values", []) if len(v) > 2)
@@ -38,6 +39,7 @@ def payload_in(desc, spec):
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("verify_attacks", __doc__)
     a, vc = cfg["attacker"], dict(cfg.get("verify") or {})
     floor, nq = float(a.get("asr_floor", 0.2)), int(vc.get("queries", 10))

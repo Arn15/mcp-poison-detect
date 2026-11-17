@@ -36,6 +36,7 @@ _VALUE_RE = re.compile(r"'([^']{2,})'|\"([^\"]{2,})\"|((?:~|/)[\w.\-/~]+)|(\b[\w
 
 
 def extract_values(text: str, exclude: set[str]) -> list[str]:
+    """Quoted / literal values in a description (paths, URLs, injected strings) that a paraphrase must keep."""
     vals = []
     for m in _VALUE_RE.finditer(text):
         v = next(g for g in m.groups() if g)
@@ -46,6 +47,7 @@ def extract_values(text: str, exclude: set[str]) -> list[str]:
 
 
 def source_text(ex: dict) -> str:
+    """Text to paraphrase: marker-stripped description for poisoned tools, raw description otherwise."""
     return ex["description_stripped"] if ex["label"] == 1 else ex["description"]
 
 
@@ -56,6 +58,7 @@ def tool_names_in(ex: dict) -> list[str]:
 
 
 def build_prompt(ex: dict, style: str) -> tuple[str, list[str], list[str]]:
+    """Paraphrase prompt for one example and style; returns (prompt, tool names to keep, values to keep)."""
     text = source_text(ex)
     names = tool_names_in(ex)
     values = extract_values(text, set(names))
@@ -66,6 +69,7 @@ def build_prompt(ex: dict, style: str) -> tuple[str, list[str], list[str]]:
 
 
 def clean_output(out: str) -> str:
+    """Strip thinking blocks, prefixes and quotes from a paraphrase model output."""
     out = re.sub(r"<think>.*?</think>", "", out, flags=re.S).strip()
     out = re.sub(r"^(?:rewritten description|description)\s*:\s*", "", out, flags=re.I).strip()
     out = out.strip().strip('"').strip()
@@ -74,6 +78,7 @@ def clean_output(out: str) -> str:
 
 def check(src: str, out: str, names: list[str], values: list[str], min_value_recall: float,
           length_ratio=(0.5, 2.2)) -> dict:
+    """Faithfulness checks for a paraphrase: names kept, value recall, length ratio, not a copy, not a refusal."""
     low = out.lower()
     names_ok = all(n.lower() in low for n in names)
     kept = [v for v in values if v.lower() in low]
@@ -89,6 +94,7 @@ def check(src: str, out: str, names: list[str], values: list[str], min_value_rec
 
 
 def pick_style(styles: list[str], key: str, k: int, attempt: int) -> str:
+    """Deterministic paraphrase style choice per (example, sample, attempt)."""
     return random.Random(f"{key}:{k}:{attempt}").choice(styles)
 
 
@@ -166,6 +172,7 @@ class HFBackend:
 
 
 def make_backend(pcfg: dict):
+    """Create the generation backend (HF transformers model, or an 'echo' stub for CPU tests)."""
     if pcfg["backend"] == "echo":
         return EchoBackend()
     return HFBackend(pcfg["model"], pcfg.get("temperature", 0.8), pcfg.get("top_p", 0.95),

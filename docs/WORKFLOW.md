@@ -54,15 +54,15 @@ Outputs: whitebox.jsonl (attack per description), wb_verified.jsonl (agent contr
 Headline number = summary.n_genuine_evasions (evades the 1%-val-FPR threshold AND asr_true >= 0.2).
 
 ## Step 7 (adversarial training + white-box re-attack)
-`notebooks/kaggle_adv1_deberta.ipynb` and `kaggle_adv1e5_e5.ipynb` (GPU T4 x2, GPU_DEPS=True). Each runs
+`notebooks/experiments/kaggle_adv1_deberta.ipynb` and `kaggle_adv1e5_e5.ipynb` (GPU T4 x2, GPU_DEPS=True). Each runs
 `scripts/adv_train.py` (base vs adv, 3 seeds -> adv_results.md) then `scripts/attack_whitebox.py` against the saved
 ADV checkpoint (-> summary.json; compare n_genuine_evasions with results/wb1 and results/wb1e5).
 
 ## Step 8 (defense checks)
-`notebooks/kaggle_def1.ipynb` (one GPU, GPU_DEPS=False) -> defense_results.md: fluency filter, registry-relative calibration, and both combined, on the wb1 / wb1e5 evaders.
+`notebooks/experiments/kaggle_def1.ipynb` (one GPU, GPU_DEPS=False) -> defense_results.md: fluency filter, registry-relative calibration, and both combined, on the wb1 / wb1e5 evaders.
 
 ## Step 9 (adv training x calibration)
-`notebooks/kaggle_cal_adv.ipynb` (1 GPU) -> cal_adv.md for DeBERTa and E5.
+`notebooks/experiments/kaggle_cal_adv.ipynb` (1 GPU) -> cal_adv.md for DeBERTa and E5.
 
 ## Step 10 (second agent)
-`notebooks/kaggle_llama_verify.ipynb` (2 GPUs, two shards in parallel; needs the Llama-3.1 license on HF) -> second_agent.jsonl per shard + merged table in the last cell.
+`notebooks/experiments/kaggle_llama_verify.ipynb` (2 GPUs, two shards in parallel; needs the Llama-3.1 license on HF) -> second_agent.jsonl per shard + merged table in the last cell.

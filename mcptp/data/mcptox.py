@@ -38,14 +38,17 @@ _MARKER_RE = re.compile("|".join(f"(?:{m})" for m in INJECTION_MARKERS), re.I)
 
 
 def strip_injection_markers(text: str) -> str:
+    """Remove explicit injection markers (e.g. <IMPORTANT>) so detectors cannot rely on them."""
     return re.sub(r"\s{2,}", " ", _MARKER_RE.sub(" ", text)).strip()
 
 
 def normalize_ws(text: str) -> str:
+    """Collapse all whitespace to single spaces."""
     return re.sub(r"\s+", " ", text or "").strip()
 
 
 def stable_id(*parts: str, n: int = 12) -> str:
+    """Deterministic short SHA-1 id from the given string parts."""
     return hashlib.sha1("\x1f".join(parts).encode()).hexdigest()[:n]
 
 

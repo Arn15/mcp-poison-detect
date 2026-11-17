@@ -24,6 +24,7 @@ def atomic_write_json(obj: Any, path: str | Path) -> None:
 
 
 def read_json(path: str | Path, default: Any = None) -> Any:
+    """Read a JSON file, or return default if it does not exist."""
     path = Path(path)
     if not path.exists():
         return default

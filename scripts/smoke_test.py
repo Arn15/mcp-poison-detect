@@ -13,6 +13,7 @@ from mcptp.utils import JsonlCheckpoint, atomic_write_json
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     crash_after = None
     if "--crash-after" in sys.argv:
         i = sys.argv.index("--crash-after")

@@ -16,6 +16,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def detect_runtime() -> str:
+    """'kaggle', 'colab' or 'local'."""
     if os.environ.get("KAGGLE_KERNEL_RUN_TYPE") or Path("/kaggle/working").exists():
         return "kaggle"
     if os.environ.get("COLAB_RELEASE_TAG") or Path("/content/sample_data").exists():
@@ -24,6 +25,7 @@ def detect_runtime() -> str:
 
 
 def storage_root(runtime: str | None = None) -> Path:
+    """Where data and outputs live for this runtime (MCPTP_ROOT overrides)."""
     if os.environ.get("MCPTP_ROOT"):
         return Path(os.environ["MCPTP_ROOT"])
     runtime = runtime or detect_runtime()

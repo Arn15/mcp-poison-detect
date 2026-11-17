@@ -33,6 +33,7 @@ from mcptp.utils.env import REPO_ROOT  # noqa: E402
 
 
 def split_hash(recs):
+    """SHA-256 over (id, label, description) of a paraphrase split."""
     h = hashlib.sha256()
     for r in sorted(recs, key=lambda r: r["id"]):
         h.update(f"{r['id']}\x1f{r['label']}\x1f{r['description']}\n".encode())
@@ -40,6 +41,7 @@ def split_hash(recs):
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     if not inputs:
         raise SystemExit("pass --inputs <generations.jsonl> ...")
     cfg, paths, run_dir, log = setup_run("freeze_para", __doc__)

@@ -1,3 +1,4 @@
+"""Shared utilities: config + CLI overrides, runtime/path detection, seeding, resumable checkpoints, run dirs."""
 from .config import load_config, save_config
 from .env import detect_runtime, resolve_paths
 from .seed import set_seed

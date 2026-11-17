@@ -35,6 +35,7 @@ DEFAULTS = {"sources": ["results/wb1/whitebox.jsonl", "results/wb1e5/whitebox.js
 
 
 def wb_rows(src):
+    """Rows of a white-box run's whitebox.jsonl (empty list if missing)."""
     p = REPO_ROOT / src
     return [json.loads(l) for l in open(p)] if p.exists() else []
 
@@ -51,11 +52,13 @@ def verified_opt_sets(floor=0.2):
 
 
 def as_example(r, desc, tag, k):
+    """Turn a white-box rewrite into a poisoned training/eval example."""
     return {"id": f"{tag}_{k}", "server": r["server"], "tool_name": r["tool_name"], "description": desc,
             "description_stripped": desc, "label": 1, "context": [], "kind": "poison", "split": "train"}
 
 
 def main():
+    """Entry point (see the module docstring for what this script does and how to run it)."""
     cfg, paths, run_dir, log = setup_run("adv_train", __doc__)
     c = {**DEFAULTS, **(cfg.get("advtrain") or {})}
     ex = ensure_examples(cfg, paths)

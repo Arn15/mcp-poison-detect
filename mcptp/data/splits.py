@@ -55,6 +55,7 @@ def choose_server_split(examples: list[dict], test_frac: float, val_frac: float,
 
 
 def assign_splits(examples: list[dict], server_split: dict, heldout_families: list[str]) -> dict[str, list[str]]:
+    """Assign example ids to train/val/test from the server split; held-out risk families always go to test."""
     held = set(heldout_families)
     ids = {s: [] for s in SPLITS}
     for e in examples:
@@ -67,6 +68,7 @@ def assign_splits(examples: list[dict], server_split: dict, heldout_families: li
 
 
 def test_hash(examples: list[dict], test_ids: list[str]) -> str:
+    """SHA-256 over (id, label, description) of every test example; pins the frozen test set."""
     by_id = {e["id"]: e for e in examples}
     h = hashlib.sha256()
     for i in sorted(test_ids):
@@ -76,6 +78,7 @@ def test_hash(examples: list[dict], test_ids: list[str]) -> str:
 
 
 def build_manifest(examples, server_split, ids, heldout_families, cfg_subset: dict, version: str) -> dict:
+    """Split manifest: servers, ids, counts, held-out families, config subset and test hash."""
     return {
         "version": version,
         "created_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -90,6 +93,7 @@ def build_manifest(examples, server_split, ids, heldout_families, cfg_subset: di
 
 
 def save_manifest(manifest: dict, path: str | Path, overwrite: bool = False) -> None:
+    """Write the manifest; refuses to overwrite a frozen one unless overwrite=True."""
     path = Path(path)
     if path.exists() and not overwrite:
         raise FileExistsError(f"{path} exists: the test set is frozen. Pass --refreeze to replace it deliberately.")
@@ -98,6 +102,7 @@ def save_manifest(manifest: dict, path: str | Path, overwrite: bool = False) -> 
 
 
 def load_manifest(path: str | Path) -> dict:
+    """Read a split manifest JSON."""
     return json.loads(Path(path).read_text())
 
 
@@ -118,4 +123,5 @@ def verify_manifest(examples: list[dict], manifest: dict) -> None:
 
 
 def split_of(manifest: dict) -> dict[str, str]:
+    """Map example id -> split name from a manifest."""
     return {i: s for s in SPLITS for i in manifest["ids"][s]}
