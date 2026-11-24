@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage[preprint]{neurips_2024}
+\makeatletter\AtBeginDocument{\renewcommand{\@noticestring}{}}\makeatother
 \setcitestyle{numbers,square,comma}
 
 \usepackage[utf8]{inputenc}
@@ -28,7 +29,7 @@
 \newcommand{\fpr}{\mathrm{FPR}}
 \newcommand{\repo}{\url{https://github.com/Arn15/mcp-poison-detect}}
 
-\title{Detecting Implicit MCP Tool Poisoning Under Adaptive\\ Attacks: Adversarial Training Meets\\ Registry-Relative Calibration}
+\title{Detecting Implicit MCP Tool Poisoning\\ Under Adaptive Attacks: Adversarial Training\\ Meets Registry-Relative Calibration}
 
 \author{%
   Arnav Yennam\\
@@ -52,7 +53,7 @@ fine-tuned DeBERTa-v3 / E5 classifiers (100\%), while a white-box word-substitut
 \emph{registry-relative calibration}, which scores a tool against the tools already approved on the same server,
 removes the false-alarm cost that training adds. The final system flags 3.0--3.5\% of benign tools on unseen servers,
 detects every attack set, and has zero genuine evasions under adaptive white-box attacks aimed at its calibrated
-threshold, including fluency-constrained ones.
+threshold, including fluency-constrained ones. Code, results and figures: \repo.
 \end{abstract}
 
 %=====================================================================================================================
@@ -90,6 +91,12 @@ question is whether such a check survives an attacker who adapts to it. Answerin
       the 1\% target.
 \end{itemize}
 
+\paragraph{Our approach.} We fine-tune transformer classifiers (DeBERTa-v3, E5) on tool descriptions and evaluate them
+under a protocol that removes benchmark shortcuts and verifies every attack against a no-poison control. We attack
+them with our own black-box LLM optimizer and a white-box gradient attacker, harden them with adversarial training on
+the white-box rewrites, and fix the resulting false alarms with registry-relative calibration, which scores a new tool
+against the tools already approved on the same server.
+
 \paragraph{Contributions.}
 \begin{itemize}
 \item An evaluation protocol for MCP tool-poisoning detectors: server-disjoint frozen splits with held-out risk
@@ -105,7 +112,6 @@ question is whether such a check survives an attacker who adapts to it. Answerin
 \item A test of calibration's trust assumption: one poisoned tool in the registry breaks it, and anchoring on approved
       tools only restores it (Sec.~\ref{sec:res-contam}).
 \end{itemize}
-Code, results and figures: \repo.
 
 %=====================================================================================================================
 \section{Related work}
@@ -266,7 +272,23 @@ and test both in Sec.~\ref{sec:res-contam}.
 All GPU work ran on Kaggle (2$\times$ NVIDIA T4, PyTorch 2.11, Transformers 5): the detector and attacker on one GPU, the
 4-bit agent on the other. Detector training takes 30--50\,s per epoch; a white-box attack over 379 items with agent
 verification takes about 1\,h; the 14B 6-shot judge needed 9.3\,h for 1,700 items. Classifier results are averaged over
-3 seeds (42--44) unless stated.
+3 seeds (42--44) unless stated. The experiments committed to on the presentation's future-work slide were completed
+afterwards and are included here: the E5 round-2 and final-system results (Sec.~\ref{sec:res-final}), the
+contaminated-registry test with approved-only anchors (Sec.~\ref{sec:res-contam}), and the natural-text attack
+(Sec.~\ref{sec:res-natural}).
+
+\paragraph{Proposal deliverables.} (D1) The plain vs.\ context-aware pilot is in Sec.~\ref{sec:res-shortcut}.
+(D2) Our attackers evade the baselines: the black-box optimizer defeats the LLM judges, the white-box attack both
+classifiers (Sec.~\ref{sec:res-bb}, \ref{sec:res-wb}). (D3) The harness reports bootstrap CIs and seed spread.
+(D4) At 1\% FPR the final system detects 100\% of held-out genuine white-box evasions vs.\ 29--76\% for the base
+classifiers and 19--33\% of optimized black-box attacks for the best judges, at 0.4--1.4\% hard-negative FPR; on
+black-box attacks every fine-tuned classifier already reaches 100\%, so no gain can be shown there. (D5) Evasions
+across adversarial rounds are in Fig.~\ref{fig:wb}. (D6) End-to-end: the 495 control-verified black-box attacks
+hijack Qwen3-8B on 80\% of queries on average (Llama-3.1-8B: 14\%), and the white-box evasions 24--49\% on Llama;
+the final system rejects all of them at registration, so their ASR drops to 0 at a 3.0--3.5\% rejection rate for
+benign tools. At the week-4 checkpoint the context model showed no gain; instead of the planned pivot to
+internals-probe distillation we kept the plain detector and moved the effort to adaptive attacks, because the
+evaluation (Sec.~\ref{sec:res-control}) showed that attacks, not context, were the open question.
 
 \subsection{MCPTox is shortcut-solvable; registry context does not help}
 \label{sec:res-shortcut}
@@ -429,7 +451,7 @@ unnatural (6.13 / 6.43; Fig.~\ref{fig:fluency}). Against the final system the na
 
 \begin{figure}[tbp]
 \centering
-\includegraphics[width=0.62\linewidth]{fig8_fluency.pdf}
+\includegraphics[width=0.78\linewidth]{fig8_fluency.pdf}
 \caption{Median GPT-2 log-perplexity of benign test tools, black-box rewrites and white-box evaders. Natural-mode
 evaders are almost as fluent as benign tools, so a perplexity filter cannot separate them.}
 \label{fig:fluency}
@@ -526,16 +548,19 @@ python scripts/make_figures.py                          # all figures in this re
 \section{Limitations and future work}
 %=====================================================================================================================
 
-\textbf{Scale of the evidence.} All attacks were optimized against one agent (Qwen3-8B); many genuine verdicts rest on
-one or two recorded queries; the held-out white-box sets are small (16--43 items); the natural-text attack used one
-seed per target. \textbf{Attacker strength.} Our black-box attackers are 4B/14B open models rather than the
-DeepSeek-V3 used by MCP-ITP; the white-box attacker is stronger than any realistic black-box one but limited to
-word substitutions, and naturalness is measured by automatic proxies rather than human judgement. \textbf{Scope.} The
-detector reads description text only; distributed attacks that split the payload across several tools, rug-pull
-updates, and malicious server code need other controls (signing, sandboxing, runtime monitoring). The approved-only
-anchor assumes the first tools on a server were vetted. \textbf{Future work:} human evaluation of natural-text
-attacks, more target agents, and deploying the detector as a registry/gateway check that re-runs whenever a tool's
-description changes.
+\begin{itemize}
+\item \textbf{Scale of the evidence.} All attacks were optimized against one agent (Qwen3-8B); many genuine verdicts
+rest on one or two recorded queries; the held-out white-box sets are small (16--43 items); the natural-text attack
+used one seed per target.
+\item \textbf{Attacker strength.} Our black-box attackers are 4B/14B open models rather than the DeepSeek-V3 used by
+MCP-ITP; the white-box attacker is stronger than any realistic black-box one but limited to word substitutions, and
+naturalness is measured by automatic proxies rather than human judgement.
+\item \textbf{Scope.} The detector reads description text only; distributed attacks that split the payload across
+several tools, rug-pull updates, and malicious server code need other controls (signing, sandboxing, runtime
+monitoring). The approved-only anchor assumes the first tools on a server were vetted.
+\item \textbf{Future work.} Human evaluation of natural-text attacks, more target agents, and deploying the detector
+as a registry/gateway check that re-runs whenever a tool's description changes.
+\end{itemize}
 
 %=====================================================================================================================
 \section{Conclusion}
