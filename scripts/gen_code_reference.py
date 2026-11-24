@@ -62,6 +62,23 @@ def main():
             L += section(f)
     (ROOT / "docs" / "CODE_REFERENCE.md").write_text("\n".join(L))
     print("wrote docs/CODE_REFERENCE.md")
+    readme = ROOT / "README.md"
+    text = readme.read_text()
+    start, end = "<!-- CODE_REFERENCE_START -->", "<!-- CODE_REFERENCE_END -->"
+    if start in text and end in text:
+        body, blocks, cur = L[4:], [], None             # skip the title and intro lines
+        for line in body:
+            if line.startswith("## "):                  # one collapsible block per section (package / scripts / tests)
+                cur = [f"<details><summary><b>{line[3:].replace('`', '')}</b></summary>", ""]
+                blocks.append(cur)
+            elif cur is not None:
+                cur.append("#### " + line[4:] if line.startswith("### ") else line)
+        for blk in blocks:
+            blk += ["", "</details>", ""]
+        inner = "\n".join(x for blk in blocks for x in blk)
+        pre, rest = text.split(start, 1)
+        readme.write_text(pre + start + "\n\n" + inner + "\n" + end + rest.split(end, 1)[1])
+        print("updated README.md code reference")
 
 
 if __name__ == "__main__":
