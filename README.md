@@ -1,4 +1,4 @@
-# Adversarially Robust Detection of Implicit MCP Tool Poisoning
+# Detecting Implicit MCP Tool Poisoning Under Adaptive Attacks: Adversarial Training Meets Registry-Relative Calibration
 
 NCSU ECE 592 / CSC 591 (Advanced Topics in Deep Learning), Fall 2026 — individual project, Arnav Yennam.
 **Report:** [`report/MCP_Tool_Poisoning_Final_Report.pdf`](report/MCP_Tool_Poisoning_Final_Report.pdf) (build: `cd report && latexmk -pdf main.tex`).
