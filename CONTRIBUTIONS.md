@@ -1,10 +1,14 @@
 # Code authorship
 
-The course requires stating which code is my own. **All code in this repository was written by me for this project.**
+The course requires stating which code is my own. **All code in this repository was developed by me for this
+project, with Claude (Anthropic) used as an AI coding assistant**; commits it helped write carry a
+`Co-Authored-By: Claude` line. The research questions, threat model, experiment design, method choices (including
+registry-relative calibration, the no-poison control and approved-only anchors) and the analysis of results are
+my own.
 Where a module re-implements a published method, it is marked *Adapted* and the paper is cited; no third-party
-source code was copied. Pretrained models and standard libraries are used through their packages (*Library*).
+source code was used. Pretrained models and standard libraries are used through their packages (*Library*).
 
-Legend: **Own** = my design and code · **Adapted** = my code, following the cited paper's method · **Library** = a
+Legend: **Own** = my design, written for this project · **Adapted** = written for this project, following the cited paper's method · **Library** = a
 third-party package or pretrained model, called but not re-implemented.
 
 ## Package `mcptp/`

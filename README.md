@@ -27,7 +27,9 @@ decides whether to admit it, and stress-tests it against attackers that adapt to
 
 ## Code organization
 
-All code is my own (see [`CONTRIBUTIONS.md`](CONTRIBUTIONS.md) for which modules re-implement a published method).
+All code was developed for this project, with Claude (Anthropic) used as an AI coding assistant; the research
+questions, experiment design, decisions and analysis are my own. [`CONTRIBUTIONS.md`](CONTRIBUTIONS.md) lists which
+modules re-implement a published method.
 A generated reference with **every class and function** and its description is in
 [`docs/CODE_REFERENCE.md`](docs/CODE_REFERENCE.md) (`python scripts/gen_code_reference.py`).
 
